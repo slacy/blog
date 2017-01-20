@@ -7,6 +7,7 @@ SITENAME = u"Slacy's Blog"
 SITEURL = 'https://slacy.github.io/blog'
 
 PATH = 'content'
+OUTPUT_PATH = 'docs'
 
 TIMEZONE = 'America/Los_Angeles'
 
