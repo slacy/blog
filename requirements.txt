@@ -13,7 +13,6 @@ enum34==1.1.6
 Fabric==1.13.1
 feedgenerator==1.9
 funcsigs==1.0.2
-functools32==3.2.3.post2
 html5lib==0.9999999
 idna==2.2
 ipaddress==1.0.18
@@ -42,7 +41,6 @@ pbr==1.10.0
 pelican==3.7.1
 pexpect==4.2.1
 pickleshare==0.7.4
-pkg-resources==0.0.0
 prompt-toolkit==1.0.9
 protobuf==3.1.0.post1
 ptyprocess==0.5.1
