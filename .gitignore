@@ -4,4 +4,3 @@ pelican.pid
 srv.pid
 *.pyc
 
-medius/
