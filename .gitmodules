@@ -1,9 +1,9 @@
 [submodule "medius"]
 	path = medius
-	url = git@github.com:onur/medius.git
+	url = https://github.com/danielfrg/pelican-ipynb.git
 [submodule "pelican-ipynb"]
 	path = pelican-ipynb
-	url = git@github.com:danielfrg/pelican-ipynb.git
+	url = https://github.com/danielfrg/pelican-ipynb.git
 [submodule "pelican-plugins"]
 	path = pelican-plugins
-	url = git@github.com:getpelican/pelican-plugins.git
+	url = https://github.com/getpelican/pelican-plugins.git
