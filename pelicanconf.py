@@ -29,6 +29,10 @@ THEME = 'medius'
 SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
           ('Github', 'https://github.com/slacy'),)
 
+
+PLUGIN_PATHS = ["plugins"]
+PLUGINS = []
+
 DEFAULT_PAGINATION = False
 
 # Uncomment following line if you want document-relative URLs when developing
