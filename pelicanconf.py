@@ -12,6 +12,7 @@ OUTPUT_PATH = 'docs'
 TIMEZONE = 'America/Los_Angeles'
 
 DEFAULT_LANG = u'en'
+DEFAULT_DATE = 'fs'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
@@ -30,8 +31,8 @@ SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
           ('Github', 'https://github.com/slacy'),)
 
 
-PLUGIN_PATHS = ["plugins"]
-PLUGINS = []
+PLUGIN_PATHS = ["pelican-plugins"]
+PLUGINS = ["pelican-ipynb.markup"]
 
 DEFAULT_PAGINATION = False
 
