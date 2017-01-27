@@ -11,6 +11,8 @@ OUTPUT_PATH = 'docs'
 
 TIMEZONE = 'America/Los_Angeles'
 
+TYPOGRIFY = True 
+
 DEFAULT_LANG = u'en'
 DEFAULT_DATE = 'fs'
 
@@ -32,7 +34,7 @@ SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
 
 
 PLUGIN_PATHS = ["pelican-plugins"]
-PLUGINS = ["pelican-ipynb.markup"]
+PLUGINS = ["render_math"]
 
 DEFAULT_PAGINATION = False
 

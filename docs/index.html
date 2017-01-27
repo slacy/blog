@@ -16,6 +16,7 @@
         <ul class="pure-menu-list">
             <li class="pure-menu-item"></li>
 
+            <li class="pure-menu-item"><a href="./category/misc.html" class="pure-menu-link">misc</a></li>
             <li class="pure-menu-item"><a href="./category/pelican.html" class="pure-menu-link">Pelican</a></li>
         </ul>
     </div>
@@ -31,19 +32,31 @@
 
 
 <div class="pure-u-3-4 meta-data">
-    <a href="./category/pelican.html" class="category">Pelican</a><br />
+    <a href="./category/misc.html" class="category">misc</a><br />
 
     <a class="author" href="./author/steve-lacy.html">Steve Lacy</a>
-    &mdash; <abbr title="2017-01-27T10:00:00-08:00">Fri 27 January 2017</abbr>
+    &mdash; <abbr title="2017-01-27T11:04:57.995902-08:00">Fri 27 January 2017</abbr>
 </div>    </div>
-    <h2><a href="./ipynb-test.html" rel="bookmark" title="Permalink to ipynb test">ipynb test</a></h2>
+    <h2><a href="./simpleadder.html" rel="bookmark" title="Permalink to SimpleAdder">SimpleAdder</a></h2>
     <div class="post-content">
-        
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+        <div class="math">$$c = \sqrt{a^2 + b^2}$$</div>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">random</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="c1"># tf Graph Input</span>
+<span class="n">num_inputs</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">num_hidden</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">16</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_inputs</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;inputs&quot;</span><span class="p">)</span>
+<span class="n">expected</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;expected&quot;</span><span class="p">)</span>
+
+<span class="n">iw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">[</span><span class="n">num_inputs</span><span class="p">,</span> <span class="n">num_hidden …</span></pre></div>
     </div>
     <div class="post-footer">
-        <a href="./ipynb-test.html">Read more</a>
+        <a href="./simpleadder.html">Read more</a>
     </div>
 </div>
 <div class="post">
@@ -111,7 +124,6 @@
                          Tags
                     </div>
                     <div class="tags">
-                    <a href="./tag/python.html">Python</a>
                     <a href="./tag/pelican.html">Pelican</a>
                     </div>
                 </div>
@@ -126,6 +138,7 @@
     <footer class="index-footer">
 
         <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+        <a href="./category/misc.html">misc</a>
         <a href="./category/pelican.html">Pelican</a>
         <a href="http://getpelican.com/">Pelican</a>
 

@@ -1,3 +1,6 @@
+
+
+```python
 #!/usr/bin/env python
 # A Snakey clone made with Pygame.
 # Requires Pygame: http://pygame.org/download.shtml
@@ -281,3 +284,25 @@ def rungame(game, players=[]):
 if __name__ == '__main__':
     main()
 
+```
+
+
+    ---------------------------------------------------------------------------
+
+    ImportError                               Traceback (most recent call last)
+
+    <ipython-input-2-7443fac0509a> in <module>()
+          8 import copy, random, pygame, sys
+          9 from pygame.locals import *
+    ---> 10 from classes.const import *
+         11 from classes.methods import *
+         12 from classes.button import *
+
+
+    ImportError: No module named classes.const
+
+
+
+```python
+
+```
