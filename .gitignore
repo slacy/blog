@@ -4,3 +4,4 @@ pelican.pid
 srv.pid
 *.pyc
 
+pelican-plugins/
