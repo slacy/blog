@@ -33,7 +33,7 @@ SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
           ('Github', 'https://github.com/slacy'),)
 
 
-PLUGIN_PATHS = ["pelican-plugins"]
+PLUGIN_PATHS = ["plugins"]
 PLUGINS = ["render_math"]
 
 DEFAULT_PAGINATION = False
