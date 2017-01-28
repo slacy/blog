@@ -1,10 +1,12 @@
 Title: Introduction
-Tags: Tensorflow From The Ground Up
+Category: TensorFlow From The Ground Up
+Tags: Pelican, Python, TensorFlow, Jupyter
 Date: 1/27/2017 5:30pm 
-Author: slacy## Introduction
-Hello and welcome to *Tensorflow from the Ground Up*!  I'm Steve, and I'm an experienced Software Engineer, and I'm learning [Tensorflow](https://tensorflow.org).
+Author: slacy
+Hello and welcome to *TensorFlow from the Ground Up*!  
+I'm [Steve](https://github.com/slacy), I'm an experienced Software Engineer, and I'm learning [TensorFlow](https://tensorflow.org).
 
-One of the biggest questions that I had was: 
+There is a lot of mystery, speculation, and promise in the field of Machine Learning, and as an engineer, my goal is to answer several big questions about ML in general: 
 
 > How do I determine if I can solve a specific problem using Machine Learning?  
 >
@@ -12,9 +14,9 @@ One of the biggest questions that I had was:
 >
 > How do I design an ML graph from scratch? 
 
-These are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. 
+For me, these are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. 
 
-There are many tutorials for Tensorflow on the internet, but I found that most of them (including ones included in the [Tensorflow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, usually starting with running an MNIST classifier on a pre-existing data set. 
+I found many tutorials for TensorFlow on the internet, but most of them (including ones included in the [Tensorflow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, usually starting with running an MNIST classifier on a pre-existing data set downloaded from the internet. 
 
 These top down introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply *existing ML models* to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. 
 
