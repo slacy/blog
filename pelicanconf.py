@@ -24,13 +24,35 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),)
+LINKS = ()
 
 THEME = 'medius' 
 
 # Social widget
 SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
           ('Github', 'https://github.com/slacy'),)
+GITHUB_URL = "https://github.com/slacy"
+TWITTER_USERNAME = "sklacy"
+
+MEDIUS_CATEGORIES = {
+    'TensorFlow From The Ground Up': {
+        'description': '',
+        'logo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/GalacticRotation2.svg/250px-GalacticRotation2.svg.png',
+        'thumbnail': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/NGC_3923_Elliptical_Shell_Galaxy.jpg/220px-NGC_3923_Elliptical_Shell_Galaxy.jpg'
+    }
+}
+
+
+MEDIUS_AUTHORS = {
+    'slacy': {
+        'description': """                    """,
+        'cover': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Milky_Way_Arch.jpg/1920px-Milky_Way_Arch.jpg',
+        'image': 'https://lh6.googleusercontent.com/-zEMaXmWAhdI/AAAAAAAAAAI/AAAAAAAAAAA/eVdgsm3TIDU/s128-c-k/photo.jpg',
+        'links': (('github', 'https://github.com/slacy'),
+                  ('twitter-square', 'https://twitter.com/sklacy')),
+    }
+}
+
 
 
 PLUGIN_PATHS = ["plugins"]

@@ -16,11 +16,13 @@ There is a lot of mystery, speculation, and promise in the field of Machine Lear
 
 For me, these are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. 
 
-I found many tutorials for TensorFlow on the internet, but most of them (including ones included in the [Tensorflow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, usually starting with running an MNIST classifier on a pre-existing data set downloaded from the internet. 
+I found many tutorials for TensorFlow on the internet, but most of them (including ones included in the [TensorFlow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, usually starting with running an MNIST classifier on a pre-existing data set downloaded from the internet.   If none of that made sense to you, then you might be the target audience for this blog!
 
 These top down introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply *existing ML models* to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. 
 
-Top down approaches aren't at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs involved.  
+Top down approaches aren't at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs involved.  Additionally, if you're looking to apply ML to new problem spaces, design and build ML graphs from scratch, or just experiment with the limits of the framework, then you'll need to use a different learning approach. 
+
+This blog is the documentation of my personal learning approach, and I hope others find it useful as well.
 ## Goals 
 I have some rough goals in mind, which I'll quickly outline here, to keep myself focused: 
 

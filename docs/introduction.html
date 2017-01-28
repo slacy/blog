@@ -24,6 +24,9 @@
 <div class="page-container">
     <div class="entry-content">
         <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="./category/tensorflow-from-the-ground-up.html"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/NGC_3923_Elliptical_Shell_Galaxy.jpg/220px-NGC_3923_Elliptical_Shell_Galaxy.jpg " class="post-avatar" alt="TensorFlow From The Ground Up"></a>
+            </div>
 <div class="pure-u-3-4 meta-data">
     <a href="./category/tensorflow-from-the-ground-up.html" class="category">TensorFlow From The Ground Up</a><br />
 
@@ -53,9 +56,10 @@ I&#8217;m <a href="https://github.com/slacy">Steve</a>, I&#8217;m an experienced
 <p>How do I design an <span class="caps">ML</span> graph from&nbsp;scratch? </p>
 </blockquote>
 <p>For me, these are extremely important questions, and most tutorials I found were lacking this type of low level deph and&nbsp;context. </p>
-<p>I found many tutorials for TensorFlow on the internet, but most of them (including ones included in the <a href="https://www.tensorflow.org/tutorials/mnist/beginners/">Tensorflow documentation</a> itself) take a &#8220;top down&#8221; approach, usually starting with running an <span class="caps">MNIST</span> classifier on a pre-existing data set downloaded from the&nbsp;internet. </p>
+<p>I found many tutorials for TensorFlow on the internet, but most of them (including ones included in the <a href="https://www.tensorflow.org/tutorials/mnist/beginners/">TensorFlow documentation</a> itself) take a &#8220;top down&#8221; approach, usually starting with running an <span class="caps">MNIST</span> classifier on a pre-existing data set downloaded from the internet.   If none of that made sense to you, then you might be the target audience for this&nbsp;blog!</p>
 <p>These top down introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply <em>existing <span class="caps">ML</span> models</em> to new or existing datasets.  They&#8217;re also useful for people who want to get a 10,000 foot view of what <span class="caps">ML</span> is and how it&#8217;s applied in&nbsp;practice. </p>
-<p>Top down approaches aren&#8217;t at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs&nbsp;involved.  </p>
+<p>Top down approaches aren&#8217;t at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs involved.  Additionally, if you&#8217;re looking to apply <span class="caps">ML</span> to new problem spaces, design and build <span class="caps">ML</span> graphs from scratch, or just experiment with the limits of the framework, then you&#8217;ll need to use a different learning&nbsp;approach. </p>
+<p>This blog is the documentation of my personal learning approach, and I hope others find it useful as&nbsp;well.</p>
 <h2>Goals</h2>
 <p>I have some rough goals in mind, which I&#8217;ll quickly outline here, to keep myself&nbsp;focused: </p>
 <ol>
@@ -86,15 +90,34 @@ I&#8217;m <a href="https://github.com/slacy">Steve</a>, I&#8217;m an experienced
         <div class="pure-g post-footer">
             <div class="pure-u-1 pure-u-md-1-2">
                 <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://lh6.googleusercontent.com/-zEMaXmWAhdI/AAAAAAAAAAI/AAAAAAAAAAA/eVdgsm3TIDU/s128-c-k/photo.jpg" alt=""></a>
+                    </div>
                     <div class="pure-u-3-4">
                         <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
                         <p class="author-description">
+                                              
                         </p>
                     </div>
                 </div>
             </div>
 
 
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="./category/tensorflow-from-the-ground-up.html"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/NGC_3923_Elliptical_Shell_Galaxy.jpg/220px-NGC_3923_Elliptical_Shell_Galaxy.jpg" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 
@@ -110,7 +133,6 @@ I&#8217;m <a href="https://github.com/slacy">Steve</a>, I&#8217;m an experienced
 
         <a href="./" title="Slacy's Blog">Slacy's Blog</a>
         <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>
-        <a href="http://getpelican.com/">Pelican</a>
 
     </footer>
 
