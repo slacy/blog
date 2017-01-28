@@ -34,10 +34,12 @@ def clean():
 
 def build():
     """Build local version of site"""
+    local('jupyter-nbconvert --config nbconvert_conf.py')
     local('pelican -s pelicanconf.py')
 
 def rebuild():
     """`build` with the delete switch"""
+    local('jupyter-nbconvert --config nbconvert_conf.py')
     local('pelican -d -s pelicanconf.py')
 
 def regenerate():
