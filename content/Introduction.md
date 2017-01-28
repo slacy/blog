@@ -1,5 +1,7 @@
 Title: Introduction
-Tags: Tensorflow From The Ground Up## Introduction
+Tags: Tensorflow From The Ground Up
+Date: 1/27/2017 5:30pm 
+Author: slacy## Introduction
 Hello and welcome!  I'm Steve, and I'm an experienced Software Engineer, and I'm learning [Tensorflow](https://tensorflow.org).
 
 One of the biggest questions that I had was: 
