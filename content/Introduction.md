@@ -28,7 +28,7 @@ I have some rough goals in mind, which I'll quickly outline here, to keep myself
 
 1. Approach machine learning from the **bottom up**.  
 2. Build **intuititon** around the tools and processes used in ML. 
-3. Use **exploratory** methods, showing different approaches to solving the same problem.
+3. Use **exploratory** methodology, showing different approaches to solving the same problem.
 4. Aim for **deep** understanding of the systems involved. 
 ## Tools
 For this blog, I'm using a new collection of tools, which I've hand-configured for this purpose.  I may go into more detail in later posts. The collection of tools I'm using is: 
