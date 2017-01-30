@@ -34,10 +34,12 @@ SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
 GITHUB_URL = "https://github.com/slacy"
 TWITTER_USERNAME = "sklacy"
 
+STATIC_PATHS = ['images',]
+
 MEDIUS_CATEGORIES = {
     'TensorFlow From The Ground Up': {
         'description': '',
-        'logo': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/GalacticRotation2.svg/250px-GalacticRotation2.svg.png',
+        'logo': '/images/greenery_1040.png',
         'thumbnail': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/NGC_3923_Elliptical_Shell_Galaxy.jpg/220px-NGC_3923_Elliptical_Shell_Galaxy.jpg'
     }
 }
