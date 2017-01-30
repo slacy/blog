@@ -48,7 +48,7 @@ MEDIUS_AUTHORS = {
     'slacy': {
         'description': """                    """,
         'cover': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Milky_Way_Arch.jpg/1920px-Milky_Way_Arch.jpg',
-        'image': '/images/ygg.png',
+        'image': 'https://slacy.github.io/blog/images/ygg.png',
         'links': (('github', 'https://github.com/slacy'),
                   ('twitter-square', 'https://twitter.com/sklacy')),
     }
