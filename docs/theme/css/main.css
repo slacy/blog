@@ -119,6 +119,7 @@ div.main-container {
       padding: 10px 0 10px 0;
       margin-bottom: 10px;
       letter-spacing: .1em;
+      text-transform: uppercase;
       font-size: 11px; }
   div.main-container img.post-image {
     margin-top: 20px;
@@ -332,6 +333,7 @@ div.category-page-container {
       text-decoration: none; }
   div.category-page-container div.section-header {
     color: rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     text-align: left;
     font-size: 11px;
@@ -491,6 +493,7 @@ div.author-page-divider {
     display: inline-block;
     border: 1px solid rgba(0, 0, 0, 0.44);
     background: #fff;
+    text-transform: uppercase;
     font-size: 12px;
     line-height: 1.4;
     padding: 4px 8px 3px 12px;

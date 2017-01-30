@@ -11,7 +11,7 @@ OUTPUT_PATH = 'docs'
 
 TIMEZONE = 'America/Los_Angeles'
 
-TYPOGRIFY = True 
+TYPOGRIFY = True
 
 DEFAULT_LANG = u'en'
 DEFAULT_DATE = 'fs'
@@ -26,7 +26,7 @@ AUTHOR_FEED_RSS = None
 # Blogroll
 LINKS = ()
 
-THEME = 'medius' 
+THEME = 'medius'
 
 # Social widget
 SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
@@ -39,7 +39,6 @@ STATIC_PATHS = ['images',]
 MEDIUS_CATEGORIES = {
     'TensorFlow From The Ground Up': {
         'description': '',
-        'logo': '/images/greenery_1040.png',
         'thumbnail': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/NGC_3923_Elliptical_Shell_Galaxy.jpg/220px-NGC_3923_Elliptical_Shell_Galaxy.jpg'
     }
 }
@@ -49,7 +48,7 @@ MEDIUS_AUTHORS = {
     'slacy': {
         'description': """                    """,
         'cover': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Milky_Way_Arch.jpg/1920px-Milky_Way_Arch.jpg',
-        'image': 'https://lh6.googleusercontent.com/-zEMaXmWAhdI/AAAAAAAAAAI/AAAAAAAAAAA/eVdgsm3TIDU/s128-c-k/photo.jpg',
+        'image': '/images/ygg.png',
         'links': (('github', 'https://github.com/slacy'),
                   ('twitter-square', 'https://twitter.com/sklacy')),
     }
