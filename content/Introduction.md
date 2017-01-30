@@ -39,3 +39,14 @@ For this blog, I'm using a new collection of tools, which I've hand-configured f
 * [TensorFlow](https://tensorflow.com) for my ML framework. 
 * [Jupyter Notebooks](https://jupyter.org) for authoring all posts. 
 * Ubuntu & Linux hardware with nVidia GPU accelleration as my runtime.
+## Intended Audience
+This blog is intended for a technical audience who has little to no experience with ML / TensorFlow, or who has highlevel experience with TensorFlow and would like to gain a deeper understanding of the math and systems involved. 
+
+If you are interested in "Coding along" and evaluating the the example code here, you will need a computer wit ha software stack that includes:
+
+* TensorFlow
+* Python 
+* [Jupyter Notebook](https://jupyter.org)
+* [MathJax](https://mathjax.org) (for rendering Notebook equations)
+
+Although GPU accelleration isn't strictly needed, it can help the design and iteration process go much faster. 
