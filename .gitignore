@@ -6,3 +6,4 @@ srv.pid
 
 pelican-plugins/
 
+.sass-cache/

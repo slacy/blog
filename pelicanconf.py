@@ -26,7 +26,7 @@ AUTHOR_FEED_RSS = None
 # Blogroll
 LINKS = ()
 
-THEME = 'medius'
+THEME = 'slacy-medius'
 
 # Social widget
 SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),

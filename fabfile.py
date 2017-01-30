@@ -34,6 +34,7 @@ def clean():
 
 def build():
     """Build local version of site"""
+    local('sass slacy-medius/scss/main.scss slacy-medius/static/css/main.css')
     local('jupyter-nbconvert --config nbconvert_conf.py')
     local('pelican -s pelicanconf.py')
 
