@@ -39,7 +39,7 @@ STATIC_PATHS = ['images',]
 MEDIUS_CATEGORIES = {
     'TensorFlow From The Ground Up': {
         'description': '',
-        'thumbnail': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/NGC_3923_Elliptical_Shell_Galaxy.jpg/220px-NGC_3923_Elliptical_Shell_Galaxy.jpg'
+        'thumbnail': 'https://slacy.github.io/blog/images/tf_logo.png',
     }
 }
 
