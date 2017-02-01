@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Basics of TensorFlow</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+            <li class="pure-menu-item pure-menu-selected"><a href="./category/tensorflow-from-the-ground-up.html" class="pure-menu-link">TensorFlow From The Ground Up</a></li>
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="./category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png " class="post-avatar" alt="TensorFlow From The Ground Up"></a>
+            </div>
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/tensorflow-from-the-ground-up.html" class="category">TensorFlow From The Ground Up</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2017-01-31T23:00:00-08:00">Tue 31 January 2017</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Basics of&nbsp;TensorFlow</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>When I first heard about TensorFlow, it was described as a library for doing Machine Learning, which I equated with Neural Networks.  (Neural Networks are just one type of Machine&nbsp;Learning).  </p>
+<p>I had read many other blog posts about Neural Network architectures, so I assumed it would have an <span class="caps">API</span> that looked something like&nbsp;this:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Here&#39;s What I thought the TensorFlow API might look like, </span>
+<span class="c1"># before I had read any code or documentation about it.</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span> 
+<span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">AddConvolutionalLayer</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">AddMaxPoolingLayer</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">AddSigmoidActivation</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">Train</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Boy, was I&nbsp;wrong!</h2>
+<p>The core <span class="caps">API</span> of TensorFlow is much lower level than what I&#8217;ve shown&nbsp;above!</p>
+<p>TensorFlow can be thought of as being most similar to the Python library <a href="http://www.sympy.org/en/index.html">SymPy</a> or a 
+symbolic mathematics language like R, Matlab or Mathematica.    But, TensorFlow isn&#8217;t a generic symbolic math package, it&#8217;s a symbolic math library whose sole purpose is to calculate numeric approximations of functions.  In other words, you can think of it like a &#8220;solver&#8221; using an algorithm like <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton&#8217;s Method</a> or <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Runge-Kutta</a>, except that it&#8217;s specifically focused on techniques used in <span class="caps">ML</span>: Stochastic Gradient&nbsp;Descent.  </p>
+<p>I know that sounds like a lot, and you really don&#8217;t need to know what all that stuff&nbsp;means!   </p>
+<p>When using TensorFlow, what you&#8217;re doing is setting up 
+a <a href="https://www.tensorflow.org/get_started/basic_usage#the_computation_graph">computation graph</a> for your&nbsp;function(s).  </p>
+<h2>Computing y=x^2 using&nbsp;TensorFlow</h2>
+<p>Let&#8217;s write a quick example TensorFlow program and see how the simple parts work.  Here, we&#8217;re going to compute <span class="math">\(y=x^2\)</span> using&nbsp;TensorFlow:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="c1"># TensorFlow Variables are for values used during computation.  </span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> 
+
+<span class="c1"># Even though this looks like native python math, it is not. </span>
+<span class="c1"># The type of &#39;x&#39; is a TensorFlow variable, so &quot;x**2&quot; doesn&#39;t just </span>
+<span class="c1"># compute a value, it returns a computation graph that computes</span>
+<span class="c1"># &quot;x^2&quot; for whatever the current value of x is.  </span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="c1"># There are internal global variables that always need to be initialized, </span>
+    <span class="c1"># as well as our own &quot;initial_value=1.0&quot; for &#39;x&#39;.  </span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+    <span class="k">print</span> <span class="s2">&quot;Initial value of x = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Now, we can confirm that y=1^2 produces 1.0: </span>
+    <span class="k">print</span> <span class="s2">&quot;Initial value of y=x^2 = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># We can&#39;t just say &quot;x=5&quot; because that would change the type of x from a </span>
+    <span class="c1"># tf.Variable into a native Python float.  We need to create &amp; run a </span>
+    <span class="c1"># graph that reassigns the value of x.  </span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+
+    <span class="c1"># Once we have reassigned x, we can recompute the &#39;y&#39; graph. </span>
+    <span class="k">print</span> <span class="s2">&quot;5^2 = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Initial value of x =  1.0
+Initial value of y=x^2 =  1.0
+5^2 =  25.0
+</pre></div>
+
+
+<p>So, there you have it.  TensorFlow can compute some values, which is not a huge surprise.  The syntax is a bit verbose, but the structure I&#8217;ve used above is very common, even in larger systems, so its useful to start out this&nbsp;way. </p>
+<p>On to bigger and better things.  How to we run a&nbsp;Solver?</p>
+<h2>Running a solver <span class="amp">&amp;</span> finding a&nbsp;minimum</h2>
+<p>Before we run a solver, we must create a computation graph whose result is a single value that we would like to <strong>minimize</strong>.  Finding values that minimize functions is what TensorFlow is really, really good&nbsp;at. </p>
+<p>Let&#8217;s assume that what we want to compute is <span class="math">\(\min(x^2)\)</span> so we restate this as &#8220;Find me the value of &#8216;<span class="math">\(x\)</span><span class="quo">&#8216;</span> that minimizes the function <span class="math">\(x^2\)</span>&#8221; </p>
+<p>So, here&#8217;s the&nbsp;code:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span> 
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="k">print</span> <span class="s2">&quot;min x = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>min x =  0.998
+</pre></div>
+
+
+<h2>Wait, what&nbsp;happened?</h2>
+<p>We know that the minimum of <span class="math">\(x^2\)</span> is at <span class="math">\(x=0\)</span> so what happened?  Where did 0.998 come from, and what&#8217;s &#8220;Learning&nbsp;Rate&#8221;? </p>
+<p>Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran <em>one iteration</em> of the algorithm, so only made a small change to the initial value of <span class="math">\(x\)</span>.  The Good Thing is that it seems to be going in the right&nbsp;direction.  </p>
+<p>What it actually computed&nbsp;was:
+</p>
+<div class="math">$$x_1=x_0 -(learning\_rate * \frac{\partial x^2}{\partial x})$$</div>
+<p><span class="math">\(learning\_rate = 0.001\)</span>, 
+the derivative of <span class="math">\(x^2\)</span> is <span class="math">\(2x\)</span>, and 
+the initial value of x was 1.0, that leaves us&nbsp;with:</p>
+<div class="math">$$x_1=1.0-0.001*2x$$</div>
+<p>Which is exactly 0.998.&nbsp;Whew! </p>
+<p>So, now we can rewrite our&nbsp;solver. </p>
+<h2>A solver that actually&nbsp;works</h2>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span> 
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+    <span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+        <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; x=&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s2">&quot;final x = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s2">&quot; y=&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>i= 0  x= 0.998
+i= 1000  x= 0.134794
+i= 2000  x= 0.0182059
+i= 3000  x= 0.00245898
+i= 4000  x= 0.000332121
+i= 5000  x= 4.48577e-05
+i= 6000  x= 6.05868e-06
+i= 7000  x= 8.18312e-07
+i= 8000  x= 1.10525e-07
+i= 9000  x= 1.4928e-08
+final x =  2.02028e-09  y= 4.08155e-18
+</pre></div>
+
+
+<p>Well, it <em>almost</em> actually works,&nbsp;right? </p>
+<p>Yes, the code above works, and this is <em>exactly</em> what you should expect from a numerical solver.  It&#8217;s going to take a very large number of iterations for this alrogithm to reach the exact solution of <span class="math">\(x=0\)</span>. </p>
+<h2>Conclusion</h2>
+<p>In conclusion, we have explored the most basic comptation functions of TensorFlow, and we&#8217;ve run a very simple solver to approximate the minimum value of the function <span class="math">\(x^2\)</span>.  Values to be compted in TensorFlow are stored in <strong>tf.Variable</strong> instances, and the main unit of work is a <strong>computation graph</strong> which is constructed by calling into the core TensorFlow <span class="caps">API</span>. </p>
+<p>We&#8217;ve seen that TensorFlow is a numerical solver, and does <strong>not</strong> produce exact results.  We&#8217;ve also shown that it takes a fairly large number of iterations to get to a final result value, for a trivial example using naive Gradient&nbsp;Descent. </p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/pelican.html">Pelican</a>
+            <a href="./tag/python.html">Python</a>
+            <a href="./tag/tensorflow.html">TensorFlow</a>
+            <a href="./tag/jupyter.html">Jupyter</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="./category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+        <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>
+
+    </footer>
+
+</body>
+</html>

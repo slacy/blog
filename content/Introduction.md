@@ -6,7 +6,7 @@ Author: slacy
 Hello and welcome to *TensorFlow from the Ground Up*!  
 I'm [Steve](https://github.com/slacy), I'm an experienced Software Engineer, and I'm learning [TensorFlow](https://tensorflow.org).
 
-There is a lot of mystery, speculation, and promise in the field of Machine Learning, and as an engineer, my goal is to answer several big questions about ML in general: 
+There is a lot of mystery, speculation, and promise in the field of Machine Learning. As an engineer learning these new systems, my goal is to answer several big questions about ML in general: 
 
 > How do I determine if I can solve a specific problem using Machine Learning?  
 >
@@ -14,11 +14,11 @@ There is a lot of mystery, speculation, and promise in the field of Machine Lear
 >
 > How do I design an ML graph from scratch? 
 
-For me, these are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. 
+These are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. 
 
-I found many tutorials for TensorFlow on the internet, but most of them (including ones included in the [TensorFlow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, usually starting with running an MNIST classifier on a pre-existing data set downloaded from the internet.   If none of that made sense to you, then you might be the target audience for this blog!
+There are many tutorials for TensorFlow on the internet, but most of them (including ones included in the [TensorFlow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, starting with running an large complex models, like an MNIST classifier, on a pre-existing data set downloaded from the internet.   This is not the way I approach learning, and I would like a set of articles describing basic machine learning from first principles, starting with simple examples, and working forward. 
 
-These top down introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply *existing ML models* to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. 
+The top down style introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply *existing ML models* to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. 
 
 Top down approaches aren't at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs involved.  Additionally, if you're looking to apply ML to new problem spaces, design and build ML graphs from scratch, or just experiment with the limits of the framework, then you'll need to use a different learning approach. 
 
@@ -48,5 +48,6 @@ If you are interested in "Coding along" and evaluating the the example code here
 * Python 
 * [Jupyter Notebook](https://jupyter.org)
 * [MathJax](https://mathjax.org) (for rendering Notebook equations)
+* Numpy/matplotlib
 
 Although GPU accelleration isn't strictly needed, it can help the design and iteration process go much faster. 
