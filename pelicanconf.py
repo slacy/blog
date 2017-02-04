@@ -33,6 +33,7 @@ SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
           ('Github', 'https://github.com/slacy'),)
 GITHUB_URL = "https://github.com/slacy"
 TWITTER_USERNAME = "sklacy"
+GOOGLE_ANALYTICS = "UA-85612-4"
 
 STATIC_PATHS = ['images',]
 

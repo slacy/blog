@@ -16,6 +16,8 @@ There is a lot of mystery, speculation, and promise in the field of Machine Lear
 
 These are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. 
 
+TensorFlow itself is a very large and complex framework, ranging from symbolic graph construction primitives, to distributed training and system management, threads and queueing, etc.  There are many moving pieces in the codebase
+
 There are many tutorials for TensorFlow on the internet, but most of them (including ones included in the [TensorFlow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, starting with running an large complex models, like an MNIST classifier, on a pre-existing data set downloaded from the internet.   This is not the way I approach learning, and I would like a set of articles describing basic machine learning from first principles, starting with simple examples, and working forward. 
 
 The top down style introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply *existing ML models* to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. 
