@@ -1,6 +1,6 @@
 Title: Introduction
 Category: TensorFlow From The Ground Up
-Tags: Pelican, Python, TensorFlow, Jupyter
+Tags: Python, TensorFlow, Jupyter
 Date: 1/27/2017 5:30pm 
 Author: slacy
 Hello and welcome to *TensorFlow from the Ground Up*!  
