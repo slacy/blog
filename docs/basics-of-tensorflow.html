@@ -50,14 +50,16 @@
         <p>This is the second post of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
 <p>When I first heard about TensorFlow, it was described as a library for doing Machine Learning, which I equated with Neural Networks.  (Neural Networks are just one type of Machine&nbsp;Learning).  </p>
 <p>I had read many other blog posts about Neural Network architectures, so I assumed it would have an <span class="caps">API</span> that looked something like&nbsp;this:</p>
-<p><span class="dquo">&#8220;</span>`python</p>
-<h1>Here&#8217;s What I thought the <em>core</em> TensorFlow <span class="caps">API</span> might look&nbsp;like,</h1>
-<h1>before I had read any code or documentation about&nbsp;it.</h1>
-<p>network = tf.Network() 
-network = network.AddConvolutionalLayer(&#8230;)
-network = network.AddMaxPoolingLayer(&#8230;)
-network = network.AddSigmoidActivation(&#8230;)
-network.Train(data)&nbsp;&#8220;`</p>
+<div class="highlight"><pre><span></span><span class="c1"># Here&#39;s What I thought the *core* TensorFlow API might look like, </span>
+<span class="c1"># before I had read any code or documentation about it.</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span> 
+<span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">AddConvolutionalLayer</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">AddMaxPoolingLayer</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">AddSigmoidActivation</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">Train</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+
 <h2>Boy, was I&nbsp;wrong!</h2>
 <p>The <em>core</em> <span class="caps">API</span> of TensorFlow is much lower level than what I&#8217;ve shown&nbsp;above!</p>
 <p>They do provide highlevel <span class="caps">NN</span> abstractions like the one I&#8217;ve shown above, but they are wrapped up in some pretty domain-specific APIs.  Additionally, I&#8217;d like to understand what the <em>lowest level</em> part of the <span class="caps">API</span> is.  Where are the <em>guts</em> of TensorFlow and how do they&nbsp;work? </p>
@@ -73,54 +75,67 @@ symbolic mathematics packages/languages like R, Matlab or Mathematica.    But, T
 a <a href="https://www.tensorflow.org/get_started/basic_usage#the_computation_graph">computation graph</a> for your&nbsp;function(s).  </p>
 <h2>Computing y=x^2 using&nbsp;TensorFlow</h2>
 <p>Let&#8217;s write a quick example TensorFlow program and see how the simple parts work.  Here, we&#8217;re going to compute <span class="math">\(y=x^2\)</span> using TensorFlow.  This is about as close to &#8220;Hello World&#8221; as we&#8217;ll&nbsp;get.</p>
-<p><span class="dquo">&#8220;</span>`python
-import tensorflow as&nbsp;tf</p>
-<h1>TensorFlow Variables are for values used during&nbsp;computation:</h1>
-<p>x = tf.Variable(dtype=tf.float32, initial_value=2.0,&nbsp;name=&#8217;x&#8217;) </p>
-<h1>Even though this looks like native python math, it is&nbsp;not.</h1>
-<h1><span class="quo">&#8216;</span>x&#8217; is a TensorFlow variable, so &#8220;x**2&#8221; doesn&#8217;t&nbsp;just</h1>
-<h1>compute a value, it returns a computation graph that&nbsp;computes</h1>
-<h1><span class="dquo">&#8220;</span>x^2&#8221; for whatever the current value of x&nbsp;is.</h1>
-<p>y =&nbsp;x**2</p>
-<p>with tf.Session() as sess:
-    # There are internal global variables that always need to be initialized, 
-    # as well as our own &#8220;initial_value=1.0&#8221; for &#8216;x&#8217;.<br>
-    sess.run([tf.local_variables_initializer(), tf.global_variables_initializer()])
-    print &#8220;Initial value of x = &#8220;,&nbsp;sess.run(x)</p>
-<pre><code># Now, we can confirm that y=2^2 produces 4.0: 
-print "Initial value of y=x^2 = ", sess.run(y)
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
-# We can't just say "x=5" because that would change the type of x from a 
-# tf.Variable into a native Python float.  We need to create &amp; run a 
-# graph that reassigns the value of x.  
-sess.run(x.assign(5))
+<span class="c1"># TensorFlow Variables are for values used during computation:</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> 
 
-# Once we have reassigned x, we can re-compute the 'y' graph. 
-print "5^2 = ", sess.run(y)
-</code></pre>
-<p><span class="dquo">&#8220;</span>`</p>
-<pre><code>Initial value of x =  2.0
+<span class="c1"># Even though this looks like native python math, it is not. </span>
+<span class="c1"># &#39;x&#39; is a TensorFlow variable, so &quot;x**2&quot; doesn&#39;t just </span>
+<span class="c1"># compute a value, it returns a computation graph that computes</span>
+<span class="c1"># &quot;x^2&quot; for whatever the current value of x is.  </span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="c1"># There are internal global variables that always need to be initialized, </span>
+    <span class="c1"># as well as our own &quot;initial_value=1.0&quot; for &#39;x&#39;.  </span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
+    <span class="k">print</span> <span class="s2">&quot;Initial value of x = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># Now, we can confirm that y=2^2 produces 4.0: </span>
+    <span class="k">print</span> <span class="s2">&quot;Initial value of y=x^2 = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># We can&#39;t just say &quot;x=5&quot; because that would change the type of x from a </span>
+    <span class="c1"># tf.Variable into a native Python float.  We need to create &amp; run a </span>
+    <span class="c1"># graph that reassigns the value of x.  </span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+
+    <span class="c1"># Once we have reassigned x, we can re-compute the &#39;y&#39; graph. </span>
+    <span class="k">print</span> <span class="s2">&quot;5^2 = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>Initial value of x =  2.0
 Initial value of y=x^2 =  4.0
 5^2 =  25.0
-</code></pre>
+</pre></div>
+
+
 <p>So, there you have it.  TensorFlow can compute some values, which is not a huge surprise.  The syntax is a bit verbose, but the general program structure I&#8217;ve used above is very common, even in larger systems, so its useful to start out this&nbsp;way. </p>
 <p>Now, on to bigger and better things.  How to we run a&nbsp;Solver?</p>
 <h2>Running a solver <span class="amp">&amp;</span> finding the minimum of our&nbsp;function</h2>
 <p>Before we run a solver, we must create a computation graph whose result is a single value that we would like to <strong>minimize</strong>.  Finding values that minimize functions is what TensorFlow is really, really good&nbsp;at. </p>
 <p>Given our <span class="math">\(x^2\)</span> example from above, let&#8217;s just assume that what we want to compute is <span class="math">\(\min(x^2)\)</span> so we restate this as &#8220;Find me the value of &#8216;<span class="math">\(x\)</span><span class="quo">&#8216;</span> that minimizes the function <span class="math">\(x^2\)</span>&#8221; </p>
 <p>So, here&#8217;s the&nbsp;code:</p>
-<p><span class="dquo">&#8220;</span>`python
-import tensorflow as&nbsp;tf</p>
-<p>x = tf.Variable(dtype=tf.float32, initial_value=1.0, name=&#8217;x&#8217;)
-y = tf.pow(x,&nbsp;2)</p>
-<p>learning_rate = 0.001 
-optimizer =&nbsp;tf.train.GradientDescentOptimizer(learning_rate)</p>
-<p>with tf.Session() as sess: 
-    sess.run(tf.global_variables_initializer())
-    sess.run(optimizer.minimize(y))
-    print &#8220;min x = &#8220;, sess.run(x)&nbsp;&#8220;`</p>
-<pre><code>min x =  0.998
-</code></pre>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span> 
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+    <span class="k">print</span> <span class="s2">&quot;min x = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>min x =  0.998
+</pre></div>
+
+
 <h2>Wait, what&nbsp;happened?</h2>
 <p>We know that the minimum of <span class="math">\(x^2\)</span> is at <span class="math">\(x=0\)</span> so what happened?  Where did <span class="math">\(0.998\)</span> come from, and what&#8217;s &#8220;Learning&nbsp;Rate&#8221;? </p>
 <p>Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran <em>one iteration</em> of the algorithm, so only made a small change to the initial value of <span class="math">\(x\)</span>.  The Good Thing is that it seems to be going in the right&nbsp;direction.  </p>
@@ -139,22 +154,27 @@ the solution we&#8217;re looking&nbsp;for. </p>
 </blockquote>
 <p>So, now we can rewrite our solver to iterate many times, and we&#8217;ll get pretty close to a true&nbsp;solution. </p>
 <h2>A solver that actually&nbsp;&#8220;works&#8221;</h2>
-<p><span class="dquo">&#8220;</span>`python
-import tensorflow as&nbsp;tf</p>
-<p>x = tf.Variable(dtype=tf.float32, initial_value=1.0, name=&#8217;x&#8217;)
-y = tf.pow(x,&nbsp;2)</p>
-<p>learning_rate = 0.001 
-optimizer =&nbsp;tf.train.GradientDescentOptimizer(learning_rate).minimize(y)</p>
-<p>with tf.Session() as sess:&nbsp;sess.run(tf.global_variables_initializer())</p>
-<pre><code>num_iterations = 10000
-for i in xrange(num_iterations):
-    sess.run(optimizer)
-    if i % 1000 == 0:
-        print "i=",i," x=", sess.run(x)
-print "final x = ", sess.run(x), " y=", sess.run(y)
-</code></pre>
-<p><span class="dquo">&#8220;</span>`</p>
-<pre><code>i= 0  x= 0.998
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span> 
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+    <span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">num_iterations</span><span class="p">):</span>
+        <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; x=&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s2">&quot;final x = &quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s2">&quot; y=&quot;</span><span class="p">,</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>i= 0  x= 0.998
 i= 1000  x= 0.134794
 i= 2000  x= 0.0182059
 i= 3000  x= 0.00245898
@@ -165,7 +185,9 @@ i= 7000  x= 8.18312e-07
 i= 8000  x= 1.10525e-07
 i= 9000  x= 1.4928e-08
 final x =  2.02028e-09  y= 4.08155e-18
-</code></pre>
+</pre></div>
+
+
 <p>Well, it <em>almost</em> actually works,&nbsp;right? </p>
 <p>Yes, the code above works, and this is <em>exactly</em> what you should expect from a numerical solver.  It&#8217;s going to take a very large number of iterations for the <code>GradientDescent</code> alrogithm to reach the exact solution of <span class="math">\(x=0\)</span>. </p>
 <h2>Conclusion</h2>

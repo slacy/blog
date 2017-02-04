@@ -10,6 +10,7 @@ When I first heard about TensorFlow, it was described as a library for doing Mac
 I had read many other blog posts about Neural Network architectures, so I assumed it would have an API that looked something like this:
 
 
+
 ```python
 # Here's What I thought the *core* TensorFlow API might look like, 
 # before I had read any code or documentation about it.
