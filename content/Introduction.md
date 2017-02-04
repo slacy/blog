@@ -3,7 +3,10 @@ Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 1/27/2017 5:30pm 
 Author: slacy
-Hello and welcome to *TensorFlow from the Ground Up*!  
+This is the first post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
+
+## Welcome!
+
 I'm [Steve](https://github.com/slacy), I'm an experienced Software Engineer, and I'm learning [TensorFlow](https://tensorflow.org).
 
 There is a lot of mystery, speculation, and promise in the field of Machine Learning. As an engineer learning these new systems, my goal is to answer several big questions about ML in general: 

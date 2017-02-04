@@ -37,6 +37,14 @@ GOOGLE_ANALYTICS = "UA-85612-4"
 
 STATIC_PATHS = ['images',]
 
+MARKDOWN = {
+    'extension_configs': {
+        'markdown.extensions.admonition': {}
+    },
+    'output_format': 'html5',
+
+}
+
 MEDIUS_CATEGORIES = {
     'TensorFlow From The Ground Up': {
         'description': '',
