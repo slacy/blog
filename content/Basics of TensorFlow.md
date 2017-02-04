@@ -1,6 +1,6 @@
 Title: Basics of TensorFlow
 Category: TensorFlow From The Ground Up
-Tags: Pelican, Python, TensorFlow, Jupyter
+Tags: Python, TensorFlow, Jupyter
 Date: 1/31/2017 11:00pm 
 Author: slacy
   When I first heard about TensorFlow, it was described as a library for doing Machine Learning, which I equated with Neural Networks.  (Neural Networks are just one type of Machine Learning).  
@@ -9,7 +9,7 @@ I had read many other blog posts about Neural Network architectures, so I assume
 
 
 ```python
-# Here's What I thought the TensorFlow API might look like, 
+# Here's What I thought the *core* TensorFlow API might look like, 
 # before I had read any code or documentation about it.
 network = tf.Network() 
 network = network.AddConvolutionalLayer(...)
@@ -19,29 +19,36 @@ network.Train(data)
 ```
 ## Boy, was I wrong!  
 
-The core API of TensorFlow is much lower level than what I've shown above!
+The *core* API of TensorFlow is much lower level than what I've shown above!
 
-TensorFlow can be thought of as being most similar to the Python library [SymPy](http://www.sympy.org/en/index.html) or a 
-symbolic mathematics language like R, Matlab or Mathematica.    But, TensorFlow isn't a generic symbolic math package, it's a symbolic math library whose sole purpose is to calculate numeric approximations of functions.  In other words, you can think of it like a "solver" using an algorithm like [Newton's Method](https://en.wikipedia.org/wiki/Newton%27s_method) or [Runge-Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods), except that it's specifically focused on techniques used in ML: Stochastic Gradient Descent.  
+They do provide highlevel NN abstractions like the one I've shown above, but they are wrapped up in some pretty domain-specific APIs.  Additionally, I'd like to understand what the *lowest level* part of the API is.  Where are the *guts* of TensorFlow and how do they work? 
+
+So, after a little bit of digging, I found some of the lowest level parts.  The APIs revolve around a process that goes like this: 
+* Construct some inputs, outputs, and parameters to learn (your "Tensors") 
+* Construct a computation graph for what you want to do with your variables. 
+* Run an Optimizer to apply one of several different algorithms to compute your hidden parameters. 
+* Save models to disk and use them for inferrence in the futrue. 
+
+TensorFlow can be thought of as being most similar to the Python library [SymPy](http://www.sympy.org/en/index.html) or other 
+symbolic mathematics packages/languages like R, Matlab or Mathematica.    But, TensorFlow isn't a generic symbolic math package, it's a symbolic math library whose sole purpose is to calculate numeric approximations of functions.  In other words, you can think of it like a "solver" using an algorithm like [Newton's Method](https://en.wikipedia.org/wiki/Newton%27s_method) or [Runge-Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods), except that it's specifically focused on techniques used in ML: Stochastic Gradient Descent.  
 
 I know that sounds like a lot, and you really don't need to know what all that stuff means!   
 
 When using TensorFlow, what you're doing is setting up 
 a [computation graph](https://www.tensorflow.org/get_started/basic_usage#the_computation_graph) for your function(s).  
-
 ## Computing y=x^2 using TensorFlow
 
-Let's write a quick example TensorFlow program and see how the simple parts work.  Here, we're going to compute $y=x^2$ using TensorFlow:
+Let's write a quick example TensorFlow program and see how the simple parts work.  Here, we're going to compute $y=x^2$ using TensorFlow.  This is about as close to "Hello World" as we'll get.
 
 
 ```python
 import tensorflow as tf
 
-# TensorFlow Variables are for values used during computation.  
-x = tf.Variable(dtype=tf.float32, initial_value=1.0, name='x') 
+# TensorFlow Variables are for values used during computation:
+x = tf.Variable(dtype=tf.float32, initial_value=2.0, name='x') 
 
 # Even though this looks like native python math, it is not. 
-# The type of 'x' is a TensorFlow variable, so "x**2" doesn't just 
+# 'x' is a TensorFlow variable, so "x**2" doesn't just 
 # compute a value, it returns a computation graph that computes
 # "x^2" for whatever the current value of x is.  
 y = x**2
@@ -49,10 +56,10 @@ y = x**2
 with tf.Session() as sess:
     # There are internal global variables that always need to be initialized, 
     # as well as our own "initial_value=1.0" for 'x'.  
-    sess.run(tf.global_variables_initializer())
+    sess.run([tf.local_variables_initializer(), tf.global_variables_initializer()])
     print "Initial value of x = ", sess.run(x)
 
-    # Now, we can confirm that y=1^2 produces 1.0: 
+    # Now, we can confirm that y=2^2 produces 4.0: 
     print "Initial value of y=x^2 = ", sess.run(y)
     
     # We can't just say "x=5" because that would change the type of x from a 
@@ -60,23 +67,22 @@ with tf.Session() as sess:
     # graph that reassigns the value of x.  
     sess.run(x.assign(5))
     
-    # Once we have reassigned x, we can recompute the 'y' graph. 
+    # Once we have reassigned x, we can re-compute the 'y' graph. 
     print "5^2 = ", sess.run(y)
 ```
 
-    Initial value of x =  1.0
-    Initial value of y=x^2 =  1.0
+    Initial value of x =  2.0
+    Initial value of y=x^2 =  4.0
     5^2 =  25.0
 
-So, there you have it.  TensorFlow can compute some values, which is not a huge surprise.  The syntax is a bit verbose, but the structure I've used above is very common, even in larger systems, so its useful to start out this way. 
+So, there you have it.  TensorFlow can compute some values, which is not a huge surprise.  The syntax is a bit verbose, but the general program structure I've used above is very common, even in larger systems, so its useful to start out this way. 
 
-On to bigger and better things.  How to we run a Solver?
-
-## Running a solver & finding a minimum
+Now, on to bigger and better things.  How to we run a Solver?
+## Running a solver & finding the minimum of our function
 
 Before we run a solver, we must create a computation graph whose result is a single value that we would like to **minimize**.  Finding values that minimize functions is what TensorFlow is really, really good at. 
 
-Let's assume that what we want to compute is $\min(x^2)$ so we restate this as "Find me the value of '$x$' that minimizes the function $x^2$" 
+Given our $x^2$ example from above, let's just assume that what we want to compute is $\min(x^2)$ so we restate this as "Find me the value of '$x$' that minimizes the function $x^2$" 
  
 So, here's the code:
 
@@ -100,7 +106,7 @@ with tf.Session() as sess:
 
 ## Wait, what happened?
 
-We know that the minimum of $x^2$ is at $x=0$ so what happened?  Where did 0.998 come from, and what's "Learning Rate"? 
+We know that the minimum of $x^2$ is at $x=0$ so what happened?  Where did $0.998$ come from, and what's "Learning Rate"? 
 
 Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran *one iteration* of the algorithm, so only made a small change to the initial value of $x$.  The Good Thing is that it seems to be going in the right direction.  
 
@@ -109,15 +115,20 @@ $$x_1=x_0 -(learning\_rate * \frac{\partial x^2}{\partial x})$$
 
 $learning\_rate = 0.001$, 
 the derivative of $x^2$ is $2x$, and 
-the initial value of x was 1.0, that leaves us with:
+the initial value of $x$ was $1.0$, that leaves us with:
 
 $$x_1=1.0-0.001*2x$$
 
-Which is exactly 0.998.  Whew! 
+Which is exactly 0.998.  Whew!  
 
-So, now we can rewrite our solver. 
+What we learned is: 
 
-## A solver that actually works
+> With each iteration of an optimizer, TensorFlow takes us one "learning_rate sized step" closer towards 
+> the solution we're looking for. 
+
+So, now we can rewrite our solver to iterate many times, and we'll get pretty close to a true solution. 
+
+## A solver that actually "works"
 
 
 ```python
@@ -154,9 +165,9 @@ with tf.Session() as sess:
 
 Well, it *almost* actually works, right? 
 
-Yes, the code above works, and this is *exactly* what you should expect from a numerical solver.  It's going to take a very large number of iterations for this alrogithm to reach the exact solution of $x=0$. 
+Yes, the code above works, and this is *exactly* what you should expect from a numerical solver.  It's going to take a very large number of iterations for the `GradientDescent` alrogithm to reach the exact solution of $x=0$. 
 ## Conclusion
 
-In conclusion, we have explored the most basic comptation functions of TensorFlow, and we've run a very simple solver to approximate the minimum value of the function $x^2$.  Values to be compted in TensorFlow are stored in **tf.Variable** instances, and the main unit of work is a **computation graph** which is constructed by calling into the core TensorFlow API. 
+We have explored the most basic comptation functions of TensorFlow, and we've run a very simple solver to approximate the minimum value of the function $x^2$.  Values to be compted in TensorFlow are stored in **tf.Variable** instances, and the main unit of work is a **computation graph** which is constructed by calling into the core TensorFlow API. 
 
 We've seen that TensorFlow is a numerical solver, and does **not** produce exact results.  We've also shown that it takes a fairly large number of iterations to get to a final result value, for a trivial example using naive Gradient Descent. 
