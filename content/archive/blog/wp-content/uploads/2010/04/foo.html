@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <style type="text/css">
+
+.container {
+  width: 400;
+  height: 400;
+  position: relative;
+  background: #FAA;
+}
+
+.top {
+  position: absolute;
+  top: 0;
+  height: 24px;
+  font-size: 18px;
+  background: #AFA;
+}
+
+.middle {
+  position: absolute;
+  top: 24px;  /* must match height of .top */
+  background: #AAF;
+  width: 100%;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0px;
+  height: 24px;
+  background: #FFA;
+  font-size: 18px;
+}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="top"> top</div>
+      <div class="middle">middle</div>
+      <div class="bottom">bottom</div>
+    </div>
+  </body>
+</html>

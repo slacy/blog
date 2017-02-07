@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" type="text/css" />
+
+    <style type="text/css">
+.container {
+width: 300px;
+height: 300px;
+position: relative;
+background: #FAA;
+border: 3px solid black;
+top: 100px;
+left: 100px;
+}
+
+.top {
+position: absolute;
+top: 0;
+height: 24px;
+font-size: 18px;
+background: #AFA;
+overflow: hidden;
+}
+
+.middle {
+position: relative;
+background: #AAF;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 100%;
+padding: 24px 0 24px 0;
+margin: 0;
+spacing: 0;
+border: 0;
+}
+
+.bottom {
+position: absolute;
+bottom: 0px;
+right: 24px;
+height: 24px;
+background: #FFA;
+font-size: 18px;
+overflow: hidden;
+}
+    </style>
+  </head>
+  <script type="text/javascript">
+    $(document).ready(function() {
+    $(".container").draggable( { handle: ".top" });
+    $(".container").resizable( { handles: "se", minHeight: 100, minWidth: 100 } );
+    });
+  </script>
+  <body>
+    <div class="container">
+      <textarea class="middle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ultricies laoreet aliquet. Phasellus orci est, adipiscing eget consequat quis, consectetur sit amet nisi. Aliquam posuere, ante id rutrum consequat, velit neque varius arcu, viverra vehicula arcu metus et justo. Sed mollis arcu a justo posuere eget pulvinar purus hendrerit. Suspendisse ac velit in risus consectetur scelerisque. In hac habitasse platea dictumst. Nulla convallis vestibulum elit in varius. Vestibulum dolor justo, scelerisque id feugiat vitae, sagittis eu quam. Donec quis dolor mi. Aenean porta sodales luctus. Sed suscipit augue nulla. Vestibulum mattis sem risus. Nullam turpis dolor, egestas nec imperdiet malesuada, iaculis eget nisl. Vestibulum luctus congue lorem vitae ullamcorper. Sed et eros orci.
+
+Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In porttitor eleifend lectus quis volutpat. Vestibulum a elit ut felis pharetra pharetra id a lectus. Ut lorem sapien, viverra ut adipiscing sed, auctor nec nulla. Sed ullamcorper venenatis justo, vitae malesuada leo dictum ac. Vivamus suscipit interdum metus, vel tempus tellus ullamcorper eget. Nam vitae commodo lectus. Duis pretium massa vitae nulla elementum euismod. Cras laoreet tellus at nunc tempor pretium. Aliquam fringilla sapien id sapien convallis tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis fringilla elementum eros, a lacinia sem egestas id.</textarea>
+      <div class="top">top (this is where the title goes)</div>
+      <div class="bottom">bottom controls go here</div>
+    </div>
+  </body>
+</html>

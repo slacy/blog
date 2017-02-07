@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <style>
+            #time {
+	      width: 324px;
+	      height: 324px; 
+            }
+            #hidden {
+            display: none;
+            }
+        </style>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js">
+        </script>
+    </head>
+    <body>
+        <center><img id=time></center>
+        <img id=hidden>
+        <script type="text/javascript">
+            function refresh() {
+              var now = new Date();
+              var hours = now.getHours();
+              if (hours > 11) {
+                ampm = "PM";
+              } else {
+                ampm = "AM";
+              }
+
+              if (hours == 0) {
+                hours = 12;
+              }
+
+              if (hours > 12) {
+                hours -= 12;
+              }
+
+              var minutes = now.getMinutes();
+              if (minutes < 10) {
+                minutes = "0" + minutes;
+              }
+
+              var month = now.getMonth() + 1;
+              var day = now.getDate();
+              var year = now.getFullYear();
+              var time = month + "/" + day + " " + year + " " + hours + ":" + minutes + ":" + now.getSeconds() + " " + ampm;
+
+
+              var url = "http://qrcode.kaywa.com/img.php?s=12&d=" + escape(time);
+              $("#hidden").replaceWith("<img id=hidden src=" + url + ">");
+              $("#hidden").load(function() {
+                $("#time").replaceWith("<img id=time src=" + url + ">");
+              });
+              self.setTimeout("refresh()", 1000);
+            };
+            refresh();
+        </script>
+    </body>
+</html>
