@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Striving for the perfect RESTful API is a fool’s errand.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2012-02-28T11:40:00-08:00">Tue 28 February 2012</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Striving for the perfect RESTful <span class="caps">API</span> is a fool&#8217;s&nbsp;errand.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>There&#8217;s always a lot of talk on programmer&#8217;s blogs about RESTful APIs.
+ Of particular note are articles <a href="https://github.com/rails/rails/issues/348">like this
+one</a>, which talks about how
+<a href="http://weblog.rubyonrails.org/2012/2/26/edge-rails-patch-is-the-new-primary-http-method-for-updates">Ruby on Rails is switching to a brand new <span class="caps">HTTP</span> method
+&#8220;<span class="caps">PATCH</span>&#8221;</a>.</p>
+<p>Here&#8217;s the big&nbsp;issue:</p>
+<h3><span class="caps">API</span> design should have nothing to do with which transport you&#8217;re&nbsp;using.</h3>
+<p>and</p>
+<h3><span class="caps">HTTP</span> is a transport&nbsp;layer.</h3>
+<p>Your <span class="caps">API</span> should (and probably will) work over at least two possible
+transports.  The first &#8220;transport&#8221; is local function calls inside your
+application itself.  The second transport is probably going to be <span class="caps">JSON</span>
+or <span class="caps">XML</span> over <span class="caps">HTTP</span>, and there are tons of other possible transports people
+might ask for or want to use, like <a href="http://code.google.com/p/protobuf/">Google
+Protobufs</a> over
+<a href="http://dev.w3.org/html5/websockets/">WebSockets</a>.</p>
+<h3>It needs to be as easy as possible for your clients to issue requests to your <span class="caps">API</span>.</h3>
+<p>Yes, it really does.  Make it easy.  Make it <strong><em>dead simple</em></strong> to use
+your <span class="caps">API</span>.  As soon as you start down the path of &#8220;use form-encoded
+fields and <span class="caps">HTTP</span> <span class="caps">POST</span> to create objects&#8221; and &#8220;use &lt;some encoding <span class="caps">TBD</span>
+because <span class="caps">PUT</span> doesn&#8217;t dictate an encoding&gt; and <span class="caps">HTTP</span> <span class="caps">PUT</span> to update
+objects&#8221; <strong>you&#8217;re doing it wrong</strong>.  Your clients don&#8217;t care about the
+transport (<span class="caps">PUT</span> vs. <span class="caps">POST</span>) they just want to get, create, update and
+delete objects, and they want to be able to easily issue those requests
+from whatever systems they already have.  In the case of <span class="caps">HTTP</span>, this will
+probably be wget, curl, in-browser JavaScript and backend server-side
+libraries.  Making your clients explicitly choose between the poorly
+named <span class="caps">PUT</span> <span class="amp">&amp;</span> <span class="caps">POST</span> is just nonsense.  Making them shoe-horn an alternate
+encoding or even form-encoding for <span class="caps">PUT</span> requests is nonsense.  They don&#8217;t
+care at all.  In fact, they probably don&#8217;t even care what the URLs are.
+ They just want your <span class="caps">API</span> to be easy to call and to work&nbsp;reliably.</p>
+<h3>Here&#8217;s a perilous RESTy&nbsp;example:</h3>
+<p>Imagine your prototypical web-based chat application.  You&#8217;re going to
+need a way to say &#8220;get me new chat messages on a given channel.&#8221;  So,
+you come up with a <span class="caps">URL</span> like&nbsp;this:</p>
+<p>/channel/&lt;channel&nbsp;name&gt;/updates</p>
+<p>Your RESTy <span class="caps">API</span> design says &#8220;Use an <span class="caps">HTTP</span> <span class="caps">GET</span> and the If-Modified-Since
+header to ask for new messages since the timestamp of the newest chat
+item&#8221;.  This sounds good.  It sounds right. It sounds&nbsp;RESTful.</p>
+<p>Okay, great, so you implement the whole thing in your backend.  You have
+your unit tests testing it, issuing requests to a test server via a
+great <span class="caps">HTTP</span> library. Awesome.  It all&nbsp;works.</p>
+<p>You pass off the <span class="caps">API</span> to your frontend development team.   They say &#8220;hey,
+this looks great!&#8221;  A week and a half later, they come back to you and&nbsp;say:</p>
+<blockquote>
+<p>I can&#8217;t figure out how to properly get chat updates!  Every time I use
+the <span class="caps">API</span> I get all the chat messages, not just the new&nbsp;ones!</p>
+</blockquote>
+<p>Ah! I know exactly what the issue is!  You&#8217;re not properly setting the
+If-Modified-Since header!  So, you go over to their desk and sit down,
+and they pull up Chrome&#8217;s Developer&nbsp;Tools.</p>
+<blockquote>
+<p>See, here&#8217;s where I&#8217;m making the request from JQuery to your <span class="caps">API</span>.  I&#8217;m
+asking for /channel/foobar/updates via \$.ajax(&#8230;)  So, <strong><span class="caps">HOW</span> <span class="caps">THE</span>
+<span class="caps">HECK</span> <span class="caps">TO</span> I <span class="caps">SET</span> a custom value for&nbsp;If-Modified-Since?</strong></p>
+</blockquote>
+<p>Reading the documentation, I believe this is possible via some
+combination of the ifModified flag to \$.ajax(), and/or the beforeSend
+function, and the <span class="caps">XHR</span> setRequestHeader function. But, you&#8217;ll quickly
+start reading <a href="http://bugs.jquery.com/ticket/4918">jQuery bug
+reports</a> and <a href="https://groups.google.com/forum/?fromgroups#!topic/jquery-en/-eec5qOKNDE">Google Groups
+posts</a> about
+why this approach might not work, and we haven&#8217;t even started talking
+about how the string for the If-Modified-Since header has to be
+formatted in a fairly particular way, so you&#8217;ll probably need a custom
+date formatting library.  Your coworker on the frontend team might&nbsp;say:</p>
+<blockquote>
+<p>Hey, so why can&#8217;t I just pass a timestamp or better yet <strong>an object
+sequence number</strong> as a <span class="caps">GET</span> parameter  and just don&#8217;t use this
+If-Modified-Since header since even if I can get it working, it&#8217;s
+going to be half a dozen extra lines of code or a special utility
+function every time I call your <span class="caps">API</span>.</p>
+</blockquote>
+<p><strong><span class="dquo">&#8220;</span>But that&#8217;s not RESTful!&#8221;</strong>  You&#8217;ll&nbsp;shout!</p>
+<p>And then you&#8217;ll realize the mistake you&#8217;ve made.  In your quest to fully
+exploit <span class="caps">HTTP</span>, you&#8217;ve made it pretty hard for your clients to actually
+call your <span class="caps">API</span>.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

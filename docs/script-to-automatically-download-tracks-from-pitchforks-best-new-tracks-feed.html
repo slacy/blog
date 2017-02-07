@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Script to automatically download tracks from Pitchfork’s Best New Tracks feed</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-09-17T10:25:00-07:00">Fri 17 September 2010</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Script to automatically download tracks from Pitchfork&#8217;s Best New Tracks&nbsp;feed</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>Pitchfork has a nice <a href="http://feeds2.feedburner.com/PitchforkBestNewTracks"><span class="caps">RSS</span>
+feed</a> with their
+&#8220;Best New Tracks&#8221;.  Each feed post usually contains a link to an <span class="caps">MP3</span>
+file you can download.  They&#8217;re not using <span class="caps">RSS</span> media enclosures (i.e. a
+podcast) so you can&#8217;t just plop this thing in a standard podcast&nbsp;downloader.</p>
+<p>So, I wrote this script to scrape the feed and download any new links to
+*.mp3 files it finds in the &lt;decscription&gt; section of each feed
+item.  It&#8217;s fairly straightforward, and is smart enough to not download
+the same file&nbsp;twice.</p>
+<p><code>#!/usr/bin/python</code></p>
+<p>from BeautifulSoup import BeautifulSoup<br>
+import cgi<br>
+import os<br>
+import re<br>
+import string<br>
+import urllib2<br>
+import&nbsp;urlparse</p>
+<p>rss_data = urllib2.urlopen(<br>&nbsp;    &#8217;http://feeds2.feedburner.com/PitchforkBestNewTracks&#8217;).read()</p>
+<p>soup = BeautifulSoup(rss_data)<br>
+posts =&nbsp;soup.findAll(&#8216;description&#8217;)</p>
+<p>mp3_urls = []<br>
+for p in posts:<br>
+    pstr = str(p)<br>
+    pstr = pstr.replace(&#8216;&lt;&#8217;, &#8216;&lt;&#8217;)<br>
+    pstr = pstr.replace(&#8216;&gt;&#8217;, &#8216;&gt;&#8217;)<br>
+    desc_soup = BeautifulSoup(pstr)<br>
+    links = desc_soup.findAll(&#8216;a&#8217;,
+href=re.compile(&#8216;.*pitchforkmedia.*mp3\$&#8217;))<br>
+    mp3_urls += [l[&#8216;href&#8217;] for l in links&nbsp;]</p>
+<p>for url in mp3_urls:<br>
+    u = urlparse.urlparse(url)<br>
+    filename = os.path.basename(u.path)<br>
+    enc_url = url.replace(&#8216; &#8216;, &#8216;%20&#8217;)<br>
+    if not os.path.exists(filename):<br>
+        print &#8220;Downloading: %s&#8221; % filename<br>
+        song = urllib2.urlopen(enc_url).read()<br>
+        f = open(filename, &#8216;w&#8217;)<br>
+        f.write(song)<br>
+        f.close()<br>
+    else:<br>
+        print &#8220;Skipping: %s&#8221; % filename<br>
+</code></p>
+<p>I&#8217;ll leave the cron job setup up to&nbsp;you.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

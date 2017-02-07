@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>What Larry Page really needs to do to return Google to its startup roots</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2011-03-24T10:57:00-07:00">Thu 24 March 2011</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>What Larry Page really needs to do to return Google to its startup&nbsp;roots</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I worked at Google from 2005-2010, and saw the company go through many
+changes, and a huge increase in staff.  Most importantly, I saw the
+company go from a place where engineers were seen as violent disruptors
+and innovators, to a place where doing things &#8220;The Google Way&#8221; was king,
+and where thinking outside the box was discouraged and even chastised.
+ So, here&#8217;s a quick list of things I think Larry could do to bring the
+startup feel back to&nbsp;Google:</p>
+<h2>Let engineers do what they do best, and forget the&nbsp;rest.</h2>
+<p>This is probably the most important single point.  Engineers at Google
+spend way too much time fussing about with everything other than
+engineering and product design.  Focusing on shipping great, innovative
+products needs to be put before <em>all</em> else.  Here&#8217;s a quick rundown of
+engineering frustrations at Google when I&nbsp;left:</p>
+<ul>
+<li><strong>Compiling <span class="amp">&amp;</span> fixing other people&#8217;s code.</strong> This is a huge problem
+    for the C++ developers at Google.  They spend massive amounts of
+    time compiling (and bug fixing) &#8220;the world&#8221; to make their
+    project work.  This needs to end.  Put an end to source-code
+    distributions for cross-team dependencies.  Make teams (bigtable,
+    <span class="caps">GFS</span>, Stubby, Chubby, etc.) deliver binaries <span class="amp">&amp;</span> headers in some
+    reasonable&nbsp;format.</li>
+<li><span style="color: #000000;"><strong>Machine Resource Requests</strong></span>
+    for products in the &#8220;less than a petabyte&#8221; class. Just hand out the
+    resources pro-bono, track usage, and if they exceed some very high
+    limit, then start charging.  Why is this a&nbsp;struggle?</li>
+<li><strong><span class="caps">LCE</span> <span class="amp">&amp;</span> <span class="caps">SRE</span> &#8220;blockers&#8221;</strong>.  Having support for Launch Coordination <span class="amp">&amp;</span>
+    Site Reliability is great, but when these people say &#8220;you can&#8217;t
+    launch unless&#8230;&#8221; then you know they&#8217;re being a hindrance, and not
+    a&nbsp;help.</li>
+<li><strong>Meetings</strong>.  Seriously, people are drenched in &#8220;status update&#8221; and
+    &#8220;team&#8221; meetings. If your company has to have &#8220;No meetings Thursday&#8221;
+    then you&#8217;re doing it wrong. How about &#8220;No meetings except
+    for Thursday&#8221;.  That would make for a productive engineering team,
+    not the other way&nbsp;around.</li>
+<li><strong>Weekly Snippets, perf, etc.</strong> I was continually amazed by the
+    amount of &#8220;extra cruft work&#8221; that goes on.  I know it sounds
+    important, but engineers should be coding <span class="amp">&amp;</span>&nbsp;designing.</li>
+<li><strong>Perf, Interviews <span class="amp">&amp;</span> lengthly interview feedback.</strong> The old
+    fashioned model of getting together in a room to discuss a candidate
+    is way more efficient.  Make sure that every single engineer in the
+    building is participating in the interview process to spread the
+    load more evenly.  Don&#8217;t let the internal recruiters pick engineers
+    for interviews, as they have favoritism and are
+    improperly motivated.   Limit to 1 interview per week, maximum.  
+    Make a simple system for &#8220;I can&#8217;t make this interview&#8221; and &#8220;I think
+    this resume looks shitty and don&#8217;t want to talk to this&nbsp;candidate.&#8221;</li>
+<li><strong>Discourage of open source software.</strong> There is so much innovation
+    going on in the open source world: Hadoop, MongoDB, Redis,
+    Cassandra, memcached, Ruby on Rails, Django, Tornado (web
+    framework), and many, many other products put Google infrastructure
+    to shame when it comes to ease-of-use and product focus.  Engineers
+    are discouraged from using these systems, to the point where they&#8217;re
+    chastised for even thinking of using anything other than
+    Bigtable/Spanner and <span class="caps">GFS</span>/Colossus for their&nbsp;products.</li>
+</ul>
+<h2>Get rid of the proprietary cluster management&nbsp;system.</h2>
+<p>Yes, seriously.  What they have is a glorified batch-scheduling system
+that makes modern datacenters feel like antiquated mainframes.
+ Dedicated machines and resources are what startups have, so give them
+to your best engineers, and they&#8217;ll do great things. You should have
+learned this from the teragoogle team.  Start building a better, Virtual
+Machine based system where engineers can own <span class="amp">&amp;</span> manage machine images
+themselves, all the way down to the operating system, dependencies, etc.
+ If more structure is needed, use existing open source packages or
+develop new systems in house, and open source those.  Build new
+&#8220;non-standard&#8221; data centers that don&#8217;t use the old system, and that
+every engineer can&nbsp;use.</p>
+<p>The cluster management system&#8217;s fatal flaw is that it requires too large
+of an ecosystem, and pidgeon-holes running jobs into a far too
+restrictive container.  It doesn&#8217;t allow persistent local disk storage,
+since jobs can be terminated and relocated at any time.  Services
+running there are then cajoled into using Bigtable and/or Colossus for
+their persistent storage, which rules out virtually all other external
+database systems (MySQL, etc.).   This is an antiquated and overly
+constrained model for job&nbsp;allocation.</p>
+<h2>Switch to team-based distributed source&nbsp;control.</h2>
+<p>Teams or large related teams should manage their own source code.
+ Provide git-based hosting, and nothing else.  Cross-team deliverables
+should be done at the binary release level, not at the source code
+level.  Hard Makefile-type dependencies between teams need to be&nbsp;abolished.</p>
+<p><a href="http://www.catb.org/~esr/writings/cathedral-bazaar/">Be the Bazaar, not the&nbsp;Cathedral.</a></p>
+<h2>Rethink the &#8220;lots of redundant, unreliable hardware&#8221;&nbsp;mantra.</h2>
+<p>Having to launch a simple service in multiple datacenters around the
+world, and having to deal with near-weekly datacenter maintenance
+shutdowns is unacceptable for an agile startup.  Startups need to focus
+on product, not process and infrastructure.  One persistent Amazon <span class="caps">EC2</span>
+instance is much more valuable than a 100 batch scheduled jobs in a
+cluster that goes down for maintenance every week. Stop doing&nbsp;that.</p>
+<h2>Eliminate <span class="caps">NIH</span>-syndrome</h2>
+<p>Google has a very, very strong <span class="caps">NIH</span> (Not Invented Here) syndrome.
+ Alternate solutions (Hadoop, MongoDB, Redis, Cassandra, MySQL,
+RabbitMQ, etc.) are all seen as technically inferior and poorly
+engineered systems.  Google needs to get off it&#8217;s high horse, and look
+at what&#8217;s happening outside of it&#8217;s organization.  Hugely scalable
+services like Twitter are built on almost entirely open source stack,
+and they&#8217;re doing it really efficiently.  Open source solutions have a
+product-focus that&#8217;s missing from much of Google&#8217;s infrastructure for
+infrastructure&#8217;s sake engineering endeavors.  Focusing on the product
+first, and using any available solution is the agile way to experiment
+in new&nbsp;spaces.</p>
+<p>Additionally, by eliminating the <span class="caps">NIH</span> syndrome, Google needs to allow
+these open systems into it&#8217;s production environment.  Amazon and
+RackSpace have nailed this with reliable, virtual hosting solutions, and
+this is allowing services built on those platforms to be portable,
+efficient, and&nbsp;agile.</p>
+<h2>Remember that small, special-purpose is more agile than big,&nbsp;general-purpose.</h2>
+<p>Google is famously good at building huge pieces of infrastructure that
+solve big, important problems. <span class="caps">GFS</span> <span class="amp">&amp;</span> Colossus for file storage,
+Bigtable, Blobstore and Spanner for structured data storage, Caffeine
+for document storage and&nbsp;indexing.</p>
+<p>But, when faced with a new problem or new requirements, projects are
+expected to pidgeon-hole their needs into one of these systems, or be
+chastised for &#8220;doing it wrong&#8221;. Additionally, when your application
+needs inevitably don&#8217;t fit or grow out of existing infrastructure
+capabilities, requests for improvement or enhancement are lost in the
+noise. This means small teams are crippled by the lack of agility of
+these monstrous&nbsp;systems.</p>
+<p>Google&#8217;s engineers need to think <span class="amp">&amp;</span> act like startup founders. Only
+develop what&#8217;s absolutely necessary to get your job done. Simplicity
+counts. Complex systems are hard to learn, debug, and maintain. Keep it
+small and&nbsp;focused.</p>
+<h2>Implement an in-house&nbsp;incubator.</h2>
+<p>Do this right now.  When a current employee comes to you and submits
+their resignation letter, and says they&#8217;re joining a startup, you should
+immediately respond with &#8220;Oh! Well, let me tell you about our in-house
+startup&nbsp;incubator&#8230;&#8221;</p>
+<p>Put smart people together in a room, let them think freely about
+products and infrastructure, and good things will come of it.  In fact,
+I might argue that every Staff level engineer or higher should &#8220;go on
+sabbatical&#8221; to the in-house incubator for a period of a minimum of 6
+months.   Rotate people in <span class="amp">&amp;</span> out, and let them bring their incubator
+learnings back on to the main campus.  Have one incubator per geography,
+at a minimum, possibly more.  Let people choose their best
+freinds/coworkers, and go off and do something great for 6 months.  No
+managers, no meetings, no&nbsp;supervision.</p>
+<h2>Make it very clear that good, small ideas&nbsp;matter.</h2>
+<p>This is <em>so</em> important.  One of the things I heard over and over was &#8220;If
+your product isn&#8217;t a billion-dollar idea, then it&#8217;s not worth Google&#8217;s
+time.&#8221;  This message sucks.  What you&#8217;re saying is &#8220;your great idea that
+might make millions per year is less important than a small tweak to ads
+or search&#8221;.  Even if it&#8217;s true, you need to foster innovation of much
+lesser initial&nbsp;impact.</p>
+<p>Google acquisitions of companies in the \<span class="math">\(5-50mm range means that at
+some level, small businesses *are* valued.  Make this very clear.  It
+sucks to have someone say "your \\)</span>5mm idea isn&#8217;t big enough&#8221; on the one
+hand, and then watch Google buy up companies for \$5mm each. This is bad&nbsp;precedent.</p>
+<h2>Eliminate internal language and framework&nbsp;cronyism.</h2>
+<p>By this, I mean: &#8220;Stop forcing people to do things The Google Way&#8221;.  
+There were several times where I had seen &#8220;unGoogly&#8221; system desgins get
+shot down because they didn&#8217;t use Bigtable, <span class="caps">GFS</span>, Colossus, Spanner,
+MegaStore, BlobStore, or any of the other internal&nbsp;systems.</p>
+<p>For example, languages like Python are shunned upon because they&#8217;re &#8220;too
+slow for web frontends&#8221;.  Let teams use whatever tools and languages
+they want, and are most efficient in. Don&#8217;t pass judgement on
+infrastructure, pass judgement on <em>Products</em>.  If someone launches a
+great system based on Oracle and a bunch of Perl <span class="caps">CGI</span> scripts running on
+Sun Sparc 5&#8217;s, then you should praise them. If they&#8217;re crushed under
+load, then praise them even more for their&nbsp;success.</p>
+<p>Engineers at Google spend huge amounts of their time being forced to
+prematurely optimize their backend and frontend infrastructure.  Most of
+the time, this benefits no one, as small products never get big enough
+to need such heavyweight systems, and are bogged down with the cost of
+multiple redundancy, and by using poorly behaved internal APIs that
+don&#8217;t meet direct product&nbsp;needs.</p>
+<h2>Make a general purpose cloud for internal&nbsp;use.</h2>
+<p>Amazon <span class="caps">EC2</span> is a better ecosystem for fast iteration and innovation than
+Google&#8217;s internal cluster management system.  <span class="caps">EC2</span> gives me reliability,
+and an easy way to start and stop entire services, not just individual
+jobs.  Long-running processes and open source code are embraced by <span class="caps">EC2</span>,
+running a replicated sharded MongoDB instance on <span class="caps">EC2</span> is almost a breeze.
+ Google should focus on making a system that works within the entire
+Open Source&nbsp;ecosystem.</p>
+<h2>Acknowledge that 20% time is a&nbsp;lie.</h2>
+<p>Virtually no one I knew in my entire career there had an effective use
+of 20% time.  There are stories about how some products are launched
+exclusively via 20% time, and I&#8217;ve seen people use their 20% time to
+effectively search for a new internal position, but for the vast
+majority of engineers, 20% time is a&nbsp;myth.</p>
+<p>I think it&#8217;s a great idea, and it needs to be made effective.  1 day per
+week isn&#8217;t reasonable (you can&#8217;t get enough done in just one day and
+it&#8217;s hard to carry momentum).  1 week per month would be great, but
+doesn&#8217;t do justice to your &#8220;main&#8221; project.  Something needs to budge
+here, and engineers need to be encouraged to take large amounts of time
+exploring new ideas and new directions.  Really fostering internal tools
+and collaboration might be the right answer.  I&#8217;m not sure, maybe they
+should just give up on it and give everyone a 20% raise.  Oh wait, they
+did that&nbsp;already.</p>
+<h2>Repeat your&nbsp;mistakes.</h2>
+<p>Engineers learn by doing, and learn by making mistakes.  Having rules
+about system design puts unnecessary constraints on thinking and
+products.  Having internal lore around things like &#8220;Google will never
+let another thing like Orkut ever happen again&#8221; is blatantly wrong.
+ Orkut was (and still is) a huge success, period.  None of the
+infrastructure stuff matters.  Even recent mistakes (Wave, etc.) should
+be praised and engineers should be encouraged to repeat those&nbsp;mistakes.</p>
+<h2><span class="dquo">&#8220;</span>Google Scale&#8221; is a&nbsp;myth.</h2>
+<p>Yes, I said&nbsp;it.</p>
+<p>Google Search (the product) requires vast resources.  Almost nothing
+else does, and yet is constrained and forced to run &#8220;at Google scale&#8221;
+when it&#8217;s completely&nbsp;unnecessary.</p>
+<p>Giving engineers the freedom to think <span class="amp">&amp;</span> design out of the box with
+respect to infrastructure and systems means you&#8217;ll be more efficient in
+the long run.  Providing reliable platforms and data centers means
+you&#8217;ll have less redundancy, and be more&nbsp;efficient.</p>
+<p>Given that a single machine can easily have <span class="caps">64GB</span> of <span class="caps">RAM</span>, <span class="caps">10TB</span> of disk,
+and 8 CPUs, it&#8217;s amazing that any product launch needs more than just a
+couple of that class of machine.  Let engineers push the boundaries,
+make mistakes, and run on the&nbsp;edge.</p>
+<p>A small system that falls down under load is a huge&nbsp;success</p>
+<p>A large system that&#8217;s wasting resources and has only a few users is a
+huge&nbsp;failure.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/development.html">development</a>
+            <a href="./tag/engineering.html">engineering</a>
+            <a href="./tag/google.html">google</a>
+            <a href="./tag/incubator.html">incubator</a>
+            <a href="./tag/roots.html">roots</a>
+            <a href="./tag/scale.html">scale</a>
+            <a href="./tag/startup.html">startup</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

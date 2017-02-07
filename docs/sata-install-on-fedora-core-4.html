@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>SATA install on Fedora Core 4</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2005-11-19T19:29:00-08:00">Sat 19 November 2005</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1><span class="caps">SATA</span> install on Fedora Core&nbsp;4</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>When Setting up my new system, which is running on an <span class="caps">ASUS</span> <span class="caps">A8N</span>-<span class="caps">SLI</span>
+Premium motherboard, I had some&nbsp;issues:</p>
+<p>First off: I did not try to use any of the &#8220;hardware&#8221; <span class="caps">RAID</span> that comes
+with the motherboard. It has 2 <span class="caps">RAID</span> controllers, and I disabled both in
+the <span class="caps">BIOS</span> before starting. Linux software raid seems to work just great,
+and use up very little <span class="caps">CPU</span>. That&nbsp;said&#8230;</p>
+<p>After installing Fedora Core 4 from CDs (network and usb disk installs
+failed) the box didn&#8217;t boot up. It just went through the boot messages
+and sat&nbsp;there.</p>
+<p>I finally figured out that the problem was the drive boot order: What
+linux thinks of as &#8220;/dev/sda&#8221; (first <span class="caps">SATA</span> drive) isn&#8217;t actually &#8220;drive
+0&#8221; to the bios. So, the hard drive boot sequence needed to be change to
+set the boot order so that &#8220;drive 2&#8221; (the 3rd drive) was the first drive
+in the&nbsp;boot.</p>
+<p>Then, I was able to get to the <span class="caps">GRUB</span> boot prompt, and boot up the box.
+There was some issue with <span class="caps">GRUB</span> thinking that the system should be on
+(hd2,0). I think this may have been caused by my previous attempts to
+fix the problem, but anyway, for inital boots, I needed to manually
+change the <span class="caps">GRUB</span> boot parameters so that it was hd0,0. Then it&nbsp;worked.</p>
+<p>This is way more than I ever wanted to know about the internal workings
+of&nbsp;linux.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Slacy's Blog</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="main-container">
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-2-3">
+
+
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-30T19:08:00-07:00">Wed 30 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./giving-up-on-nouveau-drivers-for-xorg.html" rel="bookmark" title="Permalink to Giving up on nouveau drivers for xorg">Giving up on nouveau drivers for&nbsp;xorg</a></h2>
+    <div class="post-content">
+        <p>After the latest updates from Ubuntu, I was seeing some stability issues
+with my X11. It would lock up every couple of days, and be totally
+unresponsive. I was using the binary (closed source) nvidia drivers on
+my <span class="caps">NV44</span> GeForce 6200 TurboCache(<span class="caps">TM</span>).</p>
+<p>Anyway, so I switched to nouveau, and …</p>
+    </div>
+    <div class="post-footer">
+        <a href="./giving-up-on-nouveau-drivers-for-xorg.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-28T09:36:00-07:00">Mon 28 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./django-why-cant-i-put-newlines-inside-my-blocks.html" rel="bookmark" title="Permalink to Django: Why can’t I put newlines inside my {{…}} blocks?">Django: Why can&#8217;t I put newlines inside my {{&#8230;}}&nbsp;blocks?</a></h2>
+    <div class="post-content">
+        <p>Why is this&nbsp;okay:</p>
+<div class="highlight"><pre><span></span><span class="cp">{{</span> <span class="nv">variable</span> <span class="cp">}}</span><span class="x"></span>
+</pre></div>
+
+
+<p>But this is&nbsp;not:</p>
+<div class="highlight"><pre><span></span>{{
+variable
+}}
+</pre></div>
+
+
+<p>This totally sucks for long variable names that are indented or have a
+long filter after them.  Allow newlines as whitespace inside {{&#8230;}}&nbsp;blocks!</p>
+    </div>
+    <div class="post-footer">
+        <a href="./django-why-cant-i-put-newlines-inside-my-blocks.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-25T20:00:00-07:00">Fri 25 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./sbinstart-stop-daemon-is-my-new-favorite-unix-command.html" rel="bookmark" title="Permalink to /sbin/start-stop-daemon is my new favorite UNIX command">/sbin/start-stop-daemon is my new favorite <span class="caps">UNIX</span>&nbsp;command</a></h2>
+    <div class="post-content">
+        <p>Amazed that I didn&#8217;t learn about it earlier.  It&#8217;s awesome for running
+backgrounded daemons, or for checking to see if something is already
+running.  Cool and&nbsp;easy.</p>
+<div class="highlight"><pre><span></span># man start-stop-daemon
+</pre></div>
+    </div>
+    <div class="post-footer">
+        <a href="./sbinstart-stop-daemon-is-my-new-favorite-unix-command.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-25T19:55:00-07:00">Fri 25 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./cannot-make-directory-varrunscreen-permission-denied.html" rel="bookmark" title="Permalink to Cannot make directory ‘/var/run/screen’: Permission denied">Cannot make directory &#8216;/var/run/screen&#8217;: Permission&nbsp;denied</a></h2>
+    <div class="post-content">
+        <p>I just ran an apt-get update ; apt-get dist-upgrade, and noticed that a
+bunch of screen-related programs had been&nbsp;updated.</p>
+<p>When I tried to run screen, I got&nbsp;this:</p>
+<div class="highlight"><pre><span></span># screen
+Cannot make directory &#39;/var/run/screen&#39;: Permission denied
+</pre></div>
+
+
+<p>I looked at <a href="https://bugs.launchpad.net/ubuntu/+source/screen/+bug/172651">this old bug on
+launchpad</a>,
+which seemed to have been …</p>
+    </div>
+    <div class="post-footer">
+        <a href="./cannot-make-directory-varrunscreen-permission-denied.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-24T09:20:00-07:00">Thu 24 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./how-to-screenshot-your-android-phone.html" rel="bookmark" title="Permalink to How to screenshot your Android phone">How to screenshot your Android&nbsp;phone</a></h2>
+    <div class="post-content">
+        <ol>
+<li>Turn on <span class="caps">USB</span> Debugging on your phone:<br>
+   Go to Settings-&gt;Applications-&gt;Development-&gt;<span class="caps">USB</span> Debugging
+    and make sure the checkbox is&nbsp;on.</li>
+<li>
+<div>
+
+<p>Install the Android <span class="caps">SDK</span> from
+<a href="http://developer.android.com/sdk/index.html" title="http://developer.android.com/sdk/index.html">http://developer.android.com/</a></p>
+</div>
+
+</li>
+<li>
+<div>
+
+<p>Connect phone to <span class="caps">USB</span>.</p>
+</div>
+
+</li>
+<li>
+<div>
+
+<p>Run &#8220;ddms&#8221; from the <span class="caps">SDK</span>&nbsp;package.</p>
+</div>
+
+</li>
+<li>
+<div>
+
+<p>Select your device from inside ddms, then select the
+Device- …</p></div></li></ol>
+    </div>
+    <div class="post-footer">
+        <a href="./how-to-screenshot-your-android-phone.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-21T12:06:00-07:00">Mon 21 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./where-do-you-put-your-boolean-operators.html" rel="bookmark" title="Permalink to Where do you put your boolean operators?">Where do you put your boolean&nbsp;operators?</a></h2>
+    <div class="post-content">
+        <p>When you have to insert a line break, do you put them like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>if (a &gt; 3 &amp;&amp; 
+    b &lt; 3) { 
+  // body 
+}
+</pre></div>
+
+
+<p>or do you put them like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>if (a &lt; 3 
+    &amp;&amp; b &gt; 3) { 
+  // body 
+}
+</pre></div>
+
+
+<p>I find that in C++, I like doing in the first way, but that in Python, I …</p>
+    </div>
+    <div class="post-footer">
+        <a href="./where-do-you-put-your-boolean-operators.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-20T11:17:00-07:00">Sun 20 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./a-fathers-day-treat.html" rel="bookmark" title="Permalink to A Father’s Day Treat.">A Father&#8217;s Day&nbsp;Treat.</a></h2>
+    <div class="post-content">
+        <p>Andrea&#8217;s out with the kids, and I&#8217;m at home doing <em>whatever</em> I&nbsp;want!</p>
+<p>So, that means using the new Google Command Line interface (googlecl) to
+upload <span class="caps">40GB</span> of videos from my computer to YouTube.  I suspect it&#8217;ll take
+over a day, possibly longer, but is progressing&nbsp;well …</p>
+    </div>
+    <div class="post-footer">
+        <a href="./a-fathers-day-treat.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-18T13:50:00-07:00">Fri 18 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./if-statement-syntax-that-annoys-me.html" rel="bookmark" title="Permalink to if-statement syntax that annoys me.">if-statement syntax that annoys&nbsp;me.</a></h2>
+    <div class="post-content">
+        <p>Sometimes people like to write their if statements like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>result = &quot;foo&quot;
+if condition:
+  result = &quot;bar&quot;
+</pre></div>
+
+
+<p>I assume they&#8217;re thinking that it&#8217;s faster to not have an else clasuse
+or something, but in fact, the double assignment that occurs is much
+slower than the else clause, which is …</p>
+    </div>
+    <div class="post-footer">
+        <a href="./if-statement-syntax-that-annoys-me.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-18T09:01:00-07:00">Fri 18 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./10-things-programmers-need-to-stop-saying.html" rel="bookmark" title="Permalink to 10 things programmers need to stop saying.">10 things programmers need to stop&nbsp;saying.</a></h2>
+    <div class="post-content">
+        <h3>I made a new X, whose features are based on open source project Y, which of course you&#8217;re familiar with.  But, we didn&#8217;t use any of the existing code from Y, and we&#8217;ve added lots of special-purpose features, and we&#8217;ve eliminated the really bad stuff you …</h3>
+    </div>
+    <div class="post-footer">
+        <a href="./10-things-programmers-need-to-stop-saying.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-06-17T10:15:00-07:00">Thu 17 June 2010</abbr>
+</div>    </div>
+    <h2><a href="./soul-sole-seoul-sol-saul.html" rel="bookmark" title="Permalink to Soul, Sole, Seoul, Sol, Saul">Soul, Sole, Seoul, Sol,&nbsp;Saul</a></h2>
+    <div class="post-content">
+        <p>A list based on a conversation we had in the&nbsp;car:</p>
+<ul>
+<li>Soul<ul>
+<li>Like in&nbsp;religion.</li>
+<li>Like in&nbsp;music.</li>
+<li>Like the car by&nbsp;Kia.</li>
+</ul>
+</li>
+<li>Sole<ul>
+<li>Like the&nbsp;fish</li>
+<li>Like the bottom of your&nbsp;shoe</li>
+<li>Like &#8220;The only&nbsp;one&#8221;</li>
+</ul>
+</li>
+<li>Saul<ul>
+<li>The man&#8217;s&nbsp;name</li>
+<li>In Hebrew :&nbsp;&#8220;Borrowed&#8221;</li>
+</ul>
+</li>
+<li>Sol : Sun in&nbsp;Spanish</li>
+<li>Seoul …</li></ul>
+    </div>
+    <div class="post-footer">
+        <a href="./soul-sole-seoul-sol-saul.html">Read more</a>
+    </div>
+</div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+            <a href="./index12.html">Previous articles</a>
+        </div>
+        <div class="pure-u-1-2 right">
+            <a href="./index14.html">More articles</a>
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="pure-u-1 pure-u-lg-1-3">
+            <div class="right-container">
+                <div class="right-bar">
+                    <div class="right-head">
+                         Tags
+                    </div>
+                    <div class="tags">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

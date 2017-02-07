@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Ubuntu 9.04 CPU frequency scaling seems very broken</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-04-27T14:47:00-07:00">Mon 27 April 2009</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Ubuntu 9.04 <span class="caps">CPU</span> frequency scaling seems very&nbsp;broken</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I just installed Ubuntu 9.04 on my Lenovo S10 (Intel Atom N270 @ 1.6GHz)
+netbook, and have had some serious performance issues after installing. 
+<a href="http://jasondclinton.livejournal.com/72910.html">Others have noticed similar
+issues</a>.</p>
+<p>In short, the machine never goes any faster than 800MHz, no matter what
+I&#8217;m doing.  What&#8217;s supposed to be happening is that the cpufreq module
+(now compiled into the kernel instead of a loadable module) should be
+increasing the processor speed when it detects high <span class="caps">CPU</span> usage.  For all
+intents and purposes, this feature is 100% broken on my machine.   I can
+manually override the cpufreq governor to set it to &#8220;performance&#8221; and
+the machine becomes a fair bit more responsive, but uses a lot more&nbsp;power.</p>
+<p>It does look like there are several ways to make the default policy
+&#8220;performance&#8221; and for the short term, I&#8217;m going to be doing this so that
+my machine works at a reasonable&nbsp;pace.</p>
+<p>I&#8217;ve also filed a <a href="https://bugs.launchpad.net/ubuntu/+source/linux/+bug/367739">bug with
+launchpad.net</a>
+and we&#8217;ll see if that gets any traction.  There does seem to be a large
+number of &#8220;cpufreq stuck&#8221; types of bugs in launchpad, which is very
+discouraging. Even worse, /etc/init.d/loadcpufreq seems to not have been
+updated to reflect that acpi_cpufreq is now compiled into the kernel. 
+<a href="https://bugs.launchpad.net/ubuntu/+source/sysvinit/+bug/368231">This is just
+sloppy</a>.</p>
+<p>I also suspect that this &#8220;hidden bug&#8221; is effecting a *lot* more 9.04
+users than people think.  In general, when a fast 3GHz machine &#8220;only&#8221;
+runs at 1.5GHz, it&#8217;s a perfectly fine situation and most users won&#8217;t
+notice it.   But, when a 1.6GHz machine is stuck at 800Mhz, it&#8217;s a
+pretty big&nbsp;deal.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

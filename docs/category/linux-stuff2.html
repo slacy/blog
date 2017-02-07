@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Linux Stuff</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="category-page-container">
+    <div class="category-logo">
+        <h1><a href="../category/linux-stuff.html" rel="bookmark" title="Permalink to Linux Stuff">Linux Stuff</a></h1>
+    </div>
+
+    <div class="section-header">
+        Latest
+    </div>
+
+
+
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../postfix-configuration-issues.html">Postfix configuration&nbsp;issues.</a></h1>
+
+               <p>I&#8217;ve had my new server running for a while, but mail that did not
+qualify with a hostname was not being delivered correctly. For example
+mail to &#8220;root&#8221; (without a domain name) was&nbsp;bouncing.</p>
+<p>The /var/log/mailllog&nbsp;said:</p>
+<p><code>Dec  5 22:30:53 whisper postfix/smtp[28147]: F3D372618010 …</code></p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-12-05T23:44:00-08:00">Mon 05 December 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../update-on-cpufreq_ondemand-cpuspeed-k8powernow-coolnquiet-etc.html">Update on cpufreq_ondemand, cpuspeed k8powernow, Cool&#8217;n&#8217;Quiet,&nbsp;etc.</a></h1>
+
+               <p>Okay, so here&#8217;s the&nbsp;scoop:</p>
+<p>I took a look at the source code for cpuspeed, and its basically brain
+dead. I don&#8217;t think its a really &#8220;useful&#8221; piece of software. I had
+originally recommended it, because it seemed to modprobe for the right
+drivers automatically. Thats true, but …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-11-20T23:57:00-08:00">Sun 20 November 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../powered-off-my-old-server.html">Powered off my old&nbsp;server.</a></h1>
+
+               <p>Well, I got cyrus, postfix, spamassassin and clamav to all agree to play
+nice together, and that means that my old server has been powered&nbsp;off.</p>
+<p>Mail has been transferred to my new <span class="caps">RAID5</span> array, and we&#8217;re up and&nbsp;running!</p>
+<p>The beauty of it all is that my new …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-11-20T23:31:00-08:00">Sun 20 November 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../livnaorg-dead.html">Livna.org&nbsp;dead?</a></h1>
+
+               <p>Looks like the Livna <span class="caps">RPM</span> repository isn&#8217;t responding. I found this out
+when I couldn&#8217;t run &#8220;yum update&#8221; &#8212; it was failing on the livna mirrors.
+<a href="http://rpm.livna.org">rpm.livna.org</a> is also not responding. I wonder
+if its totally dead? That woulbe a&nbsp;shame.</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-11-05T14:12:00-08:00">Sat 05 November 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../cpufreq-and-p4_clockmod.html">cpufreq and&nbsp;p4_clockmod</a></h1>
+
+               <p>I just found out (as I was researching some of the newer <span class="caps">AMD</span> features)
+that Fedora Core 4 supports the ability to dynamically adjust <span class="caps">CPU</span>
+frequency for both <span class="caps">AMD</span> and Intel CPUs! ~~For some weird reason, you have
+to manually modprobe the drivers (which is completely rediculous in my
+opinion …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-10-07T00:24:00-07:00">Fri 07 October 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../why-doesnt-sourceforge-use-sfnet.html">Why doesn&#8217;t sourceforge use&nbsp;sf.net?</a></h1>
+
+               <p>I&#8217;ve always&nbsp;wondered:</p>
+<p>SourceForge has a 2-letter domain at <a href="http://sf.net">sf.net</a> but they
+always just redirect immediately to sourceforge.net. This is the sort of
+thing you&#8217;d do if you thought that you were at risk of losing the
+domain, but they&#8217;ve been doing it like this …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-09-13T22:50:00-07:00">Tue 13 September 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../hotspots-that-are-for-stealing-passwords.html">HotSpots that are for stealing&nbsp;passwords?</a></h1>
+
+               <p>I wonder if this is&nbsp;happening:</p>
+<p>Take a Linksys <span class="caps">WRT54GS</span>, make it an open wireless access point, and then
+load it up with fake versions of all the popular websites &#8212; a fake
+hotmail.com, a fake gmail.com, a fake mail.yahoo.com, a fake
+wellsfargo.com, etc. Put it …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-08-22T00:12:00-07:00">Mon 22 August 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../mytob-update-7.html">MyTob Update&nbsp;7</a></h1>
+
+               <p>Another one fell through the cracks of <a href="http://clamav.net">clamav</a>
+today. I checked the online scanner, and it was not recognized, so I
+submitted it. We&#8217;ll see if I&#8217;m the first person or not. It&#8217;s surely
+another MyTob&nbsp;variant.</p>
+<p><em>Update:</em></p>
+<p>This file has been classified as MyTob.<span class="caps">HG</span> &#8212; I …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-07-27T10:54:00-07:00">Wed 27 July 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../mytob-update-6.html">MyTob Update&nbsp;6</a></h1>
+
+               <p>MyTob is still going strong, and still mutating quite a bit. I&#8217;ve got a
+better graph this time, showing the top 4 viruses over the last 3 weeks.
+Here you can see how <span class="caps">CW</span> and <span class="caps">CL</span> have seemingly been squashed, but they&#8217;ve
+been replaced by newer variants that …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-07-23T13:14:00-07:00">Sat 23 July 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../my-15-minutes-of-mytobdi-fame.html">My 15 minutes of MyTob.<span class="caps">DI</span>&nbsp;fame</a></h1>
+
+               <p>Just a quick update &#8212; 4 more messages slipped through today, even
+though I&#8217;m on the 2-hour update regime. I think the limiting factor here
+has become clamav&#8217;s response time, not my update time. On clamav.net,
+there are a couple links to german sites talking about the rate …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2005-06-15T00:25:00-07:00">Wed 15 June 2005</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+            <a href="../category/linux-stuff.html">Previous articles</a>
+        </div>
+        <div class="pure-u-1-2 right">
+            <a href="../category/linux-stuff3.html">More articles</a>
+        </div>
+    </div>
+</div>
+</div>
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

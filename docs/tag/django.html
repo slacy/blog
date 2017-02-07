@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Slacy's Blog - django</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="main-container">
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-2-3">
+
+            <div class="post heading">
+                <div class="heading-prefix">Tagged in </div>
+                <h3>django</h3>
+            </div>
+
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2012-01-12T16:24:00-08:00">Thu 12 January 2012</abbr>
+</div>    </div>
+    <h2><a href="../how-to-set-session-variables-in-django-unit-tests.html" rel="bookmark" title="Permalink to How to set session variables in Django unit tests.">How to set session variables in Django unit&nbsp;tests.</a></h2>
+    <div class="post-content">
+        <p>This was super non-obvious, and I lifted code from a couple of different&nbsp;places.</p>
+<p>If you&#8217;ve got Django view code that gets <span class="amp">&amp;</span> sets session values, you&#8217;ll
+want to test it properly, and the standard &#8220;self.client&#8221; from Django&#8217;s
+TestCase doesn&#8217;t really give you a usable session …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../how-to-set-session-variables-in-django-unit-tests.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2011-06-02T11:09:00-07:00">Thu 02 June 2011</abbr>
+</div>    </div>
+    <h2><a href="../django-postgresql-virtualenv-development-setup-for-windows-7.html" rel="bookmark" title="Permalink to Django + PostgreSQL + virtualenv Development setup for Windows 7">Django + PostgreSQL + virtualenv Development setup for Windows&nbsp;7</a></h2>
+    <div class="post-content">
+        <p>Here&#8217;s what you need to do Django development on Windows 7. As I go
+through the install, I&#8217;m writing down all the steps to make sure that I
+don&#8217;t miss any. I&#8217;m going to focus&nbsp;on:</p>
+<ul>
+<li><strong>Python 2.7.1</strong> from&nbsp;python.org</li>
+<li><strong>virtualenv</strong> (manages python …</li></ul>
+    </div>
+    <div class="post-footer">
+        <a href="../django-postgresql-virtualenv-development-setup-for-windows-7.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-10-21T14:26:00-07:00">Thu 21 October 2010</abbr>
+</div>    </div>
+    <h2><a href="../cleaner-pattern-for-loops-in-django-templates.html" rel="bookmark" title="Permalink to Cleaner pattern for loops in Django templates?">Cleaner pattern for  loops in Django&nbsp;templates?</a></h2>
+    <div class="post-content">
+        <p>I find myself typing stuff like this a&nbsp;lot:</p>
+<div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">item</span> <span class="k">in</span> <span class="nv">list</span> <span class="cp">%}</span>
+  <span class="cp">{%</span> <span class="k">if</span> <span class="nb">forloop</span><span class="nv">.first</span> <span class="cp">%}</span><span class="nt">&lt;ul&gt;</span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+  <span class="nt">&lt;li&gt;</span><span class="cp">{{</span> <span class="nv">item.value</span> <span class="cp">}}</span><span class="nt">&lt;/li&gt;</span>
+  <span class="cp">{%</span> <span class="k">if</span> <span class="nb">forloop</span><span class="nv">.last</span> <span class="cp">%}</span><span class="nt">&lt;/ul&gt;</span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">empty</span> <span class="cp">%}</span>
+  <span class="nt">&lt;p&gt;</span>No items in list.<span class="nt">&lt;/p&gt;</span>
+<span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}</span>
+</pre></div>
+
+
+<p>Is there a cleaner way to do this? It&#8217;s a lot of code for …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../cleaner-pattern-for-loops-in-django-templates.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-10-01T14:56:00-07:00">Fri 01 October 2010</abbr>
+</div>    </div>
+    <h2><a href="../both-production-development-settings-using-zcbuildout-djangorecipe.html" rel="bookmark" title="Permalink to Both production development settings using zc.buildout djangorecipe">Both production  development settings using zc.buildout&nbsp;djangorecipe</a></h2>
+    <div class="post-content">
+        <p>It took me a while to figure this out, so I&#8217;m writing it&nbsp;down.</p>
+<p>What I wanted was to have my django.wsgi script use the production
+settings and to have bin/django use the development settings.  Sounds
+easy, right?  It&#8217;s not obvious what the right way to …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../both-production-development-settings-using-zcbuildout-djangorecipe.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-09-21T16:19:00-07:00">Tue 21 September 2010</abbr>
+</div>    </div>
+    <h2><a href="../django-development-setup-on-windows.html" rel="bookmark" title="Permalink to Django development setup on Windows">Django development setup on&nbsp;Windows</a></h2>
+    <div class="post-content">
+        <p>Django development on Windows sounds easy, but there are a bunch of
+steps to get it all working&nbsp;right.</p>
+<ul>
+<li>Python.  Use <strong>Python 2.7</strong> from python.org
+    ﻿<a href="http://python.org/download/">http://python.org/download/</a>.  I recommend avoiding the 3rd party
+    Python distributions (ActiveState, Enthought, etc.) and sticking
+    with the official build.  As a …</li></ul>
+    </div>
+    <div class="post-footer">
+        <a href="../django-development-setup-on-windows.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-04-05T10:24:00-07:00">Mon 05 April 2010</abbr>
+</div>    </div>
+    <h2><a href="../multi-dimensional-dicts-in-python-django.html" rel="bookmark" title="Permalink to Multi-dimensional dicts in Python Django?">Multi-dimensional dicts in Python&nbsp;Django?</a></h2>
+    <div class="post-content">
+        <p>The code I&#8217;m working on frequently uses multi-dimensional dicts in
+Python.  There is a bunch of code that seems to be always doing&nbsp;this:</p>
+<div class="highlight"><pre><span></span># a,b, and c have come from some external data source, QuerySet, etc. 
+a = &#39;axis_1&#39;
+b = &#39;axis_2&#39;
+c = &#39;axis_3&#39;
+d = &#39;value&#39;
+if a not in …</pre></div>
+    </div>
+    <div class="post-footer">
+        <a href="../multi-dimensional-dicts-in-python-django.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-12-04T16:41:00-08:00">Fri 04 December 2009</abbr>
+</div>    </div>
+    <h2><a href="../announcing-parents-guild.html" rel="bookmark" title="Permalink to Announcing Parents Guild">Announcing Parents&nbsp;Guild</a></h2>
+    <div class="post-content">
+        <p>Just a quick note to my readers and searchers that we&#8217;ve launched our
+new parenting website, <a href="http://parentsguild.com">Parents Guild</a>.  We&#8217;ve
+got question <span class="amp">&amp;</span> answering, e-mail notifications, tagging, voting, and a
+bunch of other parenting-specific features in the works.  We&#8217;ve got
+about 50 users so far, which is pretty great …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../announcing-parents-guild.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-11-19T11:22:00-08:00">Thu 19 November 2009</abbr>
+</div>    </div>
+    <h2><a href="../resolving-circular-model-imports-caused-by-haystack-django.html" rel="bookmark" title="Permalink to Resolving circular model imports caused by Haystack Django">Resolving circular model imports caused by Haystack&nbsp;Django</a></h2>
+    <div class="post-content">
+        <p>So, in converting our search to Haystack, I&#8217;ve found that some of my
+standalone maintainence scripts no longer work.  They had an import
+error trying to import some of the&nbsp;models.</p>
+<p>The issue is that I&#8217;ve updated my models.py with some Haystack code. 
+The code at hand …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../resolving-circular-model-imports-caused-by-haystack-django.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-10-22T14:45:00-07:00">Thu 22 October 2009</abbr>
+</div>    </div>
+    <h2><a href="../pprinting-the-django-context-object.html" rel="bookmark" title="Permalink to pprinting the Django context object">pprinting the Django context&nbsp;object</a></h2>
+    <div class="post-content">
+        <p>This was non-obvious to me for quite some time, and I tried several
+different approaches before settling on this&nbsp;one:</p>
+<p>If you would like to pprint your Django Context (or RequestContext)
+object from within a template itself, there are several approaches you
+can take.  The easiest way I found is …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../pprinting-the-django-context-object.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-07-24T15:35:00-07:00">Fri 24 July 2009</abbr>
+</div>    </div>
+    <h2><a href="../how-to-split-viewspy-into-a-directory-django-python.html" rel="bookmark" title="Permalink to How to split views.py into a directory (Django, Python)">How to split views.py into a directory (Django,&nbsp;Python)</a></h2>
+    <div class="post-content">
+        <p>So, I&#8217;ve been doing some Django programming on the side, and the thing
+that annoys me is that Django forces you to put nearly all your source
+code into 2 files:  models.py and&nbsp;views.py</p>
+<p>Being a reasonable person, I wanted to have a separate file for each …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../how-to-split-viewspy-into-a-directory-django-python.html">Read more</a>
+    </div>
+</div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+        </div>
+        <div class="pure-u-1-2 right">
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="pure-u-1 pure-u-lg-1-3">
+            <div class="right-container">
+                <div class="right-bar">
+                    <div class="right-head">
+                         Tags
+                    </div>
+                    <div class="tags">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

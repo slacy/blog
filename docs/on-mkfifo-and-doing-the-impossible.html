@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>On mkfifo and doing the impossible.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2008-12-26T12:27:00-08:00">Fri 26 December 2008</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>On mkfifo and doing the&nbsp;impossible.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>In my experiements to make a fast commandline parallel sorting script,
+I&#8217;ve been using the unix command &#8216;mkfifo&#8217; more than I ever had before,
+and I&#8217;ve learned lots of interesting things about how the bash shell
+handles pipes and&nbsp;redirects.</p>
+<p>On the surface, using mkfifo looks a lot like using pipes, but more
+verbose. For exmaple, instead&nbsp;of:</p>
+<blockquote>
+<p># sort foo | uniq -c | sort -k1n &gt;&nbsp;frequencies</p>
+</blockquote>
+<p>you can&nbsp;say:</p>
+<blockquote>
+<p># mkfifo a b<br>
+# sort foo &gt; a &amp;<br>
+# uniq -c a &gt; b &amp;<br>
+# sort -k1n b &gt; frequencies<br>
+# rm a&nbsp;b</p>
+</blockquote>
+<p>On first inspection, this looks just like the pipe example, except a
+<em>lot</em> more verbose. Is there any use to this verbose syntax? In general,
+for simple pipes, there is no reason to use FIFOs instead, and in some
+cases FIFOs cause some issues that are not obvious. I&#8217;ll talk about
+those&nbsp;later.</p>
+<p>So, the question then&nbsp;becomes&#8230;</p>
+<h2>When is mkfifo&nbsp;useful?</h2>
+<p>mkfifo is useful when you want to do something that the pipe syntax is
+too limited to express. Take the following&nbsp;example:</p>
+<blockquote>
+<p># sort -k1n inventory &gt; sorted.by.price<br>
+# sort -k2n inventory &gt;&nbsp;sorted.by.sales</p>
+</blockquote>
+<p>In the above example, we have an inventory file, and it has 2 numeric
+fields (price and sales) and we want to produce 2 sorted outputs. If the
+input file is very large, we may not wish to read it from disk twice.
+How can we produce 2 output files without reading the file from disk
+twice? Well, the answer lies in&nbsp;mkfifo:</p>
+<blockquote>
+<p># mkfifo a b<br>
+# cat foo | tee -a a b &amp;<br>
+# sort -k1n a &gt; sorted.by.price<br>
+# sort -k2n b &gt;&nbsp;sorted.by.sales</p>
+</blockquote>
+<p>But wait, if you&#8217;re following along in your shell, you&#8217;ll realize that
+the first sort just sits there, not doing anything, and not sorting.
+Whats going on? This is where things get a bit&nbsp;complicated&#8230;</p>
+<h2>FIFOs are&nbsp;bufferless</h2>
+<p>The issue in the above example exposes one of the biggest limitations of
+FIFOs. They have absolutely no buffering in them whatsoever. The exact
+bytes that you write() to one <span class="caps">FIFO</span> are then read() again by the other.
+They&#8217;re never copied, they&#8217;re never buffered. So, why is that sometimes
+a problem? Well, it means that you can&#8217;t write() to a <span class="caps">FIFO</span> when someone
+isn&#8217;t already read()ing from&nbsp;it.</p>
+<p>So, what happens is that the tee program takes a chunk of bytes, writes
+it to fifo &#8216;a&#8217;, and blocks. When the 1st sort comes along, it read()s
+the first few bytes from tee, and then sits there waiting for more. tee
+has woken up and issued a write() to <span class="caps">FIFO</span> &#8216;b&#8217;, but there&#8217;s no one
+reading from &#8216;b&#8217;, so it just blocks, and it doesn&#8217;t send any more data
+to &#8216;a&#8217;. To make this work, we have to run at least one of the sorts in
+the&nbsp;background:</p>
+<blockquote>
+<p># cat inventory | tee -a a b <em>&amp;</em><br>
+# sort -k1n a <em>&amp;</em><br>
+# sort -k2n b <em>&amp;</em></p>
+</blockquote>
+<p>Now, the tee is writing to the FIFOs, and the sorts are reading from
+them, and everyone is happy. We can produce our outputs in less time
+than the naive example that just runs 2 sorts in&nbsp;parallel.</p>
+<h2>What else are FIFOs useful&nbsp;for?</h2>
+<p>As we saw above, FIFOs can help us do work in parallel, and they can
+help us express things that can&#8217;t be expressed in bash. Here&#8217;s a great&nbsp;example:</p>
+<p>Imagine you have to compressed files, monday.gz and tuesday.gz. You want
+to sort them together, into one single file, and compress the output,
+but you don&#8217;t have enough free disk space to store any of the files
+uncompressed. How do you do this? A naive use would&nbsp;say:</p>
+<blockquote>
+<p># zcat monday.gz tuesday.gz | sort | gzip &gt;&nbsp;twodays.gz</p>
+</blockquote>
+<p>But you&#8217;ll notice that on machine with more than 1 <span class="caps">CPU</span>, that this
+commandline only uses 1 <span class="caps">CPU</span>! Thats because the pipeline specifies a
+single flow of data, so there&#8217;s never a way to do 2 things in parallel.
+Here&#8217;s the parallelized fifo&nbsp;example:</p>
+<blockquote>
+<p># mkfifo a b<br>
+# zcat monday.gz | sort &gt; a &amp;<br>
+# zcat tuesday.gz | sort &gt; b &amp;<br>
+# sort -m a b | gzip &gt;&nbsp;twodays.gz</p>
+</blockquote>
+<p>This will produce identical output, but can do it in <em>significantly</em>
+less time, since its unzipping and sorting in <em>parallel</em> on your
+multi-core desktop. The last phase, the &#8216;sort -m&#8217; is a special trick
+used to merge the 2 sorted outputs. What if monday.gz and tuesday.gz are
+already sorted? Thats&nbsp;easy:</p>
+<blockquote>
+<p># mkfifo a b<br>
+# zcat monday.gz &gt; a<br>
+# zcat tuesday.gz &gt; b<br>
+# sort -m a b | gzip &gt;&nbsp;twodays.gz</p>
+</blockquote>
+<p>This runs even faster, and does both unzipping and merging in parallel,
+never creates a temporary file, and re-compresses on the fly.&nbsp;Sweet!</p>
+<h2>The holy&nbsp;grail</h2>
+<p>As I&#8217;ve mentioned in the past, the holy grail of shell scripting is a
+simple non-compiled script built of nothing but standard unix tools,
+that does what you want, but faster. For example, we could consider the
+Wide Finder challenge a good example of something that could be
+parallelized on multi-core machines using mkfifo and the interleave.py
+script I&#8217;ve previously mentioned. All the Wide Finder guys want to do is
+quickly process an Apache <span class="caps">HTTP</span> log and show the most popular URLs. I&#8217;ve
+always done this with a combination of sort <span class="amp">&amp;</span> uniq, so I&#8217;ll show that
+simple case&nbsp;here:</p>
+<blockquote>
+<p># cat access.log | awk &#8216;{print \$7}&#8217; | sort | uniq -c | sort -k1n |
+head&nbsp;-100</p>
+</blockquote>
+<p>But, we can do this faster using interleaving and parallel&nbsp;sorting:</p>
+<blockquote>
+<p># mkfifo a b c d e f g h<br>
+# cat access.log | interleave.py a b &amp;<br>
+# cat a | awk &#8216;{print \<span class="math">\(7}' | sort &amp;gt; c &amp;  
+\# cat b | awk '{print \\)</span>7}&#8217; | sort &gt; d &amp;<br>
+# sort -m c d | uniq -c | interleave.py e f &amp;<br>
+# sort -k1n e &gt; g &amp;<br>
+# sort -k1n f &gt; h &amp;<br>
+# sort -m g h | head&nbsp;-100</p>
+</blockquote>
+<p><strong><em>Author&#8217;s Note:  This post ends here &#8212; I found this old draft sitting
+around in my WordPress, so I decided to just publish it as is, even
+though its not actually done.  I thought it was still a good interesting
+article on mkfifo.  So, there ya&nbsp;go.</em></strong></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

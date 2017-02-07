@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Using cookies.sqlite in wget or curl</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-02-03T15:34:00-08:00">Wed 03 February 2010</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Using cookies.sqlite in wget or&nbsp;curl</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>Newer versions of FireFox use a sqlite3 database to store their&nbsp;cookies.</p>
+<p>Older versions of FireFox used a .txt file.  wget and curl know how to
+parse the older style text file, but not the sqlite3&nbsp;database.</p>
+<p>So, I wrote a quick script to extract the cookies.sqlite database and
+generate a file that looks just like the old cookies.txt file, and then
+you can pass that to wget or curl. Here&#8217;s the&nbsp;script:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="k">function</span> cleanup <span class="o">{</span>
+rm -f <span class="nv">$TMPFILE</span>
+<span class="nb">exit</span> <span class="m">1</span>
+<span class="o">}</span>
+
+<span class="nb">trap</span> cleanup  SIGHUP SIGINT SIGTERM
+
+<span class="c1"># This is the format of the sqlite database:</span>
+<span class="c1"># CREATE TABLE moz_cookies (id INTEGER PRIMARY KEY, name TEXT, value TEXT, host TEXT, path TEXT,expiry INTEGER, lastAccessed INTEGER, isSecure INTEGER, isHttpOnly INTEGER);</span>
+
+<span class="c1"># We have to copy cookies.sqlite, because FireFox has a lock on it </span>
+<span class="nv">TMPFILE</span><span class="o">=</span><span class="sb">`</span>mktemp /tmp/cookies.sqlite.XXXXXXXXXX<span class="sb">`</span>
+cat <span class="nv">$1</span> &gt;&gt; <span class="nv">$TMPFILE</span>
+sqlite3 -separator <span class="s1">&#39;    &#39;</span> <span class="nv">$TMPFILE</span> <span class="s">&lt;&lt; EOF</span>
+<span class="s">.mode tabs</span>
+<span class="s">.header off</span>
+<span class="s">select host,</span>
+<span class="s">case substr(host,1,1)=&#39;.&#39; when 0 then &#39;FALSE&#39; else &#39;TRUE&#39; end,</span>
+<span class="s">path,</span>
+<span class="s">case isSecure when 0 then &#39;FALSE&#39; else &#39;TRUE&#39; end,</span>
+<span class="s">expiry,</span>
+<span class="s">name,</span>
+<span class="s">value</span>
+<span class="s">from moz_cookies;</span>
+<span class="s">EOF</span>
+cleanup
+</pre></div>
+</td></tr></table>
+
+<p>Usage should be like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>$ extract_cookies.sh <span class="nv">$HOME</span>/.mozilla/firefox/*/cookies.sqlite &gt; /tmp/cookies.txt
+$ wget --load-cookies<span class="o">=</span>/tmp/cookies.txt http://mysite.com
+$ <span class="c1"># OR </span>
+$ curl --cookie /tmp/cookies.txt http://mysite.com
+</pre></div>
+
+
+<p>You could use this script to wrap curl or wget itself in a similar
+extraction scheme, so that you always get the most current cookie values
+when you run&nbsp;wget.</p>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/cookies.html">cookies</a>
+            <a href="./tag/cookiessqlite.html">cookies.sqlite</a>
+            <a href="./tag/cookiestxt.html">cookies.txt</a>
+            <a href="./tag/curl.html">curl</a>
+            <a href="./tag/sqlite.html">sqlite</a>
+            <a href="./tag/sqlite3.html">sqlite3</a>
+            <a href="./tag/wget.html">wget</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

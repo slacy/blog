@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Mitigating ongoing attacks to my web server.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-01-01T20:42:00-08:00">Thu 01 January 2009</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Mitigating ongoing attacks to my web&nbsp;server.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I&#8217;ve been seeing messages like this one in my Logwatch e-mails for quite
+some&nbsp;time:</p>
+<blockquote>
+<p>A total of 2 sites <span class="nfakPe">probed</span> <span
+class="nfakPe">the</span> <span class="nfakPe">server</span><br>&nbsp;203.246.75.102</p>
+<p>A total of 7 possible successful probes were detected (<span
+class="nfakPe">the</span> following URLs<br>
+contain strings that match one or more of a listing of strings that<br>
+indicate a possible&nbsp;exploit):</p>
+<p>/wiki/index.php/Talk:AVR_GCC//index.php?name=PNphpBB2&amp;file=viewtopic&amp;t=8/viewtopic.php?p=15&amp;sid=be4c914eb746ac7c96beea717fdfc692/&amp;highlight=%27.include(\$_GET[a]),exit.%27&amp;a=../../../../../../../../../../../../../../../../../../../../../../../../proc/self/environ%00
+<span class="caps">HTTP</span> Response&nbsp;200</p>
+</blockquote>
+<p>So I decided to take a brief look at it.  I&#8217;m fairly certain that this
+isn&#8217;t an exploit in my MediaWiki install &#8212; I think they&#8217;re looking for
+an exploit in a package &#8220;PNphpBB2&#8221; which I don&#8217;t have.  Anyway, I did
+some grepping of my logs to find the bad IPs and created a simple conf.d
+file that contains all the <span class="caps">IP</span> addresses that are bad.  The greps that I
+did look like&nbsp;this:</p>
+<p>zgrep &#8220;w00tw00t&#8221; /var/log/httpd/*.gz | perl -p -e
+&#8220;s/\^.*[\^0-9]([0-9]+&#46;[0-9]+&#46;[0-9]+&#46;[0-9]+)[\^0-9].*\<span class="math">\(/\\1/g"
+| sort | uniq  
+zgrep "\\.\\./\\.\\./\\.\\./\\.\\./\\.\\." /var/log/httpd/\*.gz | perl
+-p -e
+"s/\^.\*\[\^0-9\](\[0-9\]+\\.\[0-9\]+\\.\[0-9\]+\\.\[0-9\]+)\[\^0-9\].\*\\)</span>/\1/g&#8221;
+| sort | uniq<br>
+zgrep &#8220;PNphpBB2&#8221; *.gz | perl -p -e
+&#8220;s/\^.*[\^0-9]([0-9]+&#46;[0-9]+&#46;[0-9]+&#46;[0-9]+)[\^0-9].*\$/\1/g&#8221;
+| sort |&nbsp;uniq</p>
+<p>And then I put those all in a file under /etc/httpd/conf.d called
+&#8220;global_deny.conf&#8221; that looks like&nbsp;this:</p>
+<p>&lt;DirectoryMatch .*&gt;<br>
+Order Allow,Deny<br>
+allow from all<br>
+deny from [&#8230;]<br>
+deny from [&#8230;]<br>&nbsp;&lt;/DirectoryMatch&gt;</p>
+<p>With one <span class="caps">IP</span> address on each &#8220;deny from&#8221; line. Hopefully this should shut
+out a lot of the people that are trying to find exploits on my site.
+There were 845 unique <span class="caps">IP</span> addresses that had hit such&nbsp;URLs.</p>
+<p>Does anyone know of an automated solution for doing stuff like this?
+What I&#8217;d like to be able to is to have a regexp of URLs that if you ever
+hit them, then you automatically end up in a set of denied <span class="caps">IP</span> addresses.
+Maybe it would show a special &#8220;you&#8217;re an abuser&#8221; webpage for the first
+few hits after that, and then just begin&nbsp;404ing.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/apache.html">apache</a>
+            <a href="./tag/deny-from.html">deny from</a>
+            <a href="./tag/exploit.html">exploit</a>
+            <a href="./tag/httpd.html">httpd</a>
+            <a href="./tag/mediawiki.html">mediawiki</a>
+            <a href="./tag/pnphpbb2.html">pnphpbb2</a>
+            <a href="./tag/probed-the-server.html">probed the server</a>
+            <a href="./tag/security.html">security</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

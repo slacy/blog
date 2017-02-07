@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Real-world Python deployment using pip virtualenv. (Outline)</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2012-08-27T10:14:00-07:00">Mon 27 August 2012</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Real-world Python deployment using pip  virtualenv.&nbsp;(Outline)</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <h2>Real-world Python deployment.&nbsp;(Outline/notes)</h2>
+<h3>Introduction</h3>
+<p>You&#8217;ve got a great development setup and now you want to &#8220;do the right
+thing&#8221; in&nbsp;production.</p>
+<p>You&#8217;re using virtualenv&nbsp;(good!)</p>
+<p>You&#8217;re using &#8220;pip install&#8230;&#8221; for all your dependencies&nbsp;(good!)</p>
+<p>You&#8217;re probably not keeping a requirements.txt up to date (that&#8217;s <span class="caps">OK</span>!)</p>
+<p>You&#8217;re using &#8220;django-admin.py runserver&#8221; or similar (not gonna cut&nbsp;it!)</p>
+<p>You&#8217;ve got all your source code in a git repo (self hosted or github or
+other,&nbsp;good!)</p>
+<p>You&#8217;re ready to write your first fabric script!&nbsp;(good!)</p>
+<p>Now let&#8217;s get that code out to&nbsp;production!</p>
+<h3>Goals</h3>
+<ol>
+<li>Deploy a git repository to&nbsp;production.</li>
+<li>
+<p>Let&#8217;s not use eggs for our own&nbsp;source.</p>
+<ol>
+<li>This is a debatable point, but for specific use cases like
+    deploying a Django application, building and maintaining eggs is
+    harder than it should be (mainly because of static&nbsp;resources)</li>
+<li>Deploying from a source directory is actually
+    more&nbsp;straightforward.</li>
+<li>We&#8217;ll still use &#8220;python ./setup.py install&#8221; for our own&nbsp;code.</li>
+</ol>
+</li>
+<li>
+<p>Use virtualenv for environment&nbsp;management.</p>
+</li>
+<li>Use pip to install&nbsp;dependencies.</li>
+<li>Reproducible deployment.</li>
+<li>No external network&nbsp;dependencies.</li>
+<li>Fast-ish deployment <span class="amp">&amp;</span> dependency&nbsp;installation.</li>
+<li>Match development <span class="amp">&amp;</span> production environments as closely as&nbsp;possible.</li>
+</ol>
+<h3>Pitfalls</h3>
+<ol>
+<li>
+<p>Think about security for just a couple&nbsp;seconds.</p>
+<ol>
+<li>ssh keys in&nbsp;production?</li>
+<li>Could an attacker gain access to your git&nbsp;repository?</li>
+</ol>
+</li>
+<li>
+<p><span class="dquo">&#8220;</span>pip install&#8221; is a heavyweight&nbsp;process.</p>
+<ol>
+<li>Goes out to pypi.python.org and fetches&nbsp;metadata.</li>
+<li>Fetches each package from it&#8217;s own home hosting&nbsp;provider.</li>
+<li>These hosts go down.  Do you want <span class="caps">YOUR</span> deployment to depend on
+    their servers being&nbsp;up?</li>
+</ol>
+</li>
+<li>
+<p>Cut your external network access and see what&nbsp;happens.</p>
+<ol>
+<li>Imagine if outbound network access from production
+    was disallowed.  Could you still&nbsp;deploy?</li>
+</ol>
+</li>
+<li>
+<p>How do I&nbsp;rollback?</p>
+</li>
+<li>How do I manage my system configuration<ol>
+<li>apache&nbsp;configs</li>
+<li>nginx&nbsp;configs</li>
+<li>gunicorn</li>
+<li>crontabs</li>
+<li>init scripts (start/stop,&nbsp;etc)</li>
+<li>supervisord&nbsp;configs</li>
+</ol>
+</li>
+</ol>
+<h3>Solutions</h3>
+<ol>
+<li>
+<p>Security <span class="amp">&amp;</span> key&nbsp;management</p>
+<ol>
+<li>Never ssh from production to anywhere.  Only ssh
+    into&nbsp;production.</li>
+<li>Production machines should never have private keypairs.
+     (authorized_keys is <span class="caps">OK</span>)</li>
+</ol>
+</li>
+<li>
+<p>git access in&nbsp;production</p>
+<ol>
+<li>Use the &#8220;push-pull&#8221;&nbsp;strategy.</li>
+<li>Your development machine does &#8220;git push&#8221; into a bare git repo in&nbsp;production</li>
+<li>Production machine then turns around and does &#8220;git pull&#8221; from
+    it&#8217;s own local&nbsp;repository.</li>
+<li>Or, build some eggs. (This has its own issues that I won&#8217;t
+    cover&nbsp;here)</li>
+<li>You can modify code in production, and commit it, but it won&#8217;t
+    make it back to your repository unless you &#8220;git pull&#8221; from
+    that repo.  This is a good thing.  Manage
+    production customization in&nbsp;a reproducible way.</li>
+</ol>
+</li>
+<li>
+<p>users</p>
+<ol>
+<li>don&#8217;t deploy as&nbsp;root</li>
+</ol>
+</li>
+<li>
+<p>virtualanv <span class="amp">&amp;</span>&nbsp;pip</p>
+<ol>
+<li>virtualenv is&nbsp;great!</li>
+<li>don&#8217;t rely on system&nbsp;packages!</li>
+<li>Make a new virtualenv every time you&nbsp;deploy!</li>
+<li>never run &#8220;sudo&nbsp;virtualenv&#8230;&#8221;</li>
+<li>never run &#8220;sudo&nbsp;pip&#8230;&#8221;</li>
+<li>
+<p>PIP_DOWNLOAD_CACHE is <span class="caps">NOT</span> your&nbsp;friend.</p>
+<ol>
+<li>why with&nbsp;examples</li>
+</ol>
+</li>
+<li>
+<p>Solution: Separate &#8220;install this package&#8221; from &#8220;download this&nbsp;package&#8221;</p>
+<ol>
+<li>Step 1: pip install &#8212;no-install &#8212;use-mirrors -I
+    &#8212;download=\$CACHE_DIR&nbsp;&#8230;</li>
+<li>Step 2: pip install &#8212;no-index
+    &#8212;index-url=file:///dev/null&nbsp;&#8230;</li>
+</ol>
+</li>
+<li>
+<p>Use some helper scripts to make this easier. (github link <span class="caps">TBD</span>)</p>
+</li>
+<li>
+<p>You&#8217;re still screwed&nbsp;sometimes.</p>
+<ol>
+<li>outline when <span class="caps">TBD</span></li>
+</ol>
+</li>
+<li>
+<p>Automatic dependency downloads can still bite&nbsp;you</p>
+</li>
+<li>
+<p>Periodically re-download&nbsp;everything</p>
+<ol>
+<li>This makes sure that if dependencies&nbsp;change</li>
+</ol>
+</li>
+<li>
+<p>Managing package&nbsp;upgrades.</p>
+<ol>
+<li>When you want to upgrade, re-download the package and you&#8217;ll
+    pick up the latest&nbsp;version.</li>
+<li>modify&nbsp;requirements.txt</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>Managing your system&nbsp;configurations</p>
+<ol>
+<li>In principle: Make a &#8220;mock /etc&#8221; in your&nbsp;repo</li>
+<li>Copy &#8220;mock /etc&#8221; on top of the &#8220;system /etc&#8221; to install.
+    (using&nbsp;fabric)</li>
+<li>A couple other commands to enable system services (a2ensite, and
+    friends,&nbsp;etc.)</li>
+<li>supervisord, but it&#8217;s outside the scope of this talk<ol>
+<li>system supervisord or a self-installed&nbsp;supervisord?</li>
+<li>How to start up&nbsp;supervisord?</li>
+<li>web interface to production or&nbsp;not?</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

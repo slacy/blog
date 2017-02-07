@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>(stopping the) Invasion of the Chinese Bandwidth Leeches.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2008-01-26T10:25:00-08:00">Sat 26 January 2008</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>(stopping the) Invasion of the Chinese Bandwidth&nbsp;Leeches.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>Ever since I <a href="http://slacy.com/blog/index.php/2008/01/17/using-mrtg-snmpd-to-monitor-your-openwrt-routers-throughput/">setup mrtg on my OpenWRT
+router</a>,
+I&#8217;ve been noticing that between 2pm and 8pm <span class="caps">PST</span>, there&#8217;s a huge spike in
+my outgoing bandwidth. I&#8217;ve been trying to track it down, and briefly
+suspected it was my TiVoHD &#8216;phoning home&#8217; and sending back megs and megs
+of clickstream logs (but I don&#8217;t watch that much, I&nbsp;swear!).</p>
+<p>Yesterday, I did some more deeper digging, and with the help of some
+freinds, got some good debugging information. So, here&nbsp;goes:</p>
+<p>1. To show the list of all open connections on your OpenWRT router, just
+cat /proc/net/ip_conntrack. Here&#8217;s an example that shows everything
+thats going on in my network right&nbsp;now:</p>
+<blockquote>
+<p># cat /proc/net/ip_conntrack | grep -i <span class="caps">ESTAB</span><br>
+tcp 6 86216 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=64.81.79.70 sport=53336
+dport=80 src=64.81.79.70 dst=64.81.240.181 sport=80 dport=53336
+[<span class="caps">ASSURED</span>] use=1 mark=3 bytes=529536<br>
+tcp 6 86390 <span class="caps">ESTABLISHED</span> src=192.168.1.114 dst=208.73.181.192
+sport=33621 dport=5223 src=208.73.181.192 dst=64.81.240.181 sport=5223
+dport=33621 [<span class="caps">ASSURED</span>] use=1 mark=0 l7proto=unknown bytes=1006750<br>
+tcp 6 54180 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=58.39.46.168 sport=80
+dport=43104 [<span class="caps">UNREPLIED</span>] src=58.39.46.168 dst=64.81.240.181
+sport=43104 dport=80 use=1 mark=3 bytes=1492<br>
+tcp 6 15431 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=76.238.142.66 sport=80
+dport=14501 [<span class="caps">UNREPLIED</span>] src=76.238.142.66 dst=64.81.240.181
+sport=14501 dport=80 use=1 mark=3 bytes=6000<br>
+tcp 6 15471 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=76.238.142.66 sport=80
+dport=14495 [<span class="caps">UNREPLIED</span>] src=76.238.142.66 dst=64.81.240.181
+sport=14495 dport=80 use=1 mark=3 bytes=6000<br>
+tcp 6 86399 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=192.168.1.1 sport=45191
+dport=22 src=192.168.1.1 dst=192.168.1.6 sport=22 dport=45191
+[<span class="caps">ASSURED</span>] use=1 mark=0 bytes=12571<br>
+tcp 6 15392 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=76.238.142.66 sport=80
+dport=14395 [<span class="caps">UNREPLIED</span>] src=76.238.142.66 dst=64.81.240.181
+sport=14395 dport=80 use=1 mark=3 bytes=4500<br>
+tcp 6 15445 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=76.238.142.66 sport=80
+dport=14488 [<span class="caps">UNREPLIED</span>] src=76.238.142.66 dst=64.81.240.181
+sport=14488 dport=80 use=1 mark=3 bytes=6000<br>
+tcp 6 86239 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=208.65.153.251 sport=53522
+dport=80 src=208.65.153.251 dst=64.81.240.181 sport=80 dport=53522
+[<span class="caps">ASSURED</span>] use=1 mark=3 bytes=4682<br>
+tcp 6 86375 <span class="caps">ESTABLISHED</span> src=192.168.1.109 dst=209.85.199.83
+sport=50741 dport=80 src=209.85.199.83 dst=64.81.240.181 sport=80
+dport=50741 [<span class="caps">ASSURED</span>] use=1 mark=3 bytes=4500<br>
+tcp 6 54191 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=58.39.46.168 sport=80
+dport=43069 [<span class="caps">UNREPLIED</span>] src=58.39.46.168 dst=64.81.240.181
+sport=43069 dport=80 use=1 mark=3 bytes=1492<br>
+tcp 6 15442 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=76.238.142.66 sport=80
+dport=14443 [<span class="caps">UNREPLIED</span>] src=76.238.142.66 dst=64.81.240.181
+sport=14443 dport=80 use=1 mark=3 bytes=6000<br>
+tcp 6 86399 <span class="caps">ESTABLISHED</span> src=192.168.1.6 dst=209.85.199.19 sport=51337
+dport=443 src=209.85.199.19 dst=64.81.240.181 sport=443 dport=51337
+[<span class="caps">ASSURED</span>] use=1 mark=3&nbsp;bytes=4924</p>
+</blockquote>
+<p>2. Find offending users (note the bytes=<span class="caps">XXX</span> lines above) and figure out
+who they are using &#8216;whois&#8217;. I never knew you could &#8216;whois&#8217; an <span class="caps">IP</span>
+address, like&nbsp;this:</p>
+<blockquote>
+<p># whois 208.73.181.192<br>
+[Querying whois.arin.net]<br>&nbsp;[whois.arin.net]</p>
+<p>OrgName: TiVo, Inc.<br>
+OrgID: <span class="caps">TIVOI</span><br>
+Address: 2160 Gold St.<br>
+City: Alviso<br>
+StateProv: <span class="caps">CA</span><br>
+PostalCode: 95002<br>
+Country: <span class="caps">US</span><br>&nbsp;[&#8230;]</p>
+</blockquote>
+<p>3. For the truly offensive users, if they&#8217;re coming in on port 80, block
+them using apache. I found that one culprit seems to be a chinese <span class="caps">IP</span>
+address (202.108.23.56) thats issuing <span class="caps">HEAD</span> and <span class="caps">GET</span> requests for all the
+avi files in my gallery. These files are all big, and it seems to be
+downloading the same content every day at nearly the same time. So,
+after grepping through my httpd logs, like&nbsp;this:</p>
+<blockquote>
+<p>[root@whisper httpd]# zcat *.gz | grep &#8220;<span class="caps">HEAD</span>.*mvi_&#8221; | awk
+&#8216;{print \$1}&#8217; | sort | uniq -c | sort -k1n<br>
+2 220.181.38.188<br>
+4 192.168.1.6<br>
+8 61.135.162.52<br>
+10 65.94.160.128<br>
+30 220.181.5.102<br>
+47 220.181.26.9<br>
+59 66.249.70.51<br>
+70 61.135.166.44<br>
+83 66.249.73.57<br>
+93 61.135.162.107<br>
+173 220.181.3.54<br>
+185 202.108.23.56<br>
+290 66.249.73.153<br>
+1100&nbsp;66.249.70.220</p>
+</blockquote>
+<p>And then filtering out Googlebot (the bottom 2 <span class="caps">IP</span> addresses) I found a
+pretty good list of&nbsp;&#8216;abusers&#8217;.</p>
+<p>4. Block &#8216;weird&#8217; crawler bots in robots.txt. I added the following&nbsp;entries:</p>
+<blockquote>
+<p>User-agent: Yeti<br>
+Disallow:&nbsp;/</p>
+<p>User-agent: Twiceler<br>
+Disallow:&nbsp;/</p>
+<p>User-agent: Baiduspider<br>
+Disallow:&nbsp;/</p>
+<p>User-agent: YodaoBot<br>
+Disallow:&nbsp;/</p>
+<p>User-agent: Gigabot/3.0<br>
+Disallow:&nbsp;/</p>
+</blockquote>
+<p>5. If there are other offenders, I could create some iptables rules that
+blocked their incoming <span class="caps">IP</span> addresses completely. This might be the real
+solution to blocking the Chinese robots. I could use iptables to block
+entire subnets of incoming traffic, which is pretty much what I think
+may be necessary, but I&#8217;m not an expert in iptables syntax&nbsp;(yet).</p>
+<p>I&#8217;m going to be keeping an eye on my outgoing bandwidth, and making sure
+that I don&#8217;t see any other big abusers. The real issue here is that when
+crawlers, spiders, and leeches use up all my bandwidth, it makes the
+experience for the &#8216;real&#8217; users (friends <span class="amp">&amp;</span> family) that much worse.
+Also, since I listen to all my music over the network, it was causing
+some stuttering issues for me at work, which really&nbsp;sucks.</p>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/bandwidth.html">bandwidth</a>
+            <a href="./tag/chinese.html">chinese</a>
+            <a href="./tag/connections.html">connections</a>
+            <a href="./tag/crawlers.html">crawlers</a>
+            <a href="./tag/leeches.html">leeches</a>
+            <a href="./tag/mrtg.html">mrtg</a>
+            <a href="./tag/openwrt.html">openwrt</a>
+            <a href="./tag/robotstxt.html">robots.txt</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

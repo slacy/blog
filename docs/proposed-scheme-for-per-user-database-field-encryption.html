@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Proposed scheme for per-user database field encryption.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2011-06-17T16:06:00-07:00">Fri 17 June 2011</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Proposed scheme for per-user database field&nbsp;encryption.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I&#8217;ve been thinking a lot about hackers, stolenpasswords, rainbow tables,
+and credit card numbers in&nbsp;databases.</p>
+<p>But, the question remains:  &#8221;<strong>How should I store credit card numbers in
+a database for maximum user security?</strong>&#8221;</p>
+<p>Typically, user authentication for web sites looks like&nbsp;this:</p>
+<ol>
+<li>User types username <span class="amp">&amp;</span> password into text box on a web&nbsp;page.</li>
+<li>username <span class="amp">&amp;</span> password and sent (ideally, via https) to the web&nbsp;server.</li>
+<li>The server hashes the password with a known secret (salt) to
+    generate a password&nbsp;hash.</li>
+<li>The server compares the password hash the same hash value stored in
+    the database.  If successful, a random session <span class="caps">ID</span> is generated and
+    sent back to the client as an <span class="caps">HTTP</span> header, as well as stored in a
+    local store for referencing in future&nbsp;requests.</li>
+</ol>
+<p><span style="font-size: small;">Key points:  Plain text passwords aren&#8217;t
+stored in the database.  Passwords are never sent unencrypted (if using
+https) and session <span class="caps">ID</span>&#8217;s are &#8220;unguessable&#8221; because they&#8217;re randomly
+chosen from a large&nbsp;space.</span></p>
+<p><span style="font-size: small;">If your web application needs to store
+sensitive user information, like credit card numbers, how should you do
+it?  I propose using per-user encryption keys that are based on a salted
+hash of the plain-text&nbsp;password.</span></p>
+<p><span style="font-size: small;">How do you compute the correct keys and,
+where should you store them?  One possibility is to use another secure
+hash of the user&#8217;s plain text password and some <em>other</em> salt value
+that&#8217;s not the same as the one used for password checking.   Let&#8217;s call
+the resultant value our <em>user encryption key</em>.  It should <strong>never</strong> be
+stored in persistent storage, but should be sent back to the user as an
+<span class="caps">HTTP</span>&nbsp;header.</span></p>
+<p><span style="font-size: small;">The user, with every request, will then
+be sending to the server a random session <span class="caps">ID</span> as well as their current
+<em>user encryption key</em> value.  The <em>user encryption key</em> would be used
+with a symmetric encryption algorithm to store any sensitive database
+values.  (Home address, credit card numbers, other site credentials,
+etc.)  When the user changes their password, then the encrypted database
+fields need to be re-encrypted with their new&nbsp;values.</span></p>
+<p><span style="font-size: small;">As the developer of the server software,
+you need to be extra careful to only store unencrypted sensitive
+information in <span class="caps">RAM</span>, and only use it for the minimum duration possible.  
+For example, it would be difficult to impossible to implement offline
+billing with such a system in&nbsp;place.</span></p>
+<p><span style="font-size: small;">With this scheme in place, your
+customer&#8217;s data will be completely secure, even if your server is hacked
+and even if your entire database replicated.  Even if the hackers had
+access to your source code, they could, at most, get the unencrypted
+data for users who were currently visiting the site (through net
+sniffing the user encryption key values) or from users whose PCs have
+been compromised.   That feels pretty secure to&nbsp;me.</span></p>
+<p><span style="font-size: small;">The resultant flow for user sign-in
+looks like&nbsp;this:</span></p>
+<ol>
+<li><span style="font-size: small;">Receive plaintext username and&nbsp;password</span></li>
+<li><span style="font-size: small;">Hash password with &#8220;password salt&#8221;
+    and check against stored value for user authentication and
+    session&nbsp;generation.</span></li>
+<li><span style="font-size: small;">Hash password with &#8220;user key salt&#8221;
+    and set an <span class="caps">HTTP</span> header with this value as the user
+    encryption&nbsp;key.</span></li>
+<li><span style="font-size: small;">When user reads or writes sensitive
+    information, encrypt/decrypt it with the user encryption&nbsp;key.</span></li>
+<li><span style="font-size: small;">Never store decrypted values in
+    persistent storage. (some asynchronous task queues may violate this
+    constraint, so be&nbsp;careful)</span></li>
+</ol>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

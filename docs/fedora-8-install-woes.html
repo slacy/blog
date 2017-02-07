@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Fedora 8 install woes.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2007-12-12T18:40:00-08:00">Wed 12 December 2007</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Fedora 8 install&nbsp;woes.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I tried to install Fedora 8 last night, and just like the last 2 or 3
+Fedora upgrades, it failed. This time the problem is that the installer
+(anaconda) hangs at about 25% done &#8220;resolving dependencies&#8221; Ugh. I
+strace&#8217;d anaconda and found that it was trying to do something in /tmp,
+/usr/tmp, and /var/tmp (god knows what), and was using up 100% of my
+<span class="caps">CPU</span>.</p>
+<p>After a bit of searching I found a link to the bug <a href="https://bugzilla.redhat.com/show_bug.cgi?id=372011">&#8220;depsolve hang in F7
+to F8 upgrade&#8221;&gt;</a>
+(of&nbsp;course!)</p>
+<p>Seems like they have some kind of updates patch for the Fedora 8
+installer, but it hasn&#8217;t yet been rolled into the released images. Ugh.
+You can read about it more on the <a href="https://fedoraproject.org/wiki/Bugs/F8Common">Fedora 8 common
+bugs</a> wiki page. There&#8217;s
+nothing like a &#8220;common bugs&#8221; page to make you feel <strong>really</strong> confident
+about a linux&nbsp;distro.</p>
+<p>Any suggestions about how I could move my system from <span class="caps">FC6</span> to Ubuntu?
+User data via backups is easy, but I&#8217;m loathed to even think about
+trying to replicate my postfix, mysql, and httpd configs in a new&nbsp;distro&#8230;</p>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/anaconda.html">anaconda</a>
+            <a href="./tag/fedora-8.html">Fedora 8</a>
+            <a href="./tag/hang.html">hang</a>
+            <a href="./tag/installer.html">installer</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

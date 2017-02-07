@@ -9,3 +9,4 @@ pelican-plugins/
 .sass-cache/
 \#*\#
 .\#*
+oldblog/output/

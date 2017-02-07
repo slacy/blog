@@ -16,7 +16,6 @@
         <ul class="pure-menu-list">
             <li class="pure-menu-item"></li>
 
-            <li class="pure-menu-item"><a href="../category/tensorflow-from-the-ground-up.html" class="pure-menu-link">TensorFlow From The Ground Up</a></li>
         </ul>
     </div>
 
@@ -92,7 +91,203 @@
         <a href="../introduction.html">Read more</a>
     </div>
 </div>
+<div class="post">
+    <div class="post-meta pure-g">
 
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2015-05-15T12:08:00-07:00">Fri 15 May 2015</abbr>
+</div>    </div>
+    <h2><a href="../crazy-things-that-the-ceres-bright-spots-could-be.html" rel="bookmark" title="Permalink to Crazy things that the Ceres bright spots could be.">Crazy things that the Ceres bright spots could&nbsp;be.</a></h2>
+    <div class="post-content">
+        <p>Here&#8217;s a quick list of some crazy things that the Ceres bright dots
+could (or could not)&nbsp;be.</p>
+<ol>
+<li>
+<p>A Biological Alien&nbsp;City</p>
+<p>Unlikely.  Current measurements of reflectivity of the spots says
+&#8220;they&#8217;re as reflective as water ice&#8221; or, in other terms &#8220;white
+as snow&#8221;.  Now, that&#8217;s not …</p></li></ol>
+    </div>
+    <div class="post-footer">
+        <a href="../crazy-things-that-the-ceres-bright-spots-could-be.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-11-10T14:50:00-08:00">Mon 10 November 2014</abbr>
+</div>    </div>
+    <h2><a href="../listing-installed-debianubuntu-packages-by-size.html" rel="bookmark" title="Permalink to Listing installed debian/Ubuntu packages by size.">Listing installed debian/Ubuntu packages by&nbsp;size.</a></h2>
+    <div class="post-content">
+        <p>Here&#8217;s a command to list all installed Debian/Ubuntu packages, sorted by
+size:<br>
+<code>dpkg-query -W -f='${db:Status-Abbrev} ${Installed-Size}\t${binary:Package} ${Version}\t${Maintainer}\n' | egrep "^ii" | sort -k2n</code></p>
+    </div>
+    <div class="post-footer">
+        <a href="../listing-installed-debianubuntu-packages-by-size.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-10-17T14:37:00-07:00">Fri 17 October 2014</abbr>
+</div>    </div>
+    <h2><a href="../running-do-release-upgrade-or-apt-get-dist-upgrade-on-an-lxc-container.html" rel="bookmark" title="Permalink to Running do-release-upgrade or ‘apt-get dist-upgrade’ on an LXC container.">Running do-release-upgrade or &#8216;apt-get dist-upgrade&#8217; on an <span class="caps">LXC</span>&nbsp;container.</a></h2>
+    <div class="post-content">
+        <p>I&#8217;ve found that running do-release-upgrade or even a &#8220;apt-get
+dist-upgrade&#8221; on a containerized machine instance using <span class="caps">LXC</span> won&#8217;t
+actually complete successfully.  I found a <a href="http://ubuntuforums.org/showthread.php?t=1863056">post on
+ubuntuforums</a>
+explaining the solution, but wanted to capture it here for my own&nbsp;reference.</p>
+<div class="highlight"><pre><span></span># First make sure to stop the LXC machine …</pre></div>
+    </div>
+    <div class="post-footer">
+        <a href="../running-do-release-upgrade-or-apt-get-dist-upgrade-on-an-lxc-container.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-10-10T12:43:00-07:00">Fri 10 October 2014</abbr>
+</div>    </div>
+    <h2><a href="../adding-an-always-launch-a-new-terminal-shortcut-to-gnome-launcher.html" rel="bookmark" title="Permalink to Adding an Always launch a new terminal shortcut to Gnome Launcher">Adding an Always launch a new terminal shortcut to Gnome&nbsp;Launcher</a></h2>
+    <div class="post-content">
+        <p>When using gnome3, the default Terminal launcher will just raise and
+focus an existing terminal if there already is one.  I find this
+behavior counter-intuitive.  I like to always create a new&nbsp;terminal.</p>
+<p>To add this behavior, create a file&nbsp;in:</p>
+<p>\~/.local/share/applications/newterm.desktop</p>
+<p>With&nbsp;contents:</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2 …</pre></div></td></tr></table>
+    </div>
+    <div class="post-footer">
+        <a href="../adding-an-always-launch-a-new-terminal-shortcut-to-gnome-launcher.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-10-06T13:29:00-07:00">Mon 06 October 2014</abbr>
+</div>    </div>
+    <h2><a href="../childrens-poem-about-iron-gall-ink.html" rel="bookmark" title="Permalink to Children’s Poem about Iron Gall Ink">Children&#8217;s Poem about Iron Gall&nbsp;Ink</a></h2>
+    <div class="post-content">
+        <p>Via
+<a href="http://http://www.ink-corrosion.org/igi_indexc33a.html">irongallink.com</a>
+and <a href="http://books.google.com/books/about/Rules_Made_by_E_B_for_His_Children_to_Le.html?id=Vhz2MgEACAAJ">this
+book</a>:</p>
+<blockquote>
+<p>To make common yncke of Wyne take a quart,<br>
+Two ounces of gomme, let that be a parte,<br>
+Five ounces of galles,<br>
+of copres take three,<br>
+Long standing dooth make it better to be;<br>
+If wyne ye do want, rayne water is best,<br>
+And …</p></blockquote>
+    </div>
+    <div class="post-footer">
+        <a href="../childrens-poem-about-iron-gall-ink.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-10-06T13:08:00-07:00">Mon 06 October 2014</abbr>
+</div>    </div>
+    <h2><a href="../iron-gall-ink-diy-project.html" rel="bookmark" title="Permalink to Iron Gall Ink DIY project.">Iron Gall Ink <span class="caps">DIY</span>&nbsp;project.</a></h2>
+    <div class="post-content">
+        <p>This weekend we finished up our &#8220;Make your own <a href="http://en.wikipedia.org/wiki/Iron_gall_ink">Iron Gall
+Ink</a>&#8221; project with the kids.
+ Amazingly, our crazy &#8220;only using stuff we have at home&#8221; experiment
+worked and we got something that resembled ink!  We even made our own
+rudimentary pens to write&nbsp;with!</p>
+<p>To make your own homemade …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../iron-gall-ink-diy-project.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-08-19T15:26:00-07:00">Tue 19 August 2014</abbr>
+</div>    </div>
+    <h2><a href="../winding-down-on-facebook.html" rel="bookmark" title="Permalink to Winding down on Facebook">Winding down on&nbsp;Facebook</a></h2>
+    <div class="post-content">
+        <p>I&#8217;ve been winding down my use of Facebook over the last several months,
+particularly when it comes to sharing photos and more personal/family
+details, but in general I&#8217;m finding that I get less and less utility
+from <span class="caps">FB</span> in general.  This has meant that for me, the …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../winding-down-on-facebook.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2014-01-29T12:30:00-08:00">Wed 29 January 2014</abbr>
+</div>    </div>
+    <h2><a href="../if-people-spoke-like-most-code-comments-are-written.html" rel="bookmark" title="Permalink to If people spoke like most code comments are written.">If people spoke like most code comments are&nbsp;written.</a></h2>
+    <div class="post-content">
+        <p>How do you like my new San Frascisco Giants Baseball&nbsp;hat?</p>
+<p>It&#8217;s a hat. It&#8217;s for the game baseball. Baseball is a game involving one
+or more bases and a ball.  You&#8217;re wearing the hat. Hats that are worn
+are hats that are currently on some person …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../if-people-spoke-like-most-code-comments-are-written.html">Read more</a>
+    </div>
+</div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+        </div>
+        <div class="pure-u-1-2 right">
+            <a href="../author/slacy2.html">More articles</a>
+        </div>
+    </div>
+</div>
 
         </div>
     </div>
@@ -103,7 +298,6 @@
     <footer class="index-footer">
 
         <a href="../" title="Slacy's Blog">Slacy's Blog</a>
-        <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>
 
     </footer>
 

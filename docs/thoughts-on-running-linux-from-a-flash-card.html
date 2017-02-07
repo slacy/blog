@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Thoughts on running Linux from a Flash card.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2008-07-25T10:52:00-07:00">Fri 25 July 2008</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Thoughts on running Linux from a Flash&nbsp;card.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>When I was away on vacation last month, I realized that it would be
+*really* great if I could have carried my computer with me on my
+travels, but who wants to lug a whole computer through the Swiss&nbsp;Alps?!</p>
+<p>I had previously heard about <a href="">Puppy Linux</a> and <a href="">qemu-puppy</a> which
+are tailor-made linux distributions that come directly as a bootable <span class="caps">ISO</span>
+image and can be put on a flash disk. This seemed like a great
+compromise: Bring your whole &#8216;computer&#8217; sans hardware, wherever you go.
+qemu-puppy was of particular interest to me, because it could either be
+booted directly from a <span class="caps">USB</span> disk, or it could be run in the qemu&nbsp;emulator.</p>
+<p>There are a lot of situations where re-booting just isn&#8217;t possible.
+Think about visiting an internet cafe: You don&#8217;t want to be seen
+rebooting their computer, changing the <span class="caps">BIOS</span> to be able to boot from <span class="caps">USB</span>,
+and then rebooting into your own system. Never mind hotel lobbies, or
+your friends desktop at home. Making these kinds of changes are just not&nbsp;cool.</p>
+<h3>Evaluating&nbsp;emulation</h3>
+<p>So, If rebooting isn&#8217;t an option, then that leaves emulation. There are
+several emulated or virtual environments available, so I took a look at
+the 3 main options available. Here&#8217;s my&nbsp;summary:</p>
+<ul>
+<li>VMWare (Linux, Windows, Mac)<ul>
+<li>Con: Requires administrator install. (This will be impossible in
+    internet cafes, and rude on friends/family&nbsp;computers)</li>
+<li>Con: Uses proprietary image creation tools (Although some
+    workarounds&nbsp;exist)</li>
+<li>Pro: Fast <span class="amp">&amp;</span> fairly standard. May be pre installed in some&nbsp;locations?</li>
+<li>Con: No &#8216;unaccellerated&#8217; (i.e. fully emulated) mode&nbsp;available.</li>
+</ul>
+</li>
+<li>Qemu (Linux, Windows, Mac)<ul>
+<li>Con: Requires administrator install for&nbsp;accelleration</li>
+<li>Pro: Can run unaccellerated without administrator install, which
+    is slow, but&nbsp;works.</li>
+<li>Pro: Player can be used without running an&nbsp;installer.</li>
+<li>Pro: Open source tools for image&nbsp;creation.</li>
+<li>Con: Because of limitations in qemu disk format and fat32, <span class="caps">4GB</span>
+    is the largest single disk that can be&nbsp;made.</li>
+<li>Pro: Supports both encrypted and sparse image&nbsp;formats.</li>
+<li>Pro: Available on Mac, Linux, Windows for&nbsp;free.</li>
+</ul>
+</li>
+<li>kvm (Linux-only)<ul>
+<li>Pro: Just like qemu, except fully accellerated when available on
+    Linux&nbsp;systems.</li>
+<li>Con: Would require an administrator install if not
+    already&nbsp;present.</li>
+</ul>
+</li>
+</ul>
+<p>So, I began to focus in on building a system inside a qemu image, that
+would run either accellerated when available (i.e. at home and work) and
+that still had reasonable performance when running un-accellerated. So,
+I began to download and install a variety of pre-packaged distributions,
+and that also made me come up with my personal requirements, which I&#8217;ll
+include here&nbsp;first:</p>
+<h3>System&nbsp;requirements</h3>
+<ul>
+<li>Must run in qemu, both accellerated (kqemu, kvm, etc.)
+    and unaccellerated. Worst case boot time must still be&nbsp;&#8216;reasonable&#8217;.</li>
+<li>Must include some way to run X11 applications, including a fully
+    fledged browser and windowing tools (Firefox 3.x, window manager,
+    toolbar, terminal emulator,&nbsp;etc.)</li>
+<li>Ideally would be based on a standard distribution, and easily
+    upgradeable as new software&nbsp;arises</li>
+<li>Must also include a reasonable set of commandline tools for doing
+    terminal-only work when running unaccellerated (i.e. emacs, screen,
+    and all the other &#8216;regular&#8217; unix&nbsp;tools)</li>
+<li>Must not boot directly into X11, and must not use an X11 login
+    (gdm, etc.) screen. These are too heavyweight when booting&nbsp;unaccellerated</li>
+<li>Must fit in a 4G&nbsp;image.</li>
+<li>Must have a clean, uncluttered X11&nbsp;interface</li>
+</ul>
+<h3>The&nbsp;distributions</h3>
+<ul>
+<li>Puppy Linux <span class="amp">&amp;</span> qemu-puppy<ul>
+<li>Too&nbsp;ugly</li>
+<li>Has a graphical login&nbsp;screen</li>
+<li>Uses a non-standard web&nbsp;browser</li>
+<li>Uses a non-standard distribution, so hard to&nbsp;upgrade</li>
+</ul>
+</li>
+<li><span class="caps">DSL</span> (Damn Small Linux)<ul>
+<li>Boots *really*&nbsp;fast!</li>
+<li>Ugly</li>
+<li>Uses a non-standard web&nbsp;browser</li>
+<li>Uses a non-standard distribution, so hard to&nbsp;upgrade</li>
+<li>Lots of missing tools, and no &#8216;apt-get&#8217; to install things (i.e.&nbsp;emacs)</li>
+</ul>
+</li>
+<li>ubuntulite<ul>
+<li>Con: Has a weird install process with alternate&nbsp;repos</li>
+<li>Con: Still uses graphical&nbsp;login</li>
+<li>Pro: Mostly standard&nbsp;ubuntu</li>
+<li>Con: Not any better than a trimmed down&nbsp;ubuntu-jeos</li>
+</ul>
+</li>
+<li>xubuntu<ul>
+<li>Con: Way too many services running for a small <span class="caps">VM</span></li>
+<li>Con: Uses too much <span class="caps">CPU</span> when sitting&nbsp;&#8220;idle&#8221;</li>
+</ul>
+</li>
+<li>ubuntu-jeos<ul>
+<li>Pro: Kernel built specifically for&nbsp;VMs</li>
+<li>Pro: Standard ubuntu otherwise (trimmed down base&nbsp;install)</li>
+<li>Con: No X11 or graphical <span class="caps">UI</span> at all (but easy to&nbsp;install!)</li>
+<li>Pro: Easy to install new packages, easy to&nbsp;upgrade.</li>
+<li>Pro: Installs as a &#8216;real&#8217; fully fledged distro, not as a live <span class="caps">CD</span>
+    or specially tailored&nbsp;distro.</li>
+<li>Con: Only Xorg server is available (no Xvesa, as far as I
+    can&nbsp;tell).</li>
+</ul>
+</li>
+</ul>
+<p>So, I decided to start with ubuntu-jeos as my base, and to customize
+from there. My biggest insight wast that I realized that I don&#8217;t really
+need to run a &#8220;physical&#8221; X11 server, I could just run a <span class="caps">VNC</span> server, and
+export a graphical display that way. The <span class="caps">VNC</span> server is much lighter
+weight than Xorg, its easy to start and stop on the commandline (no
+complicated configs) and it makes the <span class="caps">VNC</span> viewer take the brunt of the
+<span class="caps">CPU</span> needed to power the display. Some quick experiments showed that this
+was all&nbsp;true!</p>
+<p>My best case image is&nbsp;now:</p>
+<ul>
+<li>Base ubuntu-jeos&nbsp;install</li>
+<li><span class="caps">VNC</span>&nbsp;server</li>
+<li>emacs-nox</li>
+<li>sshd</li>
+</ul>
+<p>Which gives me all kinds of interesting options. The system boots up in
+text mode, and from there, I can&nbsp;either:</p>
+<ul>
+<li>Work strictly in the text <span class="caps">UI</span>, if I&#8217;m just doing something&nbsp;simple.</li>
+<li>Start a <span class="caps">VNC</span> server and run programs inside that, if local X11
+    isn&#8217;t&nbsp;available.</li>
+<li>If local X11 is available, then I can use ssh with X11 forwarding to
+    run programs in the <span class="caps">VM</span> and have them displayed&nbsp;locally.</li>
+</ul>
+<p>This is a really flexible setup! A <span class="caps">4GB</span> flash drive is large enough to
+hold the entire <span class="caps">VM</span> image, as well as some local tools, like Windows <span class="amp">&amp;</span>
+Mac <span class="caps">SSH</span> clients, <span class="caps">VNC</span> viewers, qemu emulator binaries, etc. So, on one
+flash drive, I have a complete computer (sans hardware) and enough
+support binaries in the emulators to run it pretty much any way I like,
+with no install on the host computer necessary!&nbsp;Sweet!</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

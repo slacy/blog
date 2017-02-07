@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>30 second tutorial for ipython, pylab, numpy and matplotlib</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2008-01-30T21:24:00-08:00">Wed 30 January 2008</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>30 second tutorial for ipython, pylab, numpy and&nbsp;matplotlib</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p><a href="http://ipython.scipy.org/moin/">ipython</a> <span class="amp">&amp;</span>
+<a href="http://matplotlib.sourceforge.net/pylab_commands.html">pylab</a>,
+especially when you include <a href="http://numpy.scipy.org/">numpy</a> and
+<a href="http://matplotlib.sourceforge.net">matplotlib</a>, make a fantastic
+replacement for <a href="http://www.gnuplot.info/">gnuplot</a>. Imagine if you had
+the plotting capabilities of <a href="http://www.wolfram.com">Mathematica</a>, but
+the ease of use of <a href="http://www.python.org/">Python</a>. Thats what this
+combo gives&nbsp;you.</p>
+<p>First, you need to install all the right bits. I&#8217;ve got links above, and
+each link should have a good install tutorial. For linux distributions,
+this is particularly easy. Just use yum or&nbsp;apt-get.</p>
+<p>Start off by running the interactive ipython shell in pylab&nbsp;mode:</p>
+<blockquote>
+<p># ipython&nbsp;-pylab</p>
+</blockquote>
+<p>Then, once you&#8217;re there, lets do a simple&nbsp;plot:</p>
+<blockquote>
+<p>&gt;&gt; your_data = load(&#8220;./datafile&#8221;)<br>
+&gt;&gt; plot(your_data);<br>
+&gt;&gt;&nbsp;legend()</p>
+</blockquote>
+<p>The file &#8216;datafile&#8217; could look something like&nbsp;this:</p>
+<blockquote>
+<p>1 2 3<br>
+2 3 4<br>
+3 2 3<br>
+4 1 2<br>
+5 0 1<br>
+6 1 0<br>
+7 2 1<br>
+8 3 2<br>
+9 2&nbsp;3</p>
+</blockquote>
+<p>The plot() function will pop up a window that looks like this:<br>
+<img alt="" src="http://slacy.com/blog/wp-content/matplotlib.png"></p>
+<p>Pretty easy,&nbsp;huh?</p>
+<p>The great part about this combination is the number of other
+transformations that you can do on the data. So, any sort of other data
+analysis that you&#8217;d like to do (sorting, contour, histogramming, etc.)
+is all built in to either matplotlib, numpy, or pylab.&nbsp;Excellent!</p>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/gnuplot.html">gnuplot</a>
+            <a href="./tag/ipython.html">ipython</a>
+            <a href="./tag/matplotlib.html">matplotlib</a>
+            <a href="./tag/numpy.html">numpy</a>
+            <a href="./tag/pylab.html">pylab</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

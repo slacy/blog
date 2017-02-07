@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Slacy's Blog - Python</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="main-container">
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-2-3">
+
+            <div class="post heading">
+                <div class="heading-prefix">Tagged in </div>
+                <h3>Python</h3>
+            </div>
+
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-11-19T11:22:00-08:00">Thu 19 November 2009</abbr>
+</div>    </div>
+    <h2><a href="../resolving-circular-model-imports-caused-by-haystack-django.html" rel="bookmark" title="Permalink to Resolving circular model imports caused by Haystack Django">Resolving circular model imports caused by Haystack&nbsp;Django</a></h2>
+    <div class="post-content">
+        <p>So, in converting our search to Haystack, I&#8217;ve found that some of my
+standalone maintainence scripts no longer work.  They had an import
+error trying to import some of the&nbsp;models.</p>
+<p>The issue is that I&#8217;ve updated my models.py with some Haystack code. 
+The code at hand …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../resolving-circular-model-imports-caused-by-haystack-django.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-11-06T09:46:00-08:00">Fri 06 November 2009</abbr>
+</div>    </div>
+    <h2><a href="../flymake-for-emacs-python.html" rel="bookmark" title="Permalink to flymake for emacs + Python">flymake for emacs +&nbsp;Python</a></h2>
+    <div class="post-content">
+        <p>flymake is an emacs mode that lets you &#8220;compile&#8221; (or syntax check) your
+code on the fly. For Python, this means that you can run several syntax
+checkers, like pep8 or pylint, or pyflakes (or all of the above) while
+you&#8217;re editing your code in realtime. To get this …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../flymake-for-emacs-python.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-11-04T10:16:00-08:00">Wed 04 November 2009</abbr>
+</div>    </div>
+    <h2><a href="../useful-keybindings-for-emacs-python-mode.html" rel="bookmark" title="Permalink to Useful keybindings for emacs python-mode">Useful keybindings for emacs&nbsp;python-mode</a></h2>
+    <div class="post-content">
+        <p>I wrote up this keybinding the other day at work, and found that I
+missed it when I went home, so I wrote it again from&nbsp;scratch.</p>
+<p>It allows you easily indent or undent the current region using M-left
+and&nbsp;M-right:</p>
+<p><span class="dquo">&#8220;</span>` {.lisp name=&#8221;code&#8221;}
+(global-set-key [M-left] &#8216;(lambda () (interactive)
+  (save-excursion
+    (py-shift-region-left …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../useful-keybindings-for-emacs-python-mode.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-10-22T14:45:00-07:00">Thu 22 October 2009</abbr>
+</div>    </div>
+    <h2><a href="../pprinting-the-django-context-object.html" rel="bookmark" title="Permalink to pprinting the Django context object">pprinting the Django context&nbsp;object</a></h2>
+    <div class="post-content">
+        <p>This was non-obvious to me for quite some time, and I tried several
+different approaches before settling on this&nbsp;one:</p>
+<p>If you would like to pprint your Django Context (or RequestContext)
+object from within a template itself, there are several approaches you
+can take.  The easiest way I found is …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../pprinting-the-django-context-object.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-07-24T15:35:00-07:00">Fri 24 July 2009</abbr>
+</div>    </div>
+    <h2><a href="../how-to-split-viewspy-into-a-directory-django-python.html" rel="bookmark" title="Permalink to How to split views.py into a directory (Django, Python)">How to split views.py into a directory (Django,&nbsp;Python)</a></h2>
+    <div class="post-content">
+        <p>So, I&#8217;ve been doing some Django programming on the side, and the thing
+that annoys me is that Django forces you to put nearly all your source
+code into 2 files:  models.py and&nbsp;views.py</p>
+<p>Being a reasonable person, I wanted to have a separate file for each …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../how-to-split-viewspy-into-a-directory-django-python.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2009-05-13T12:41:00-07:00">Wed 13 May 2009</abbr>
+</div>    </div>
+    <h2><a href="../perl-in-place-replacement-syntax.html" rel="bookmark" title="Permalink to Perl in place replacement syntax">Perl in place replacement&nbsp;syntax</a></h2>
+    <div class="post-content">
+        <p>I always forget how to do this, so I&#8217;m writing it&nbsp;down:</p>
+<p>perl -pi -e&nbsp;&#8220;s/foo/bar/g&#8221;</p>
+<p>Is there a way to do this in Python and be as concise? That would be
+really nice, and would eliminate one more place where I end up using
+Perl …</p>
+    </div>
+    <div class="post-footer">
+        <a href="../perl-in-place-replacement-syntax.html">Read more</a>
+    </div>
+</div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+            <a href="../tag/python3.html">Previous articles</a>
+        </div>
+        <div class="pure-u-1-2 right">
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="pure-u-1 pure-u-lg-1-3">
+            <div class="right-container">
+                <div class="right-bar">
+                    <div class="right-head">
+                         Tags
+                    </div>
+                    <div class="tags">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

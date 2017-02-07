@@ -64,7 +64,12 @@ MEDIUS_AUTHORS = {
 PLUGIN_PATHS = ["plugins"]
 PLUGINS = ["render_math"]
 
-DEFAULT_PAGINATION = False
+DEFAULT_PAGINATION = 10
+ARCHIVE_SAVE_AS = 'archive/index.html'
+YEAR_ARCHIVE_SAVE_AS = 'archive/{date:%Y}/index.html'
+MONTH_ARCHIVE_SAVE_AS = 'archive/{date:%Y}/{date:%m}/index.html'
+USE_FOLDER_AS_CATEGORY = False
+DISPLAY_CATEGORIES_ON_MENU = False
 
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True

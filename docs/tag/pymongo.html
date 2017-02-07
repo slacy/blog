@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Slacy's Blog - pymongo</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="main-container">
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-lg-2-3">
+
+            <div class="post heading">
+                <div class="heading-prefix">Tagged in </div>
+                <h3>pymongo</h3>
+            </div>
+
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2011-01-05T11:38:00-08:00">Wed 05 January 2011</abbr>
+</div>    </div>
+    <h2><a href="../simple-pymongo-dereference-that-understands-other-databases.html" rel="bookmark" title="Permalink to Simple pymongo dereference that understands other databases.">Simple pymongo dereference that understands other&nbsp;databases.</a></h2>
+    <div class="post-content">
+        <p>Here&#8217;s the code for a Python dereference function using pymongo that
+understands cross-database references&nbsp;properly:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymongo</span>
+
+<span class="k">def</span> <span class="nf">dereference</span><span class="p">(</span><span class="n">ref</span><span class="p">):</span>
+    <span class="n">dbname</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">database</span>
+    <span class="n">collname</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">collection</span>
+    <span class="k">print</span> <span class="n">ref</span>
+    <span class="k">return</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">Connection</span><span class="p">()[</span><span class="n">dbname</span><span class="p">][</span><span class="n">collname</span><span class="p">]</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s1">&#39;_id&#39;</span><span class="p">:</span> <span class="n">ref</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+</pre></div>
+    </div>
+    <div class="post-footer">
+        <a href="../simple-pymongo-dereference-that-understands-other-databases.html">Read more</a>
+    </div>
+</div>
+<div class="post">
+    <div class="post-meta pure-g">
+
+
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/general.html" class="category">General</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-12-01T17:02:00-08:00">Wed 01 December 2010</abbr>
+</div>    </div>
+    <h2><a href="../identity-mapper-reducer-for-mongodb.html" rel="bookmark" title="Permalink to Identity mapper reducer for MongoDB">Identity mapper  reducer for&nbsp;MongoDB</a></h2>
+    <div class="post-content">
+        <p>This code for doing an identity map <span class="amp">&amp;</span> identity reduce in MongoDB.
+Mostly, this is useful for debugging and testing. This code is written
+in Python, and using the pymongo&nbsp;driver.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymongo.code</span> <span class="kn">import</span> <span class="n">Code</span>
+
+<span class="n">connection</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">Connection</span><span class="p">()</span>
+<span class="c1"># You&#39;ll need to get your DB and your Collection here.   </span>
+<span class="c1"># From …</span></pre></div>
+    </div>
+    <div class="post-footer">
+        <a href="../identity-mapper-reducer-for-mongodb.html">Read more</a>
+    </div>
+</div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+        </div>
+        <div class="pure-u-1-2 right">
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="pure-u-1 pure-u-lg-1-3">
+            <div class="right-container">
+                <div class="right-bar">
+                    <div class="right-head">
+                         Tags
+                    </div>
+                    <div class="tags">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Fedora Core 2, imapd & cyrus</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/linux-stuff.html" class="category">Linux Stuff</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2005-04-22T07:00:00-07:00">Fri 22 April 2005</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Fedora Core 2, imapd <span class="amp">&amp;</span>&nbsp;cyrus</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>So, I upgraded my system to Fedora Core 2 last weekend, and there was a
+big&nbsp;surprise:</p>
+<p>The U of W imap server isn&#8217;t supported or distributed anymore, so I had
+to switch to using the new (and only) imap server:&nbsp;cyrus.</p>
+<p>Cyrus is okay, but administration is a pain in the&nbsp;ass.</p>
+<p>So, I had to update all my mbox mail into cyrus, and couldn&#8217;t really
+find any good instructions on the web, so I&#8217;ll post some&nbsp;here.</p>
+<p>In general, its a 3-step&nbsp;process:</p>
+<p>1. Create mail folders using <span
+style="font-weight: bold;">cyradm</span><br>
+2. Use <span style="font-weight: bold;">formail</span> and <span
+style="font-weight: bold;">cpmsg.pl</span> (see below) to translate mbox
+file into cyrus messages<br>
+3. Run <span style="font-weight: bold;">reconstruct</span> on the cyrus&nbsp;folders.</p>
+<h3>Step 1: Use cyradm to create&nbsp;mailboxes</h3>
+<p>This is fairly easy. If you&#8217;re not familiar with cyradm, here are the
+things that you need to&nbsp;know:</p>
+<p>You should know that all the mailboxes in cyrus are named things like<br>
+&#8220;user.username&#8221; where &#8220;username&#8221; is the <span class="caps">IMAP</span> user name. So, you want<br>
+to do something like&nbsp;this:</p>
+<p><span style="font-family: courier new,courier,monospace;">cyradm -U
+cyrus&nbsp;localhost</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"><span class="caps">IMAP</span>&nbsp;Password:</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">cm&nbsp;user.username.MigratedMessages</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">cm&nbsp;user.username.MigratedMessages.foldername</span></p>
+<p>etc. once for each folder that you are going to&nbsp;migrate.</p>
+<h3>Step 2: Use formail and cpmsg.pl to translate mbox files into cyrus&nbsp;messages</h3>
+<p>Formail is a unix program that will parse mbox formatted messages and<br>
+do things with them. What you want to do is turn each message into a<br>
+cyrus-style message file in the right&nbsp;directory.</p>
+<p>Here&#8217;s the text of cpmsg.pl that I stole from another site. Basically,<br>
+it names the file correctly, and puts some extra newlines on the&nbsp;end:  </p>
+<p><span
+style="font-family: courier new,courier,monospace;">#!/usr/bin/perl&nbsp;-w</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">#</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"># Usage: cat
+mailbox.txt | formail -s&nbsp;cpmsg.pl</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">#</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"># where
+&#8216;cpmsg.pl&#8217; is the name of this&nbsp;script</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">#</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"># Purpose:
+Called by formail once for each mail message in a&nbsp;Berkeley-</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"># format&nbsp;mailbox</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">#</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">\<span class="math">\(maildir =
+"\\)</span><span class="caps">ARGV</span>[0]&#8221;;</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">if
+(!\<span class="math">\(maildir) { die "Usage: \\)</span>0 \$maildir&#8221;;&nbsp;}</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"># Formail
+increments this number for each message.&nbsp;The</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"># leading
+&#8220;0&#8220;&#8216;s must be removed (e.g. 001 becomes&nbsp;1)</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">\<span class="math">\(filenum =
+(\\)</span><span class="caps">ENV</span>{<span class="caps">FILENO</span>} - 0) +&nbsp;1;</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">open
+(<span class="caps">OUTFILE</span>,&#8221;&gt;\<span class="math">\(maildir/\\)</span>filenum.&#8221;);</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">while
+(<stdin>) {</stdin></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;">&nbsp;chomp;</span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"></span>  </p>
+<p><span style="font-family: courier new,courier,monospace;"> print <span class="caps">OUTFILE</span>&nbsp;&#8220;\$_</p>
+<p></span>Take the above source code, past it into a scrpt called cpmsg.pl,
+and save it.  You&#8217;re now ready to start converting the mailboxes. 
+Basically, you want to do&nbsp;this:</p>
+<p>cat mbox_filename | formail -s ./cpmsg.pl&nbsp;/var/spool/imap/u/user/username/MigratedMessages/foldername</p>
+<p>That will take the mbox_filename listed, and call cpmsg.pl once for
+each message in the file, placing them in the named folder.  Then
+cpmsg.pl does some very simple formatting, and saves out the individual
+files with the filenames that cyrus expects to see.  <span
+style="font-weight: bold;"><span class="caps">NOTE</span>: <span class="caps">DO</span> <span class="caps">NOT</span> <span class="caps">RUN</span> <span class="caps">THIS</span> <span class="caps">ON</span> A <span class="caps">CYRUS</span> <span class="caps">MAILBOX</span> <span class="caps">THAT</span>
+<span class="caps">ALREADY</span> <span class="caps">HAS</span> <span class="caps">MESSAGES</span> <span class="caps">IN</span> <span class="caps">IT</span>.  <span class="caps">IT</span> <span class="caps">WILL</span> <span class="caps">OVERWRITE</span> <span class="caps">THE</span> <span class="caps">EXISTING</span>
+<span class="caps">MESSAGES</span>.</span>  You have been&nbsp;warned.</p>
+<h3>Step 3: Run reconstruct on all the toplevel&nbsp;mailboxes</h3>
+<p>This step is fairly straightforward. You just have to run the cyrus
+command &#8220;reconstruct&#8221; for each user mailbox. This process creates the
+required indices and database entries for each e-mail message. The
+syntax is as follows: (for Fedora Core 2&nbsp;Systems)</p>
+<p><span style="font-family: courier new,courier,monospace;"># su -
+cyrus</span><br>
+<span style="font-family: courier new,courier,monospace;">#
+/usr/lib/cyrus-imapd/reconstruct -r&nbsp;user.username</span></p>
+<p>Thats it! You should be good to go with all your mailboxes migrated&nbsp;safely.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

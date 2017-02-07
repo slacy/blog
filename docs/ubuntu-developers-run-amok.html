@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Ubuntu developers run amok.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2007-09-27T08:16:00-07:00">Thu 27 September 2007</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Ubuntu developers run&nbsp;amok.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I&#8217;m not an Ubuntu user, so when I found out that the next version of
+Ubuntu will <em>not</em> use <a href="http://www.gnu.org/software/bash/">bash</a> as its
+default shell for /bin/sh, I was really surprised. Funny enough, they&#8217;ve
+decided to use <a href="http://gondor.apana.org.au/~herbert/dash/">dash</a> instead
+of bash, because its &#8216;more <span class="caps">POSIX</span>-compliant&#8217; and because it has slightly
+higher performance, making all your shell scripts run&nbsp;faster.</p>
+<p>The funny thing is, this is just a horrible idea. I&#8217;ll go through the&nbsp;reasons:</p>
+<p>1. bash has been the default shell for nearly a decade, and thus, most
+scripts are written in bash syntax, and sometimes use bash features even
+though it says &#8220;#!/bin/sh&#8221; at the top of the file. The Ubuntu
+developers say &#8220;well, thats a broken script that needs to be fixed&#8221;
+without any regard for what this will mean for their&nbsp;users.</p>
+<p>2. Having the login shell different from the scripting shell is a really
+bad idea. This is like someone living in Spain teaching their kids to
+speak Esperanto at home. It&#8217;ll just lead to mass&nbsp;confusion.</p>
+<p>3. Shell scripting performance? Seriously, who cares? One of the use
+cases that they quote in their
+<a href="https://wiki.ubuntu.com/DashAsBinSh">DashAsBinSh</a> wiki page is that
+./configure for OpenOffice runs 2 minutes faster. Do I care? This is a
+one time script, and even so, <em>no one actually runs it</em>! (other than the
+guy who builds the OpenOffice packages). Even as a programmer employed
+at a large <span class="amp">&amp;</span> well-known web software company, I probably run ./configure
+scripts one a week at tops, and more likely, once a month, and only for
+my personal&nbsp;projects.</p>
+<p>4. If bash is so horribly slow, then why not spend your effort profiling
+it and improving&nbsp;it?</p>
+<p>You can read <a href="https://bugs.launchpad.net/ubuntu/+source/dash/+bug/61463">a great bug
+report</a> with
+lots of follow-up replies from both the Ubuntu developers and real
+users. Funny thing is, the Ubuntu developer community is being a stick
+in the mud, and is really committed to dash. What&nbsp;hubris!</p>
+<p>As a side note, they no longer use the catchphrase <a href="https://launchpad.net/bounties/all-linux-for-humans">&#8220;Ubuntu, Linux for
+humans&#8221;</a>. I guess
+it should be &#8220;Ubuntu, Linux for Ubuntu developers on a silly performance
+rampage that brakes reasonable behavior for everyone&nbsp;else&#8221;.</p>
+<p>And I thought I would switch away from Fedora someday&#8230; guess&nbsp;not!</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

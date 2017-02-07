@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>General</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="category-page-container">
+    <div class="category-logo">
+        <h1><a href="../category/general.html" rel="bookmark" title="Permalink to General">General</a></h1>
+    </div>
+
+    <div class="section-header">
+        Latest
+    </div>
+
+
+
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../simple-asynchronous-form-submission-using-jquery.html">Simple asynchronous form submission using&nbsp;jQuery</a></h1>
+
+               <p>It&#8217;s not hard to submit a form asynchronously in jQuery. Here&#8217;s a little
+example. I put a block like this right below my form&nbsp;element.</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;script</span> <span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+$(&quot;#my_form&quot;).submit(function() {
+    $.ajax({
+        type: &quot;POST&quot;,
+        url: &quot;/path/to/post/handler/&quot;,
+        data: $(&quot;#my_form&quot;).serializeArray(),
+        success: function() {
+            // Whatever you want …</pre></div>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-18T15:26:00-07:00">Fri 18 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../breaking-out-of-the-middle-of-a-try-block-in-python.html">Breaking out of the middle of a try block in&nbsp;Python</a></h1>
+
+               <p>I had some code where I wanted to break out of a try block in Python.
+The code looked something like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>    try:
+        print &quot;First&quot;
+        if some_condition:
+            # What do I put here to break out of the try block?
+        print &quot;Second&quot;
+    except Exception as e:
+        if e:
+            print &quot;Exception&quot;
+    print …</pre></div>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-16T10:34:00-07:00">Wed 16 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../twitterbots-unite.html">Twitterbots&nbsp;unite!</a></h1>
+
+               <p>So, when you post a link to twitter, what&nbsp;happens?</p>
+<p>Within a matter of seconds, you&#8217;ll see traffic from at least all of the&nbsp;following:</p>
+<div class="highlight"><pre><span></span><span class="nt">50</span><span class="p">.</span><span class="nc">18</span><span class="p">.</span><span class="nc">61</span><span class="p">.</span><span class="nc">103</span> <span class="nt">-</span> <span class="nt">-</span> <span class="cp">[</span><span class="mi">10</span><span class="p">/</span><span class="nx">Mar</span><span class="p">/</span><span class="nx">2011</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">15</span> <span class="o">+</span><span class="mi">0000</span><span class="cp">]</span> <span class="s2">&quot;HEAD / HTTP/1.1&quot;</span> <span class="nt">404</span> <span class="nt">221</span> <span class="s2">&quot;-&quot;</span> <span class="s2">&quot;UnwindFetchor/1.0 (+http://www.gnip.com …</span></pre></div>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-10T00:01:00-08:00">Thu 10 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../pymacs-ropemacs-and-virtualenv-all-at-the-same-time.html">pymacs, ropemacs, and virtualenv, all at the same&nbsp;time.</a></h1>
+
+               <p>So, you&#8217;re developing for Python, and you want to use rope and ropemacs
+and pymacs, but it&#8217;s totally busted when you use your&nbsp;virtualenv.</p>
+<p>In addition, the packaged versions of pymacs+ropemacs for ubuntu 10.10
+(and 11.04) are also kind of busted, because they complains with …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-04T17:15:00-08:00">Fri 04 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../an-extremely-simple-config-pattern-for-python.html">An extremely simple config pattern for&nbsp;Python</a></h1>
+
+               <p>So, you&#8217;re developing a Python application.<br>
+And, you have needs for &#8220;production&#8221; versus &#8220;development&#8221;&nbsp;configs.</p>
+<p>If you&#8217;re using a web framework, you might have some support for doing
+this, but what about your other modules that you&#8217;d like to configure in
+a similar&nbsp;way?</p>
+<p>What you sort …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-03T10:44:00-08:00">Thu 03 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../making-pep8-pyflakes-etc-work-with-virtualenv.html">Making pep8, pyflakes, etc work with&nbsp;virtualenv.</a></h1>
+
+               <p>Unfortunately, the pre-built binaries for the Python pep8 checker and
+pyflakes both point directly at #!/usr/bin/python. (<span class="caps">FYI</span> I have at least
+one git pull request out to fix&nbsp;this).</p>
+<p>This means that if you&#8217;re using virtualenv, they&#8217;ll complain about a ton
+of missing packages when you …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-02T15:41:00-08:00">Wed 02 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../what-am-i-doing-wrong.html">What am I doing&nbsp;wrong?</a></h1>
+
+               <p>You know, it&#8217;s very obvious that some python modules are high quality,
+and others are utter crap. Please tell me what I&#8217;m doing&nbsp;wrong:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Produces no output on console. Oh? Maybe I need to specify a stream
+handler …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-01T19:28:00-08:00">Tue 01 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../extremely-simple-xml-to-python-converter.html">Extremely simple <span class="caps">XML</span> to Python&nbsp;converter</a></h1>
+
+               <p>There are a ton of different ways you can encode <span class="caps">XML</span>, but for the style
+that looks like&nbsp;this:</p>
+<div class="highlight"><pre><span></span><span class="nt">&lt;xml&gt;</span> 
+<span class="nt">&lt;name&gt;</span>Bob<span class="nt">&lt;/name&gt;</span> 
+...
+</pre></div>
+
+
+<p>You can use this nice little function to convert it to a native Python
+object.  I&#8217;m using this to turn the results of the LinkedIn <span class="caps">API …</span></p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-03-01T17:51:00-08:00">Tue 01 March 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../why-im-unhappy-with-the-pyramid-web-framework.html">Why I&#8217;m unhappy with the Pyramid web&nbsp;framework.</a></h1>
+
+               <p>Here I am, writing this post instead of coding.  Why?  Because I&#8217;m
+having to read through the
+<a href="http://docs.pylonsproject.org/docs/pyramid.html">Pyramid</a> source code
+trying to figure out what the heck is going on with configuration.  Or,
+to be more specific, how can I load module X when I&#8217;m in production, but …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-02-25T23:04:00-08:00">Fri 25 February 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+    <div class="pure-g article-row">
+        <div class="pure-u-1 article-info">
+           <div class="col">
+
+               <h1><a href="../a-simple-pattern-for-short-urls-for-objects-in-mongodb.html">A simple pattern for short URLs for objects in&nbsp;MongoDB.</a></h1>
+
+               <p>So, you need short URLs for your pages, and pages are objects in your
+MongoDB database. How do you generate these short&nbsp;ids?</p>
+<p>The pattern I&#8217;m using is quite simple, but requires that you create a
+unique index on a field called &#8220;short_id.&#8221;   Since I&#8217;m using
+<a href="http://github.com/slacy/minimongo">minimongo</a>, it …</p>
+
+               <div class="post-meta pure-g">
+                   <div class="pure-u">
+                       <img src="https://slacy.github.io/blog/images/ygg.png" class="post-avatar" alt="Go to the profile of slacy">
+                   </div>
+                   <div class="pure-u-3-4 meta-data">
+                       <a href="../author/slacy.html" class="category">slacy</a><br />
+                       <abbr title="2011-02-23T14:07:00-08:00">Wed 23 February 2011</abbr>
+                   </div>
+               </div>
+
+           </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+<div class="pagination">
+    <div class="post-meta pure-g">
+        <div class="pure-u-1-2 left">
+            <a href="../category/general5.html">Previous articles</a>
+        </div>
+        <div class="pure-u-1-2 right">
+            <a href="../category/general7.html">More articles</a>
+        </div>
+    </div>
+</div>
+</div>
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

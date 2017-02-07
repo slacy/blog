@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Postfix configuration issues.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/linux-stuff.html" class="category">Linux Stuff</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2005-12-05T23:44:00-08:00">Mon 05 December 2005</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Postfix configuration&nbsp;issues.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I&#8217;ve had my new server running for a while, but mail that did not
+qualify with a hostname was not being delivered correctly. For example
+mail to &#8220;root&#8221; (without a domain name) was&nbsp;bouncing.</p>
+<p>The /var/log/mailllog&nbsp;said:</p>
+<p><code>Dec  5 22:30:53 whisper postfix/smtp[28147]: F3D372618010: to=, relay=none, delay=1, status=bounced (Host or domain name not found. Name service error for name=whisper.slacy.com type=A: Host not found)</code></p>
+<p>I resolved the problem, and it was&nbsp;twofold.</p>
+<p>First, postfix was not consulting the /etc/hosts file to resolve <span class="caps">DNS</span>
+names. I had to add the following to my /etc/mail/main.cf&nbsp;file:</p>
+<p><code>smtp_host_lookup = native</code></p>
+<p>I&#8217;m not sure why the default for this is &#8220;dns&#8221; (which does not obey the
+local host rules) but it is.&nbsp;Resolved.</p>
+<p>The second issue was that I had somehow set myhostname to be the name of
+my domain instead of my full hostname. This resulted in mail being
+bounced with a &#8220;loops back to myself&#8221; error. So, setting myhostname to
+be my complete hostname worked just&nbsp;fine.</p>
+<p>Oh, and I had to make sure that /etc/hosts contained entries for&nbsp;\$myhostname.</p>
+<p>There&#8217;s a lot of misinformation about this issue floating around on the
+&#8216;net, so hopefully this will help out a couple of&nbsp;people.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

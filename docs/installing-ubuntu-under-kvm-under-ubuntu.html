@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Installing Ubuntu under KVM under Ubuntu</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2008-03-29T20:45:00-07:00">Sat 29 March 2008</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Installing Ubuntu under <span class="caps">KVM</span> under&nbsp;Ubuntu</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>Here&#8217;s the commandline that you&#8217;d use to install Ubuntu under <span class="caps">KVM</span> under
+Ubuntu. I&#8217;m using Gutsy, so this may not work with newer or older&nbsp;versions.</p>
+<p>First, I recommend that you see <a href="http://slacy.com/blog/index.php/2008/03/18/30-second-guide-to-bridging-eth0-on-ubuntu/">my post on bridging
+eth0</a>.
+Do that&nbsp;first.</p>
+<p>Then, run the&nbsp;following:</p>
+<blockquote>
+<p>sudo kvm -no-kvm -net nic -net tap -vnc :1 -hda root-base-10G.img -hdb
+home-base-200G.img -hdd var-base-50G.img -cdrom
+../install_imgs/ubuntu-7.10-server-i386.iso -boot&nbsp;d</p>
+</blockquote>
+<p>Note how I&#8217;ve passed 3 different disks, one for &#8220;root&#8221;, one for &#8220;home&#8221;
+and one for &#8220;var&#8221; (and /tmp). I think this will be a good configuration
+because these &#8220;base&#8221; images will be shared across multiple machines via
+qemu overlays (more on that later). And there&#8217;s a totally separate disk
+for &#8220;home&#8221;, which is where most of the user data will&nbsp;go.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

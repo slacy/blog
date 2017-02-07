@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Best error message I’ve seen in a long time.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-07-28T08:41:00-07:00">Wed 28 July 2010</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Best error message I&#8217;ve seen in a long&nbsp;time.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>This came from a Gnome-enabled program on by Ubuntu 10.04 system.  It
+pretty much sums up what&#8217;s wrong with &#8220;Linux on the&nbsp;desktop&#8221;</p>
+<blockquote>
+<p><span
+style="font-family: Georgia, 'Bitstream Charter', serif; color: #444444;"><span
+style="line-height: 22px;">Error setting value: No database available
+to save your configuration: Unable to store a value at key
+&#8216;/desktop/gnome/url-handlers/unknown/command&#8217;, as the configuration
+server has no writable databases. There are some common causes of this
+problem: 1) your configuration path file /etc/gconf/2/path doesn&#8217;t
+contain any databases or wasn&#8217;t found 2) somehow we mistakenly created
+two gconfd processes 3) your operating system is misconfigured so <span class="caps">NFS</span>
+file locking doesn&#8217;t work in your home directory or 4) your <span class="caps">NFS</span> client
+machine crashed and didn&#8217;t properly notify the server on reboot that
+file locks should be dropped. If you have two gconfd processes (or had
+two at the time the second was launched), logging out, killing all
+copies of gconfd, and logging back in may help. If you have stale
+locks, remove \~/.gconf*/*lock. Perhaps the problem is that you
+attempted to use GConf from two machines at once, and ORBit still has
+its default configuration that prevents remote <span class="caps">CORBA</span> connections - put
+&#8220;ORBIIOPIPv4=1&#8221; in /etc/orbitrc. As always, check the user.* syslog
+for details on problems gconfd encountered. There can only be one
+gconfd per home directory, and it must own a lockfile in \~/.gconfd
+and also lockfiles in individual storage locations such as&nbsp;\~/.gconf</span></span></p>
+</blockquote>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

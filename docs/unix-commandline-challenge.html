@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Unix commandline challenge</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2008-06-10T23:08:00-07:00">Tue 10 June 2008</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Unix commandline&nbsp;challenge</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>I&#8217;ve been spending a lot of my time at work sorting and grepping through
+large multi-<span class="caps">GB</span> files, and have been amazed that the standard <span class="caps">UNIX</span> sort
+and grep commands don&#8217;t have support for <span class="caps">SMP</span>&nbsp;machines.</p>
+<p>I decided that it should be fairly straightforward to come up with a
+commandline that can use 2 or more CPUs to do a sort or grep of a single
+file. But, I haven&#8217;t yet been able to come up with a simple command line
+to do&nbsp;this!</p>
+<p>So I&#8217;ll propose a challenge: Come up with a script (python, perl, bash,
+etc.) or simple command line that can use 2 or more CPUs to process
+(grep or sort) a single file in less time than the naive invocation of
+the same&nbsp;command.</p>
+<p>The input that I&#8217;m using for testing is about 5.2 million lines long,
+and takes up about <span class="caps">60MB</span>. Each line is made up of between 0 and 20 random
+uppercase letters.<a href="http://slacy.com/blog/wp-content/randwords.pl">Here&#8217;s a perl script that will generate a file full
+of random words just like
+this.</a> Just run something
+like &#8220;./randwords.pl | head -500m &gt;&nbsp;randwords&#8221;</p>
+<p>Here are some of the approaches that I&#8217;ve tried thus&nbsp;far:</p>
+<h2>The awk co-processor&nbsp;approach</h2>
+<p>gawk has support for what it calls &#8220;co-processors&#8221; which I would call
+&#8220;pipes to child processes&#8221;. It seems like a great feature. The way that
+this works is that you can &#8216;print&#8217; records to a piped co-processor and
+use more than one in parallel to do your work. Here&#8217;s an example&nbsp;commandline:</p>
+<blockquote>
+<p># cat randwords | awk &#8216;{if (<span class="caps">NR</span> % 2 == 1)<br>
+{ print \<span class="math">\(0 | "egrep -i steve"} else {print \\)</span>0 | &#8220;egrep -i steve&#8221;&nbsp;}}&#8217;</p>
+</blockquote>
+<p>You can imagine wrapping this up in a containing script to simplify its
+usage. Upon running this script, you might notice that there aren&#8217;t
+actually 2 grep processes running. This is because awk is being too
+smart and realizes that you&#8217;re forking of the &#8216;same&#8217; process to do work.
+So, adding some dorky commandline switches to make them look different
+is what you&nbsp;want:</p>
+<blockquote>
+<p># cat randwords | awk &#8216;{if (<span class="caps">NR</span> % 2 == 1)<br>
+{ print \<span class="math">\(0 | "egrep -i steve"} else {print \\)</span>0 | &#8220;egrep -a -i steve&#8221;&nbsp;}}&#8217;</p>
+</blockquote>
+<p>The &#8220;-a&#8221; option means &#8220;process input as text&#8221; (duh!) which should have
+no effect on the output, but after adding that flag, we can now see that
+awk fires up 2 grep processes that run in&nbsp;parallel.</p>
+<p>So, how did it perform? Well, awk takes up \~60% of the <span class="caps">CPU</span>, with about
+18% being given to each grep process. So, its almost 100% of a single
+core to do the work. Here&#8217;s how the timings&nbsp;look:</p>
+<blockquote>
+<p>time cat smallrand | awk &#8216;{if (<span class="caps">NR</span> % 2 == 1) { print \<span class="math">\(0 | "egrep -i
+steve"} else {print \\)</span>0 | &#8220;egrep -a -i steve&#8221; }}&#8217;<br>
+<span class="caps">TPHOBQSTEVEOGIK</span><br>
+<span class="caps">PHCYZMSTEVEDYZFF</span><br>
+<span class="caps">USTEVENPP</span></p>
+<p>real 0m45.069s<br>
+user 0m18.545s<br>
+sys&nbsp;0m25.793s</p>
+<p># time cat randwords | egrep -i steve<br>
+<span class="caps">TPHOBQSTEVEOGIK</span><br>
+<span class="caps">PHCYZMSTEVEDYZFF</span><br>
+<span class="caps">USTEVENPP</span></p>
+<p>real 0m0.372s<br>
+user 0m0.165s<br>
+sys&nbsp;0m0.166s</p>
+</blockquote>
+<p>So, the awk solution is running more than 10 times slower than the
+native grep. <span class="caps">NEXT</span>!</p>
+<h2>The perl &#8220;sharding&#8221;&nbsp;script</h2>
+<p>One could imagine that all you need to do to solve this problem is to
+take alternating lines of the input text and shove them down the stdin
+of 2 child processes. Seems easy, right? So, lets whip up a perl script
+that does just that: (shortened for display&nbsp;here)</p>
+<blockquote>
+<p>#!/usr/bin/perl<br>
+\<span class="math">\(num = \\)</span>#<span class="caps">ARGV</span> + 1;<br>
+for (\<span class="math">\(i = 0; \\)</span>i &lt; \<span class="math">\(num; \\)</span>i++) { open( \<span class="math">\(files\[\\)</span>i],
+&#8220;\<span class="math">\(ARGV\[\\)</span>i]&#8221;) || die; }<br>
+\<span class="math">\(line = 0;  
+while (&lt;stdin&gt;) { print { \\)</span>files[\<span class="math">\(line++ % \\)</span>num] } \<span class="math">\(\_; }  
+for (\\)</span>i = 0; \<span class="math">\(i &amp;lt; \\)</span>num; \<span class="math">\(i++) { close \\)</span>files[\$i];&nbsp;}</p>
+</blockquote>
+<p>Seems like a good idea, right? We can even use perl&#8217;s super funky &#8220;open&#8221;
+syntax to fork of the child processes. Assuming that this is stored as
+&#8220;shard.pl&#8221; we can invoke it like&nbsp;this:</p>
+<blockquote>
+<p># cat randomwords | ./shard.pl &#8220;| egrep -i steve&#8221; &#8220;|egrep -i&nbsp;steve&#8221;</p>
+</blockquote>
+<p>How does this compare to the native&nbsp;grep?</p>
+<blockquote>
+<p># time cat randwords | ./shard.pl &#8220;|egrep -i steve&#8221; &#8220;|egrep -i
+steve&#8221;<br>
+<span class="caps">TPHOBQSTEVEOGIK</span><br>
+<span class="caps">PHCYZMSTEVEDYZFF</span><br>
+<span class="caps">USTEVENPP</span></p>
+<p>real 0m6.625s<br>
+user 0m6.335s<br>
+sys&nbsp;0m0.251s</p>
+</blockquote>
+<p>So, its only about 20 times slower than the native grep. I guess we&#8217;re
+making progress? The script can actually be &#8220;optimized&#8221; to run in about
+4 seconds, if you buffer up a few lines of input before calling &#8216;print&#8217;.
+I suspect that a few more gains of that nature can be had, but I don&#8217;t
+expect them to be&nbsp;huge.</p>
+<h2>The divide and conquer&nbsp;approach</h2>
+<p>So, how about just splitting the file in half and then grepping the 2
+sides in parallel? Well, to be fair, we&#8217;re looking for a <em>script</em> to
+solve this problem, so we&#8217;ll need to write a &#8216;split in half&#8217; script, and
+go from there. Lets just see if its even remotely&nbsp;possible:</p>
+<blockquote>
+<p># wc -l randwords<br>
+5242880 randwords<br>
+# time (head -2621440 randwords &gt; top ; tail -2621440 randwords
+&gt; bottom ; echo top bottom | xargs -n1 -P2 egrep -i steve)<br>
+<span class="caps">TPHOBQSTEVEOGIK</span><br>
+<span class="caps">PHCYZMSTEVEDYZFF</span><br>
+<span class="caps">USTEVENPP</span></p>
+<p>real 0m1.235s<br>
+user 0m0.514s<br>
+sys&nbsp;0m0.728s</p>
+</blockquote>
+<p>So, we&#8217;re using 2x the disk space, and we&#8217;re only taking about 6 times
+longer than native grep. Maybe we can remove those temp files and speed
+things up, like&nbsp;this:</p>
+<blockquote>
+<p># time (head -2621440 randwords | egrep -i steve <span class="amp">&amp;</span> tail -2621440
+randwords | egrep -i steve)<br>
+<span class="caps">TPHOBQSTEVEOGIK</span><br>
+<span class="caps">PHCYZMSTEVEDYZFF</span><br>
+<span class="caps">USTEVENPP</span></p>
+<p>real 0m0.446s<br>
+user 0m0.556s<br>
+sys 0m0.204s<br>
+# time egrep -i steve randwords<br>
+<span class="caps">TPHOBQSTEVEOGIK</span><br>
+<span class="caps">PHCYZMSTEVEDYZFF</span><br>
+<span class="caps">USTEVENPP</span></p>
+<p>real 0m0.209s<br>
+user 0m0.152s<br>
+sys&nbsp;0m0.055s</p>
+</blockquote>
+<p>Thats more like it! Now we&#8217;re only running in 2x the time of the native
+grep! Whopee! Unfortunately, a true &#8216;script&#8217; of this sort would have to
+include the time to count the lines, so we may as well add that in our
+runtime&nbsp;too:</p>
+<blockquote>
+<p># time wc -l randwords<br>
+5242880&nbsp;randwords</p>
+<p>real 0m0.537s<br>
+user 0m0.432s<br>
+sys&nbsp;0m0.062s</p>
+</blockquote>
+<p>Which (surprisingly) takes about 3 times longer than the grep itself, so
+thats never gonna really work out, is&nbsp;it?</p>
+<p>Any other bright&nbsp;ideas?</p>
+</blockquote>
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

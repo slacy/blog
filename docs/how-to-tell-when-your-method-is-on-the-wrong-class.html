@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>How to tell when your method is on the wrong class.</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/general.html" class="category">General</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2010-07-29T11:44:00-07:00">Thu 29 July 2010</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>How to tell when your method is on the wrong&nbsp;class.</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <h2>1. Your code uses self on the <span class="caps">RHS</span> of an&nbsp;assignment.</h2>
+<p>Here&#8217;s a Python&nbsp;example:</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">accumulator</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">def</span> <span class="nx">__init__</span><span class="p">(</span><span class="nx">self</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">self</span><span class="p">.</span><span class="nx">sum</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="kr">class</span> <span class="nx">value</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">def</span> <span class="nx">__init__</span><span class="p">(</span><span class="nx">self</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">self</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="nx">def</span> <span class="nx">accumulate</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">accum_instance</span><span class="p">)</span><span class="o">:</span>
+     <span class="nx">accum_instance</span><span class="p">.</span><span class="nx">sum</span> <span class="o">+=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">value</span>
+</pre></div>
+
+
+<p>Instead of&nbsp;saying:</p>
+<div class="highlight"><pre><span></span>a = accumulator()
+v = value()
+v.accumulate(a)
+</pre></div>
+
+
+<p>These methods should be re-arranged such that we don&#8217;t have &#8220;self.value&#8221;
+on the <span class="caps">RHS</span> of the assignment in the accumulate method, which would make
+our calling code look like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>a = accumulator()
+v = value()
+a.accumulate(v)
+</pre></div>
+
+
+<p>The calling actually looks quite similar, but the semantics of who&#8217;s
+responsible for the work is more&nbsp;clear.</p>
+<h2>2. You have method names like &#8220;add_to&#8221;, &#8220;increment_by&#8221;, &#8220;combine_with&#8221; or&nbsp;&#8220;compute_from&#8221;</h2>
+<p>Instead of calling &#8220;self.increment_by(bar)&#8221; you should likely be
+calling&nbsp;&#8220;bar.increment(self)&#8221;</p>
+<p>Note, this violates one of my rules below of passing only &#8220;self&#8221; as a
+method argument. At some point, the difference between foo.method(self)
+and self.method(foo) becomes subjective, and it&#8217;s your job as the
+programmer to decide how these pieces of code relate to each other, and
+where the functional separation lies. The best way to decide issues like
+this is to try to come up with some rule for where methods live and
+behave. The exact guts of &#8220;method&#8221; would need to be known &#8212; is it
+modifying self, or it&#8217;s argument, or both? Try to come up with a rule
+like &#8220;treat arguments as const wherever possible&#8221; and you may find that
+these issues sort themselves out. You may even find that splitting a
+class up, or joining two classes together might be a good solution to
+make your code more&nbsp;readable.</p>
+<h2>3. Your method doesn&#8217;t use &#8220;self&#8221; at all, or only very&nbsp;minimally.</h2>
+<p>Here&#8217;s another surprisingly common practice, a method that looks like&nbsp;this:</p>
+<div class="highlight"><pre><span></span>def some_method(self, foo, bar, baz):
+  self.counter += 1
+  foo.process(bar)
+  bar.aggregate()
+  baz.compute_from(bar)
+</pre></div>
+
+
+<p>This method should likely live somewhere outside of the current class,
+and in the classes<br>
+of foo, bar, or&nbsp;baz.</p>
+<h2>4. You&#8217;re passing self (and no other arguments) as an argument to another&nbsp;method.</h2>
+<p>If you have code that&nbsp;says:</p>
+<div class="highlight"><pre><span></span>some_class.some_method(self)
+</pre></div>
+
+
+<p>Then you likely want to&nbsp;say:</p>
+<div class="highlight"><pre><span></span>self.better_method(some_class)
+</pre></div>
+
+
+<p>Similarly, passing a handful of member variables from self to another
+method is an indication that method should live in the current class.
+ For&nbsp;example:</p>
+<div class="highlight"><pre><span></span>some_class.some_method(self.foo, self.bar, self.baz)
+</pre></div>
+
+
+<p>could be rewritten&nbsp;as:</p>
+<div class="highlight"><pre><span></span>self.better_method(some_class)
+</pre></div>
+
+
+<p>Unless better_method would end up violating more of these rules.&nbsp;:)</p>
+<h2>5. Your method delegates most of it&#8217;s functionality to another class or&nbsp;module.</h2>
+<p>For&nbsp;example:</p>
+<div class="highlight"><pre><span></span>def some_method(totally_reasonable_argument):
+  other_class.process(totally_reasonable_argument)
+  other_class.member_variable += self.size
+  other_class.log(totally_reasonable_argument)
+</pre></div>
+
+
+<p>Look how every line calls into functions in other_class (which could
+also be a module). Clearly, this method should be living inside
+other_class and not on the current&nbsp;class.</p>
+<h2>6. Your method returns an instance of a different&nbsp;class.</h2>
+<p>For&nbsp;example:</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">SomeClass</span><span class="p">(</span><span class="nx">object</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">def</span> <span class="nx">generate_something</span><span class="p">(</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">)</span><span class="o">:</span>
+    <span class="err">#</span> <span class="nx">likely</span> <span class="nx">some</span> <span class="nx">computation</span> <span class="nx">involving</span> <span class="nx">foo</span> <span class="o">&amp;</span> <span class="nx">bar</span> <span class="nx">here</span><span class="p">...</span>
+    <span class="err">#</span> <span class="nx">but</span><span class="p">,</span> <span class="nx">we</span><span class="err">&#39;</span><span class="nx">re</span> <span class="nx">returning</span> <span class="nx">an</span> <span class="nx">instance</span> <span class="nx">of</span> <span class="nx">a</span> <span class="nx">totally</span> <span class="nx">different</span> <span class="kr">class</span><span class="p">.</span>
+    <span class="err">#</span> <span class="nx">This</span> <span class="nx">method</span> <span class="nx">should</span> <span class="nx">likely</span> <span class="nx">be</span> <span class="nx">split</span> <span class="nx">into</span> <span class="mi">2</span> <span class="nx">pieces</span><span class="p">,</span> <span class="nx">one</span> <span class="nx">living</span> <span class="nx">here</span><span class="p">,</span>
+    <span class="err">#</span> <span class="nx">and</span> <span class="nx">another</span> <span class="nx">piece</span> <span class="k">in</span> <span class="kr">class</span> <span class="nx">something</span><span class="p">.</span>
+    <span class="k">return</span> <span class="nx">something</span><span class="p">(</span><span class="nx">foo</span><span class="p">,</span> <span class="nx">bar</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Of course, there&#8217;s always a time and a place for a factory method, but
+in Python, these should actually be fairly few and far&nbsp;between.</p>
+    </div>
+
+    <footer>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
