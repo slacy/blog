@@ -5,7 +5,7 @@ Date: 2/9/2017 11:00am
 Author: slacy
 This is just a friendly reminder:
 
-# All the source code for all the examples in this blog (and these posts) are all on GitHub!
+# All the source code for all the examples in this blog (and these posts) are on GitHub!
 
 Each blog post is its own executable Jupyter Notebook, and all the notebooks can be found in [my GitHub repository](https://github.com/slacy/blog).
 
