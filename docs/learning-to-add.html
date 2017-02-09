@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Learning to Add</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="./" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="./category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png " class="post-avatar" alt="TensorFlow From The Ground Up"></a>
+            </div>
+<div class="pure-u-3-4 meta-data">
+    <a href="./category/tensorflow-from-the-ground-up.html" class="category">TensorFlow From The Ground Up</a><br />
+
+    <a class="author" href="./author/slacy.html">slacy</a>
+    &mdash; <abbr title="2017-02-08T10:00:00-08:00">Wed 08 February 2017</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Learning to&nbsp;Add</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>This is the <strong>third</strong> post of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
+<p>In this post, we&#8217;ll explore a toy Neural Network, and show our first Perceptron based code.  This is our first real Neural Network code.  This is a simple example, but will lead us to more insights in coming&nbsp;posts. </p>
+<h2>Introduction</h2>
+<p>Machine Learning problems can be thought of like this: 
+<em> Define a highly-parameterized generic function of the form: <span class="math">\(f(inputs) = outputs\)</span>
+</em> Choose some <em>Training Data</em> that are example pairs of <span class="math">\((inputs, outputs)\)</span>.
+<em> Feed the </em>Training Data<em> to an optimizer, which will find values for all the hidden parameters that optimize our </em>loss function<em>.
+</em> After training, we can use the computed hidden parameters to <em>validate</em> example <span class="math">\((input, output)\)</span> pairs that we did not use during&nbsp;training. </p>
+<p>The power of machine learning is in the design of the computation graph (i.e. &#8220;The Neural Network&#8221;) that determines both the parameters, and also determines the flexibility and &#8220;adaptability&#8221; of the resulting model.  In other&nbsp;words:</p>
+<blockquote>
+<p>If we train a model on a collection of input data, does it produce the 
+expected results for data that it has never seen&nbsp;before?  </p>
+<p>How can we choose a Network Design that we know will solve our target&nbsp;function? </p>
+</blockquote>
+<p>The key insight here is understanding your problem area domain, and &#8220;what&#8217;s possible&#8221; versus &#8220;what&#8217;s not possible&#8221; in Neural Networks.  We don&#8217;t yet have this intuition, but we&#8217;re on our way to building&nbsp;it. </p>
+<p>Once we have this intuition, it will steer our network design decisions, and can help us to debug any issues we have during the training process.  Additionally, it will guide our expectations about what&#8217;s possible in the problem domain, and may even lead us into new areas of network and node&nbsp;design.  </p>
+<p>But as you will see, the idea of a &#8220;Neural Network Node&#8221; is nothing more than an abstract idea that helps us reason about the computation graph.  There is really no such thing as a &#8220;node&#8221; in a network &#8212; there is just a collection of parameters, stored as matrices, and a graph that does computations on these&nbsp;matrices. </p>
+<p>With that, let&#8217;s get&nbsp;coding.</p>
+<h2>Let&#8217;s get&nbsp;concrete!</h2>
+<p>Everything above is pretty abstract, so let&#8217;s start with a concrete problem.  Can we learn the&nbsp;function:</p>
+<div class="math">$$f(x,y) = x+y$$</div>
+<p>Using a Neural&nbsp;Network? </p>
+<p>First, what does it mean to &#8220;learn&#8221; this function?  It will involve the following steps:
+<em> Design a computation graph.
+</em> Choose some training data, which will be a collection of <span class="math">\((x,y)\)</span> pairs.
+<em> Choose some validation data, which will be a collection of <span class="math">\((x,y)\)</span> pairs that were never used during training. 
+</em> Implement a <em>Loss function</em> to determine how correct the values computed are.  This determines the training and accuracy. 
+* Write code to implement the graph, train and validate our problem&nbsp;set.</p>
+<h2>The Computation&nbsp;Graph</h2>
+<p>Last time, we talked about TensorFlow <code>tf.Variable</code> objects, which we used to hold computed values in our graph.  Variables are generally Tensors (i.e. matrices) that hold all the hidden parameters that will be learned by the&nbsp;network. </p>
+<p>In addition to <code>Variables</code>, we need to pass values to our network.  These values can be thought of the <em>inputs</em> to our function.  In TensorFlow, these inputs are instances of the type <code>tf.placeholder</code>.  You can think of a <code>placeholder</code> as a slot where an input value will go, at runtime.  They aren&#8217;t <em>learned parameters</em> like the <code>Variable</code> instances&nbsp;are. </p>
+<p>In general, <code>Variable</code> and <code>placeholder</code> instances behave pretty much the same, except that placeholders are <em>inputs</em> and Variables are <em>stored parameters</em>.  Variables require an initial value, and Placeholders are fed discrete values at runtime with each training&nbsp;iteration. </p>
+<p>For our learning task, we are going to use a traditional <a href="https://en.wikipedia.org/wiki/Perceptron">Perceptron</a> based network. Our network will consist of:
+<em> One input layer of our <span class="math">\((x,y)\)</span> values.
+</em> One middle layer of 2 values, computed using the Perceptron function.
+* One output&nbsp;value.  </p>
+<p>Each node in the middle layer will&nbsp;compute </p>
+<div class="math">$$f(x) = \sum_{i=0}^n {w_i v_i+b_i}$$</div>
+<p>The steps of the computation look roughly like&nbsp;this: </p>
+<div class="math">$$\begin{array}{rl}
+inputs &amp; = \{x,y\} \\
+l_1 &amp; = w_1 x + w_2 y + b_1 \\
+l_2 &amp; = w_3 x + w_4 y + b_2 \\
+output &amp; = w_5 l_1 + w_6 l_2 + b_3
+\end{array}$$</div>
+<p>If we expand out the temporaries, we&nbsp;get: </p>
+<div class="math">$$output = w_5 (w_1 x + w_2 y + b_1) + w_6 (w_3 x + w_4 y + b_2) + b_3$$</div>
+<p>As you can see, we can easily implement <span class="math">\(x+y\)</span> by&nbsp;setting: </p>
+<div class="math">$$\begin{array}{rl}
+w_1, w_2, w_5 &amp; = 1.0 \\
+w_3, w_4, w_6 &amp; = 0.0 \\
+b_i &amp; = 0.0 \\
+\end{array}$$</div>
+<p>We&#8217;ll be using TensorFlow&#8217;s matrix representations to implement these calculations.  All weights and biases shown above are stored as&nbsp;matrices. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># Here are the inputs to our computation Graph.  Note that the expected value </span>
+<span class="c1"># f(x,y)=x+y is passed a via a placeholder as well. </span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">expected</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expected&#39;</span><span class="p">)</span>
+
+<span class="c1"># Inputs need to be in the form of a single tensor, so we concatenate and reshape </span>
+<span class="c1"># into a form that we can use below. </span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># We are constructing a middle layer of 2 perceptron nodes.  Weights and biases </span>
+<span class="c1"># are our w_i and v_i from the above equations. </span>
+<span class="n">input_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> 
+                           <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">input_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> 
+                         <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="c1"># Our middle layer of &quot;nodes&quot; (can be thought of as just an intermediate value)</span>
+<span class="c1"># Is an array of size (1,2) and each value is computed from our perceptron function: </span>
+<span class="n">mid_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_weight</span><span class="p">),</span> <span class="n">input_bias</span><span class="p">)</span>
+
+<span class="c1"># We&#39;re looking for a single output value, so we apply the same perceptron formula </span>
+<span class="c1"># to our middle layer, but this time multiplying by a tensor of size (2,1) to produce </span>
+<span class="c1"># an output of size (1,1).  We then &quot;squeeze&quot; this value down to a tensor of size (1)</span>
+<span class="n">out_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
+                         <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">out_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> 
+                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="c1"># Perceptron formula again, and the squeeze to get a single value. </span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mid_layer</span><span class="p">,</span> <span class="n">out_weight</span><span class="p">),</span> <span class="n">out_bias</span><span class="p">))</span>
+
+<span class="c1"># Our error function is computed as &quot;Squared Difference&quot; between the computed output</span>
+<span class="c1"># and the expected value. </span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">output</span> <span class="o">-</span> <span class="n">expected</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Learning rate and optimizer similar to our previous examples. </span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> 
+              <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
+
+    <span class="c1"># Training: </span>
+    <span class="c1">#</span>
+    <span class="c1"># Iterate many times with random inputs to &quot;learn&quot; the parameters</span>
+    <span class="c1"># stored in input_wegiht, input_bias, out_weight, out_bias Variables above.  </span>
+    <span class="c1"># For this example, we only pass in **even** numbers in the range [0,20]</span>
+    <span class="c1"># </span>
+    <span class="c1"># We will use odd values during our validation phase below to ensure that </span>
+    <span class="c1"># we never validate on any of the inputs that were in the training set. </span>
+    <span class="k">print</span> <span class="s2">&quot;TRAIN&quot;</span>
+    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="p">):</span>
+        <span class="n">ix</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,]</span>
+        <span class="n">iy</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">],]</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">ix</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">iy</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span><span class="n">e</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
+
+    <span class="c1"># Once we have learned the parameters, we can validate by passing inputs </span>
+    <span class="c1"># never seen before.  For this case, we expand the range of our inputs </span>
+    <span class="c1"># to include all odd numbers in the range [-40,40].  </span>
+    <span class="k">print</span> <span class="s2">&quot;VALIDATE&quot;</span>
+    <span class="n">validate_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">validate_iterations</span><span class="p">):</span>
+        <span class="n">ix</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,]</span>
+        <span class="n">iy</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">],]</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">output</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">ix</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">iy</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span><span class="n">e</span><span class="p">})</span>
+        <span class="k">print</span> <span class="s2">&quot;x=&quot;</span><span class="p">,</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot; y=&quot;</span><span class="p">,</span><span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot; out=&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
+
+    <span class="c1"># Print out the computed weights and bisaes for inspection. </span>
+    <span class="k">print</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">input_weight</span><span class="p">,</span> <span class="n">input_bias</span><span class="p">,</span> <span class="n">out_weight</span><span class="p">,</span> <span class="n">out_bias</span><span class="p">])</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>TRAIN
+i= 0  loss= [ 394.15966797]
+i= 1000  loss= [ 0.01988767]
+i= 2000  loss= [ 0.00211122]
+i= 3000  loss= [ 0.00171648]
+i= 4000  loss= [  5.18434717e-05]
+i= 5000  loss= [  1.20902005e-05]
+i= 6000  loss= [  2.59056542e-05]
+i= 7000  loss= [  1.48313939e-06]
+i= 8000  loss= [  9.60653779e-08]
+i= 9000  loss= [  6.63021638e-08]
+VALIDATE
+x= 21  y= -35  out= -13.9998  loss= [  2.91411197e-08]
+x= -11  y= -31  out= -41.9998  loss= [  4.56348062e-08]
+x= 15  y= -25  out= -9.99984  loss= [  2.69064913e-08]
+x= -37  y= 17  out= -19.9998  loss= [  3.35276127e-08]
+x= 9  y= 31  out= 40.0001  loss= [  8.38190317e-09]
+x= 13  y= 35  out= 48.0001  loss= [  6.41739462e-09]
+x= -13  y= -39  out= -51.9998  loss= [  5.23868948e-08]
+x= 31  y= -27  out= 4.00014  loss= [  2.01916919e-08]
+x= -35  y= 33  out= -1.99985  loss= [  2.39794105e-08]
+x= -9  y= 19  out= 10.0001  loss= [  1.88592821e-08]
+[array([[-0.83800858,  0.15946344],
+       [-0.84973776,  0.08742908]], dtype=float32), array([[ 0.13537928, -0.1656988 ]], dtype=float32), array([[-1.15744114],
+       [ 0.18846205]], dtype=float32), array([[ 0.18807185]], dtype=float32)]
+</pre></div>
+
+
+<h2>It&nbsp;worked!</h2>
+<p>Looking at the output above, we can see that even when we pass in inputs that are outside the range of the original training data, we produce values for <span class="math">\(x+y\)</span> that are approximately within our final loss (i.e. error estimate)&nbsp;value.  </p>
+<p><strong>Our network has &#8220;Learned To Add&#8221; just like we&nbsp;thought!</strong></p>
+<p>This result isn&#8217;t a huge surprise, because the perceptron algorithm is a collection of linear functions composed together, and <span class="math">\(x+y\)</span> is linear, so it does a great job.  By this same logic, we could easily have this network learn any function that takes the same form as the equation <span class="math">\(output\)</span> shown&nbsp;above. </p>
+<h2>Can we view the&nbsp;parameters?</h2>
+<p>Looking back to the original <span class="math">\(output\)</span> equation above, we can see that there are many combinations of weights and biases that will exactly solve our equation.  Which one will the optimizer&nbsp;find?  </p>
+<p>It turns out that it doesn&#8217;t really matter, as long as the result is correct.  In fact, it might find other non-obvious combinations of parameters that simplify down to exactly <span class="math">\(x+y\)</span>.   We can change the code above to print out the values for the weights <span class="amp">&amp;</span> biases.  With one run from above, I got the following&nbsp;results: </p>
+<div class="math">$$\begin{array}{rl}
+input\_weight &amp; = \begin{bmatrix}-0.83800858 &amp; 0.15946344 \\
+       -0.84973776 &amp; 0.08742908\end{bmatrix} \\
+input\_bias &amp; = \begin{bmatrix}0.13537928 &amp; -0.1656988\end{bmatrix} \\
+out\_weight &amp; = \begin{bmatrix}-1.15744114 &amp; 0.18846205\end{bmatrix} \\
+out\_bias &amp; = 0.18807185
+\end{array}$$</div>
+<p>I&#8217;ll just let you trust me that if you pass these values into the graph above that the result approximates <span class="math">\(x+y\)</span>.</p>
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="./tag/python.html">Python</a>
+            <a href="./tag/tensorflow.html">TensorFlow</a>
+            <a href="./tag/jupyter.html">Jupyter</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="./author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="./category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="./" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
