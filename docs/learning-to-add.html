@@ -47,7 +47,7 @@
 
     <div class="entry-content">
         <p>This is the <strong>third</strong> post of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
-<p>In this post, we&#8217;ll explore a toy Neural Network, and show our first Perceptron based code.  This is our first real Neural Network code.  This is a simple example, but will lead us to more insights in coming&nbsp;posts. </p>
+<p>In this post, we&#8217;ll explore a toy Neural Network, and show our first Perceptron based code.  This is a simple example to get the thought process going, but will lead us to more insights in coming&nbsp;posts. </p>
 <h2>Introduction</h2>
 <p>Machine Learning problems can be thought of like this: 
 <em> Define a highly-parameterized generic function of the form: <span class="math">\(f(inputs) = outputs\)</span>
@@ -143,6 +143,8 @@ b_i &amp; = 0.0 \\
 <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+
 <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> 
               <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
@@ -160,7 +162,7 @@ b_i &amp; = 0.0 \\
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="p">):</span>
         <span class="n">ix</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,]</span>
         <span class="n">iy</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,]</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">],]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">]),]</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">ix</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">iy</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span><span class="n">e</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">print</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
@@ -173,7 +175,7 @@ b_i &amp; = 0.0 \\
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">validate_iterations</span><span class="p">):</span>
         <span class="n">ix</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,]</span>
         <span class="n">iy</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,]</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">],]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">]),]</span>
         <span class="n">out</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">output</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">ix</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">iy</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span><span class="n">e</span><span class="p">})</span>
         <span class="k">print</span> <span class="s2">&quot;x=&quot;</span><span class="p">,</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot; y=&quot;</span><span class="p">,</span><span class="n">iy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot; out=&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
 
@@ -183,30 +185,30 @@ b_i &amp; = 0.0 \\
 
 
 <div class="highlight"><pre><span></span>TRAIN
-i= 0  loss= [ 394.15966797]
-i= 1000  loss= [ 0.01988767]
-i= 2000  loss= [ 0.00211122]
-i= 3000  loss= [ 0.00171648]
-i= 4000  loss= [  5.18434717e-05]
-i= 5000  loss= [  1.20902005e-05]
-i= 6000  loss= [  2.59056542e-05]
-i= 7000  loss= [  1.48313939e-06]
-i= 8000  loss= [  9.60653779e-08]
-i= 9000  loss= [  6.63021638e-08]
+i= 0  loss= [ 343.70489502]
+i= 1000  loss= [ 0.00222525]
+i= 2000  loss= [  9.52743212e-05]
+i= 3000  loss= [  7.60952462e-05]
+i= 4000  loss= [  2.87974472e-05]
+i= 5000  loss= [  2.28197314e-06]
+i= 6000  loss= [  6.43522071e-08]
+i= 7000  loss= [  3.78495315e-08]
+i= 8000  loss= [  1.07751148e-05]
+i= 9000  loss= [  5.25324140e-09]
 VALIDATE
-x= 21  y= -35  out= -13.9998  loss= [  2.91411197e-08]
-x= -11  y= -31  out= -41.9998  loss= [  4.56348062e-08]
-x= 15  y= -25  out= -9.99984  loss= [  2.69064913e-08]
-x= -37  y= 17  out= -19.9998  loss= [  3.35276127e-08]
-x= 9  y= 31  out= 40.0001  loss= [  8.38190317e-09]
-x= 13  y= 35  out= 48.0001  loss= [  6.41739462e-09]
-x= -13  y= -39  out= -51.9998  loss= [  5.23868948e-08]
-x= 31  y= -27  out= 4.00014  loss= [  2.01916919e-08]
-x= -35  y= 33  out= -1.99985  loss= [  2.39794105e-08]
-x= -9  y= 19  out= 10.0001  loss= [  1.88592821e-08]
-[array([[-0.83800858,  0.15946344],
-       [-0.84973776,  0.08742908]], dtype=float32), array([[ 0.13537928, -0.1656988 ]], dtype=float32), array([[-1.15744114],
-       [ 0.18846205]], dtype=float32), array([[ 0.18807185]], dtype=float32)]
+x= -15  y= 29  out= 14.0  loss= [  1.78260962e-10]
+x= -19  y= -11  out= -29.9999  loss= [  1.88592821e-08]
+x= 7  y= 9  out= 16.0  loss= [ 0.]
+x= 3  y= 9  out= 12.0  loss= [  9.09494702e-11]
+x= -1  y= -35  out= -35.9998  loss= [  2.94676283e-08]
+x= 21  y= -13  out= 8.00004  loss= [  1.60434865e-09]
+x= -39  y= 7  out= -31.9999  loss= [  1.63308869e-08]
+x= -3  y= 17  out= 14.0  loss= [  3.63797881e-12]
+x= 21  y= 29  out= 49.9999  loss= [  1.14087015e-08]
+x= -33  y= 3  out= -29.9999  loss= [  1.53704605e-08]
+[array([[-0.73145592,  0.41055757],
+       [-0.71037835,  0.44684216]], dtype=float32), array([[ 0.12508716,  0.19557403]], dtype=float32), array([[-1.03099132],
+       [ 0.59887499]], dtype=float32), array([[ 0.01188867]], dtype=float32)]
 </pre></div>
 
 
@@ -225,10 +227,11 @@ out\_weight &amp; = \begin{bmatrix}-1.15744114 &amp; 0.18846205\end{bmatrix} \\
 out\_bias &amp; = 0.18807185
 \end{array}$$</div>
 <p>I&#8217;ll just let you trust me that if you pass these values into the graph above that the result approximates <span class="math">\(x+y\)</span>.</p>
-<div class="highlight"><pre><span></span>
-</pre></div>
-
-
+<h2>You should play with this code a little&nbsp;bit.</h2>
+<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some insights:
+<em> Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? 
+</em> Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate? <br>
+* Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</p>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

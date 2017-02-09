@@ -3,7 +3,7 @@ Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 1/31/2017 11:00pm 
 Author: slacy
-This is the second post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
+This is the **second** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
 
 When I first heard about TensorFlow, it was described as a library for doing Machine Learning, which I equated with Neural Networks.  (Neural Networks are just one type of Machine Learning).  
 

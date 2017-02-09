@@ -5,7 +5,7 @@ Date: 2/8/2017 10:00am
 Author: slacy
 This is the **third** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
 
-In this post, we'll explore a toy Neural Network, and show our first Perceptron based code.  This is our first real Neural Network code.  This is a simple example, but will lead us to more insights in coming posts. 
+In this post, we'll explore a toy Neural Network, and show our first Perceptron based code.  This is a simple example to get the thought process going, but will lead us to more insights in coming posts. 
 
 ## Introduction
 
@@ -130,6 +130,8 @@ loss = tf.pow(output - expected, 2)
 learning_rate = 0.001
 optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
+def f(x,y): return x + y
+
 with tf.Session() as sess: 
     sess.run([tf.local_variables_initializer(), 
               tf.global_variables_initializer()])
@@ -147,7 +149,7 @@ with tf.Session() as sess:
     for i in xrange(train_iterations):
         ix = [random.randrange(0, 10) * 2,]
         iy = [random.randrange(0, 10) * 2,]
-        e = [ix[0] + iy[0],]
+        e = [f(ix[0],iy[0]),]
         _, l = sess.run([optimizer, loss], feed_dict={x:ix, y:iy, expected:e})
         if i % 1000 == 0:
             print "i=",i," loss=", l
@@ -160,7 +162,7 @@ with tf.Session() as sess:
     for i in xrange(validate_iterations):
         ix = [random.randrange(-20, 20) * 2 + 1,]
         iy = [random.randrange(-20, 20) * 2 + 1,]
-        e = [ix[0]+iy[0],]
+        e = [f(ix[0], iy[0]),]
         out, l = sess.run([output, loss], feed_dict={x:ix, y:iy, expected:e})
         print "x=",ix[0], " y=",iy[0], " out=", out, " loss=", l
     
@@ -169,30 +171,30 @@ with tf.Session() as sess:
 ```
 
     TRAIN
-    i= 0  loss= [ 394.15966797]
-    i= 1000  loss= [ 0.01988767]
-    i= 2000  loss= [ 0.00211122]
-    i= 3000  loss= [ 0.00171648]
-    i= 4000  loss= [  5.18434717e-05]
-    i= 5000  loss= [  1.20902005e-05]
-    i= 6000  loss= [  2.59056542e-05]
-    i= 7000  loss= [  1.48313939e-06]
-    i= 8000  loss= [  9.60653779e-08]
-    i= 9000  loss= [  6.63021638e-08]
+    i= 0  loss= [ 343.70489502]
+    i= 1000  loss= [ 0.00222525]
+    i= 2000  loss= [  9.52743212e-05]
+    i= 3000  loss= [  7.60952462e-05]
+    i= 4000  loss= [  2.87974472e-05]
+    i= 5000  loss= [  2.28197314e-06]
+    i= 6000  loss= [  6.43522071e-08]
+    i= 7000  loss= [  3.78495315e-08]
+    i= 8000  loss= [  1.07751148e-05]
+    i= 9000  loss= [  5.25324140e-09]
     VALIDATE
-    x= 21  y= -35  out= -13.9998  loss= [  2.91411197e-08]
-    x= -11  y= -31  out= -41.9998  loss= [  4.56348062e-08]
-    x= 15  y= -25  out= -9.99984  loss= [  2.69064913e-08]
-    x= -37  y= 17  out= -19.9998  loss= [  3.35276127e-08]
-    x= 9  y= 31  out= 40.0001  loss= [  8.38190317e-09]
-    x= 13  y= 35  out= 48.0001  loss= [  6.41739462e-09]
-    x= -13  y= -39  out= -51.9998  loss= [  5.23868948e-08]
-    x= 31  y= -27  out= 4.00014  loss= [  2.01916919e-08]
-    x= -35  y= 33  out= -1.99985  loss= [  2.39794105e-08]
-    x= -9  y= 19  out= 10.0001  loss= [  1.88592821e-08]
-    [array([[-0.83800858,  0.15946344],
-           [-0.84973776,  0.08742908]], dtype=float32), array([[ 0.13537928, -0.1656988 ]], dtype=float32), array([[-1.15744114],
-           [ 0.18846205]], dtype=float32), array([[ 0.18807185]], dtype=float32)]
+    x= -15  y= 29  out= 14.0  loss= [  1.78260962e-10]
+    x= -19  y= -11  out= -29.9999  loss= [  1.88592821e-08]
+    x= 7  y= 9  out= 16.0  loss= [ 0.]
+    x= 3  y= 9  out= 12.0  loss= [  9.09494702e-11]
+    x= -1  y= -35  out= -35.9998  loss= [  2.94676283e-08]
+    x= 21  y= -13  out= 8.00004  loss= [  1.60434865e-09]
+    x= -39  y= 7  out= -31.9999  loss= [  1.63308869e-08]
+    x= -3  y= 17  out= 14.0  loss= [  3.63797881e-12]
+    x= 21  y= 29  out= 49.9999  loss= [  1.14087015e-08]
+    x= -33  y= 3  out= -29.9999  loss= [  1.53704605e-08]
+    [array([[-0.73145592,  0.41055757],
+           [-0.71037835,  0.44684216]], dtype=float32), array([[ 0.12508716,  0.19557403]], dtype=float32), array([[-1.03099132],
+           [ 0.59887499]], dtype=float32), array([[ 0.01188867]], dtype=float32)]
 
 ## It worked!
 
@@ -217,8 +219,9 @@ out\_bias & = 0.18807185
 
 I'll just let you trust me that if you pass these values into the graph above that the result approximates $x+y$.
 
+## You should play with this code a little bit.
 
-
-```python
-
-```
+Here's a collection of random ideas for how to play around with the code example above and gain some insights:
+* Modify the "f()" function to try other linear combinations of x & y.  Can it learn $x-y$?  Can it learn $0.5x + 0.75y - 0.33$? 
+* Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate?   
+* Modify the size of the middle layer, and have it try to learn something "Hard" like $x\cdot y$. Did it work?  Do you have any thoughts about why or why not?

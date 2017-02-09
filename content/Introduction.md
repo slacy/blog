@@ -3,7 +3,7 @@ Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 1/27/2017 5:30pm 
 Author: slacy
-This is the first post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
+This is the **first** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
 
 ## Welcome!
 
@@ -21,7 +21,7 @@ These are extremely important questions, and most tutorials I found were lacking
 
 TensorFlow itself is a very large and complex framework, ranging from symbolic graph construction primitives, to distributed training and system management, threads and queueing, etc.  For the sake of this blog, I'm going to focus on the *core* API that TensorFlow provides.  This is lowlevel methods for buliding computation graphs and implementing "learning" and "training".  TensorFlow includes several other higher level API abstractions in `tf.contrib` and `tf.learn`, but these will be out of the scope of this blog and I will try not to use those APIs. 
 
-There are many tutorials for TensorFlow on the internet, but most of them (including ones included in the [TensorFlow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, starting with running an large complex models, like an MNIST classifier, on a pre-existing data set downloaded from the internet.  Additionally, they will frequently use the collection of highlevel and specialized APIs from `tf.learn` and `tf.contrib`, which hide the implementation details from the developer.  This is not the way I approach learning, and I would like a set of articles describing basic machine learning from first principles, starting with simple examples, and working forward. 
+There are many tutorials for TensorFlow on the internet, but most of them (including ones included in the [TensorFlow documentation](https://www.tensorflow.org/tutorials/mnist/beginners/) itself) take a "top down" approach, starting with running an large complex models, like an MNIST classifier, on a pre-existing data set downloaded from the internet.  Additionally, they will frequently use the collection of highlevel and specialized APIs primarily from `tf.contrib`, which hide the implementation details from the developer.  This is not the way I approach learning, and I would like a set of articles describing basic machine learning from first principles, starting with simple examples, and working forward. 
 
 The top down style introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply *existing ML models* to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. 
 
@@ -29,6 +29,7 @@ Top down approaches aren't at all suited for developers who would like to gain a
 
 This blog is the documentation of my personal learning approach, and I hope others find it useful as well.
 ## Goals 
+
 I have some rough goals in mind, which I'll quickly outline here, to keep myself focused: 
 
 1. Approach machine learning from the **bottom up**.  
@@ -36,6 +37,7 @@ I have some rough goals in mind, which I'll quickly outline here, to keep myself
 3. Use **exploratory** methodology, showing different approaches to solving the same problem.
 4. Aim for **deep** understanding of the systems involved. 
 ## Tools
+
 For this blog, I'm using a new collection of tools, which I've hand-configured for this purpose.  I may go into more detail in later posts. The collection of tools I'm using is: 
 
 * [Pelican Static Blogging](https://getpelican.com) Software for content generation.
@@ -45,12 +47,13 @@ For this blog, I'm using a new collection of tools, which I've hand-configured f
 * [Jupyter Notebooks](https://jupyter.org) for authoring all posts. 
 * Ubuntu & Linux hardware with nVidia GPU accelleration as my runtime.
 ## Intended Audience
+
 This blog is intended for a technical audience who has little to no experience with ML / TensorFlow, or who has highlevel experience with TensorFlow and would like to gain a deeper understanding of the math and systems involved. 
 
 If you are interested in "Coding along" and evaluating the the example code here, you will need a computer wit ha software stack that includes:
 
-* TensorFlow
-* Python 
+* [TensorFlow](https://tensorflow.org)
+* [Python](https://python.org)
 * [Jupyter Notebook](https://jupyter.org)
 * [MathJax](https://mathjax.org) (for rendering Notebook equations)
 * Numpy/matplotlib
