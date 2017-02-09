@@ -27,6 +27,7 @@ The *core* API of TensorFlow is much lower level than what I've shown above!
 They do provide highlevel NN abstractions like the one I've shown above, but they are wrapped up in some pretty domain-specific APIs.  Additionally, I'd like to understand what the *lowest level* part of the API is.  Where are the *guts* of TensorFlow and how do they work? 
 
 So, after a little bit of digging, I found some of the lowest level parts.  The APIs revolve around a process that goes like this: 
+
 * Construct some inputs, outputs, and parameters to learn (your "Tensors") 
 * Construct a computation graph for what you want to do with your variables. 
 * Run an Optimizer to apply one of several different algorithms to compute your hidden parameters. 

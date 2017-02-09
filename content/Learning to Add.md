@@ -10,6 +10,7 @@ In this post, we'll explore a toy Neural Network, and show our first Perceptron 
 ## Introduction
 
 Machine Learning problems can be thought of like this: 
+
 * Define a highly-parameterized generic function of the form: $f(inputs) = outputs$
 * Choose some *Training Data* that are example pairs of $(inputs, outputs)$.
 * Feed the *Training Data* to an optimizer, which will find values for all the hidden parameters that optimize our *loss function*.
@@ -38,6 +39,7 @@ $$f(x,y) = x+y$$
 Using a Neural Network? 
 
 First, what does it mean to "learn" this function?  It will involve the following steps:
+
 * Design a computation graph.
 * Choose some training data, which will be a collection of $(x,y)$ pairs.
 * Choose some validation data, which will be a collection of $(x,y)$ pairs that were never used during training. 
@@ -53,6 +55,7 @@ In addition to ``Variables``, we need to pass values to our network.  These valu
 In general, ``Variable`` and ``placeholder`` instances behave pretty much the same, except that placeholders are *inputs* and Variables are *stored parameters*.  Variables require an initial value, and Placeholders are fed discrete values at runtime with each training iteration. 
 
 For our learning task, we are going to use a traditional [Perceptron](https://en.wikipedia.org/wiki/Perceptron) based network. Our network will consist of:
+
 * One input layer of our $(x,y)$ values.
 * One middle layer of 2 values, computed using the Perceptron function.
 * One output value.  
@@ -222,6 +225,7 @@ I'll just let you trust me that if you pass these values into the graph above th
 ## You should play with this code a little bit.
 
 Here's a collection of random ideas for how to play around with the code example above and gain some insights:
+
 * Modify the "f()" function to try other linear combinations of x & y.  Can it learn $x-y$?  Can it learn $0.5x + 0.75y - 0.33$? 
 * Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate?   
 * Modify the size of the middle layer, and have it try to learn something "Hard" like $x\cdot y$. Did it work?  Do you have any thoughts about why or why not?

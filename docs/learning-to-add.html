@@ -49,11 +49,13 @@
         <p>This is the <strong>third</strong> post of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
 <p>In this post, we&#8217;ll explore a toy Neural Network, and show our first Perceptron based code.  This is a simple example to get the thought process going, but will lead us to more insights in coming&nbsp;posts. </p>
 <h2>Introduction</h2>
-<p>Machine Learning problems can be thought of like this: 
-<em> Define a highly-parameterized generic function of the form: <span class="math">\(f(inputs) = outputs\)</span>
-</em> Choose some <em>Training Data</em> that are example pairs of <span class="math">\((inputs, outputs)\)</span>.
-<em> Feed the </em>Training Data<em> to an optimizer, which will find values for all the hidden parameters that optimize our </em>loss function<em>.
-</em> After training, we can use the computed hidden parameters to <em>validate</em> example <span class="math">\((input, output)\)</span> pairs that we did not use during&nbsp;training. </p>
+<p>Machine Learning problems can be thought of like&nbsp;this: </p>
+<ul>
+<li>Define a highly-parameterized generic function of the form: <span class="math">\(f(inputs) =&nbsp;outputs\)</span></li>
+<li>Choose some <em>Training Data</em> that are example pairs of <span class="math">\((inputs, outputs)\)</span>.</li>
+<li>Feed the <em>Training Data</em> to an optimizer, which will find values for all the hidden parameters that optimize our <em>loss function</em>.</li>
+<li>After training, we can use the computed hidden parameters to <em>validate</em> example <span class="math">\((input, output)\)</span> pairs that we did not use during&nbsp;training. </li>
+</ul>
 <p>The power of machine learning is in the design of the computation graph (i.e. &#8220;The Neural Network&#8221;) that determines both the parameters, and also determines the flexibility and &#8220;adaptability&#8221; of the resulting model.  In other&nbsp;words:</p>
 <blockquote>
 <p>If we train a model on a collection of input data, does it produce the 
@@ -68,20 +70,24 @@ expected results for data that it has never seen&nbsp;before?  </p>
 <p>Everything above is pretty abstract, so let&#8217;s start with a concrete problem.  Can we learn the&nbsp;function:</p>
 <div class="math">$$f(x,y) = x+y$$</div>
 <p>Using a Neural&nbsp;Network? </p>
-<p>First, what does it mean to &#8220;learn&#8221; this function?  It will involve the following steps:
-<em> Design a computation graph.
-</em> Choose some training data, which will be a collection of <span class="math">\((x,y)\)</span> pairs.
-<em> Choose some validation data, which will be a collection of <span class="math">\((x,y)\)</span> pairs that were never used during training. 
-</em> Implement a <em>Loss function</em> to determine how correct the values computed are.  This determines the training and accuracy. 
-* Write code to implement the graph, train and validate our problem&nbsp;set.</p>
+<p>First, what does it mean to &#8220;learn&#8221; this function?  It will involve the following&nbsp;steps:</p>
+<ul>
+<li>Design a computation&nbsp;graph.</li>
+<li>Choose some training data, which will be a collection of <span class="math">\((x,y)\)</span>&nbsp;pairs.</li>
+<li>Choose some validation data, which will be a collection of <span class="math">\((x,y)\)</span> pairs that were never used during&nbsp;training. </li>
+<li>Implement a <em>Loss function</em> to determine how correct the values computed are.  This determines the training and&nbsp;accuracy. </li>
+<li>Write code to implement the graph, train and validate our problem&nbsp;set.</li>
+</ul>
 <h2>The Computation&nbsp;Graph</h2>
 <p>Last time, we talked about TensorFlow <code>tf.Variable</code> objects, which we used to hold computed values in our graph.  Variables are generally Tensors (i.e. matrices) that hold all the hidden parameters that will be learned by the&nbsp;network. </p>
 <p>In addition to <code>Variables</code>, we need to pass values to our network.  These values can be thought of the <em>inputs</em> to our function.  In TensorFlow, these inputs are instances of the type <code>tf.placeholder</code>.  You can think of a <code>placeholder</code> as a slot where an input value will go, at runtime.  They aren&#8217;t <em>learned parameters</em> like the <code>Variable</code> instances&nbsp;are. </p>
 <p>In general, <code>Variable</code> and <code>placeholder</code> instances behave pretty much the same, except that placeholders are <em>inputs</em> and Variables are <em>stored parameters</em>.  Variables require an initial value, and Placeholders are fed discrete values at runtime with each training&nbsp;iteration. </p>
-<p>For our learning task, we are going to use a traditional <a href="https://en.wikipedia.org/wiki/Perceptron">Perceptron</a> based network. Our network will consist of:
-<em> One input layer of our <span class="math">\((x,y)\)</span> values.
-</em> One middle layer of 2 values, computed using the Perceptron function.
-* One output&nbsp;value.  </p>
+<p>For our learning task, we are going to use a traditional <a href="https://en.wikipedia.org/wiki/Perceptron">Perceptron</a> based network. Our network will consist&nbsp;of:</p>
+<ul>
+<li>One input layer of our <span class="math">\((x,y)\)</span>&nbsp;values.</li>
+<li>One middle layer of 2 values, computed using the Perceptron&nbsp;function.</li>
+<li>One output&nbsp;value.  </li>
+</ul>
 <p>Each node in the middle layer will&nbsp;compute </p>
 <div class="math">$$f(x) = \sum_{i=0}^n {w_i v_i+b_i}$$</div>
 <p>The steps of the computation look roughly like&nbsp;this: </p>
@@ -228,10 +234,12 @@ out\_bias &amp; = 0.18807185
 \end{array}$$</div>
 <p>I&#8217;ll just let you trust me that if you pass these values into the graph above that the result approximates <span class="math">\(x+y\)</span>.</p>
 <h2>You should play with this code a little&nbsp;bit.</h2>
-<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some insights:
-<em> Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? 
-</em> Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate? <br>
-* Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</p>
+<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
+<ul>
+<li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
+<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning&nbsp;rate?   </li>
+<li>Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</li>
+</ul>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
