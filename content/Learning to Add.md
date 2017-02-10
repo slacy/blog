@@ -3,6 +3,7 @@ Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 2/8/2017 10:00am 
 Author: slacy
+
 This is the **third** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
 
 In this post, we'll explore a toy Neural Network, and show our first Perceptron based code.  This is a simple example to get the thought process going, but will lead us to more insights in coming posts. 

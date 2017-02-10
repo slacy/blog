@@ -3,6 +3,7 @@ Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 1/27/2017 5:30pm 
 Author: slacy
+
 This is the **first** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
 
 ## Welcome!

@@ -3,6 +3,7 @@ Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 2/9/2017 11:00am
 Author: slacy
+
 This is just a friendly reminder:
 
 # All the source code for all the examples in this blog (and these posts) are on GitHub!

@@ -35,7 +35,7 @@ GITHUB_URL = "https://github.com/slacy"
 TWITTER_USERNAME = "sklacy"
 GOOGLE_ANALYTICS = "UA-85612-4"
 
-STATIC_PATHS = ['images',]
+STATIC_PATHS = ['images','ActivationFunctions_files']
 
 # MARKDOWN = {
 #     'output_format': 'html5',
