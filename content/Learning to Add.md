@@ -136,7 +136,7 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
 
 def f(x,y): return x + y
 
-with tf.Session() as sess: 
+with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess: 
     sess.run([tf.local_variables_initializer(), 
               tf.global_variables_initializer()])
     
@@ -175,30 +175,30 @@ with tf.Session() as sess:
 ```
 
     TRAIN
-    i= 0  loss= [ 343.70489502]
-    i= 1000  loss= [ 0.00222525]
-    i= 2000  loss= [  9.52743212e-05]
-    i= 3000  loss= [  7.60952462e-05]
-    i= 4000  loss= [  2.87974472e-05]
-    i= 5000  loss= [  2.28197314e-06]
-    i= 6000  loss= [  6.43522071e-08]
-    i= 7000  loss= [  3.78495315e-08]
-    i= 8000  loss= [  1.07751148e-05]
-    i= 9000  loss= [  5.25324140e-09]
+    i= 0  loss= [ 96.03557587]
+    i= 1000  loss= [ 0.02457347]
+    i= 2000  loss= [ 0.00617263]
+    i= 3000  loss= [ 0.00031168]
+    i= 4000  loss= [ 0.00040334]
+    i= 5000  loss= [  2.47910157e-06]
+    i= 6000  loss= [  3.63274012e-07]
+    i= 7000  loss= [  5.71934834e-07]
+    i= 8000  loss= [  3.97377335e-07]
+    i= 9000  loss= [  2.21334631e-08]
     VALIDATE
-    x= -15  y= 29  out= 14.0  loss= [  1.78260962e-10]
-    x= -19  y= -11  out= -29.9999  loss= [  1.88592821e-08]
-    x= 7  y= 9  out= 16.0  loss= [ 0.]
-    x= 3  y= 9  out= 12.0  loss= [  9.09494702e-11]
-    x= -1  y= -35  out= -35.9998  loss= [  2.94676283e-08]
-    x= 21  y= -13  out= 8.00004  loss= [  1.60434865e-09]
-    x= -39  y= 7  out= -31.9999  loss= [  1.63308869e-08]
-    x= -3  y= 17  out= 14.0  loss= [  3.63797881e-12]
-    x= 21  y= 29  out= 49.9999  loss= [  1.14087015e-08]
-    x= -33  y= 3  out= -29.9999  loss= [  1.53704605e-08]
-    [array([[-0.73145592,  0.41055757],
-           [-0.71037835,  0.44684216]], dtype=float32), array([[ 0.12508716,  0.19557403]], dtype=float32), array([[-1.03099132],
-           [ 0.59887499]], dtype=float32), array([[ 0.01188867]], dtype=float32)]
+    x= 29  y= 39  out= 67.9992  loss= [  5.70493285e-07]
+    x= 37  y= 27  out= 63.9994  loss= [  3.27418093e-07]
+    x= 31  y= -9  out= 22.0002  loss= [  4.40195436e-08]
+    x= -37  y= 27  out= -10.0001  loss= [  3.38422979e-09]
+    x= 5  y= 9  out= 14.0  loss= [  3.63797881e-10]
+    x= 15  y= 9  out= 24.0  loss= [  2.45927367e-09]
+    x= -11  y= -35  out= -45.999  loss= [  1.06083462e-06]
+    x= -33  y= -27  out= -59.999  loss= [  1.02963531e-06]
+    x= -23  y= -33  out= -55.9989  loss= [  1.14087015e-06]
+    x= -27  y= 35  out= 7.99971  loss= [  8.37756033e-08]
+    [array([[-0.04954526, -0.85443568],
+           [ 0.01755414, -0.85590768]], dtype=float32), array([[ 0.08150564,  0.08256237]], dtype=float32), array([[-0.02584258],
+           [-1.1688565 ]], dtype=float32), array([[ 0.09884781]], dtype=float32)]
 
 ## It worked!
 

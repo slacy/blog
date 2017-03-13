@@ -48,22 +48,27 @@
     <div class="entry-content">
         <p>This is an <strong>interlude</strong> from my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
 <p>In a previous post, <a href="../learning-to-add.html">Learning to Add</a> I showed simple code to run <span class="amp">&amp;</span> train a neural network.  That code example trains &#8220;one example at a time&#8221;.  This is generally <em>not</em> how you implement a typical large <span class="caps">ML</span> training&nbsp;system. </p>
-<p>Its much more typical to train in <strong>batches</strong>.  Batches are a way to pass a large collection of training examples to our network, run the expensive calculations just once, on the entire batch, and update the network once.   Because everything in TensorFlow is a <em>tensor</em> (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that virtually assume that the first dimension of a tensor is actually a batch.  Here is an example using an unknown batch&nbsp;size:</p>
+<p>Its much more typical to train in <strong>batches</strong>.  Batches are a way to pass a medium to large collection of training examples to our network, run the expensive calculations just once on the entire batch, then update the gradients and train on the next batch.   Because everything in TensorFlow is a <em>tensor</em> (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that assume that the first dimension of a tensor is the size of a batch.  Here is an example using an unknown batch&nbsp;size:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
-<span class="c1"># This declares a batch, of unknown size, of tensors of size 4. </span>
+<span class="c1"># This declares a batch of unknown size, of tensors of size 4. </span>
 <span class="n">ins</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
-<span class="c1"># Our weights and biases can be declared as usual. </span>
+<span class="c1"># Our weights and biases are declared as usual.  The batch size does </span>
+<span class="c1"># not effect their declaration. </span>
 <span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
-    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x-nobatch&quot;</span><span class="p">,</span> 
-    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
+    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,)))</span>
 
-<span class="c1"># We can multiply in * w without worrying what the size of the output is. </span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+<span class="c1"># We compute &quot;out = ins * w + b&quot; without worrying what the first dimension of </span>
+<span class="c1"># these tensors are. </span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">b</span><span class="p">)</span>
 
-<span class="c1"># When we print the size of the output, it will have an known </span>
-<span class="c1"># dimension for batch size as well </span>
+<span class="c1"># When we print the shape of the final output, it has an unknown </span>
+<span class="c1"># size for the first dimension as well. </span>
 <span class="k">print</span> <span class="s2">&quot;Shape of intermediate =&quot;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span>
 </pre></div>
 
@@ -73,8 +78,8 @@
 
 
 <h2>Additional benefits of&nbsp;batching</h2>
-<p>Batching our training data can actually make training faster as well, and not just because the computation is more efficient.  You must remember that we&#8217;re training via <em>GradientDescent</em> (and similar algorithms).  These algorithms look at the current set of inputs, and decide how to tweak internally stored parameters to improve the <em>loss function</em>.  </p>
-<p>But, there are lots of cases where optimizing one training example has the opposite effect on other training examples.  These examples can tend to &#8220;See-saw&#8221; back and forth between two not very optimial sets of parameters.  You can think of each example as <em>pulling</em> the parameters in opposite&nbsp;directions.</p>
+<p>Batching our training data can actually make training faster as well, and not just because the computation is more efficient.  Remember that we&#8217;re training via <em>GradientDescent</em> (and similar algorithms).  These algorithms look at the current set of inputs, and decide how to tweak internally stored parameters to minimize the <em>loss function</em>.  </p>
+<p>But, there are lots of cases where optimizing one training example has the opposite effect on other training examples.  These examples can tend to &#8220;See-saw&#8221; back and forth between two not very optimial sets of parameters during training.  You can think of each example as <em>pulling</em> the parameters in opposite&nbsp;directions.</p>
 <p>When we batch, we give multiple training examples to the optimizer.  If two examples pull parmeters in opposite directions, then they will end up cancelling each other out, and other solutions will be&nbsp;tried.</p>
 <p>There are several library functions within TensorFlow itself to facilitate batching, but here, I&#8217;m going to be doing the work myself, to make it more clear how batching really&nbsp;works.</p>
 <h2>Examples</h2>

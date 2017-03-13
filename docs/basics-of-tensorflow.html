@@ -142,7 +142,7 @@ Initial value of y=x^2 =  4.0
 <p>Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran <em>one iteration</em> of the algorithm, so only made a small change to the initial value of <span class="math">\(x\)</span>.  The Good Thing is that it seems to be going in the right&nbsp;direction.  </p>
 <p>What it actually computed&nbsp;was:
 </p>
-<div class="math">$$x_1=x_0 -(learning\_rate * \frac{\partial x^2}{\partial x})$$</div>
+<div class="math">$$x_1=x_0 -(learning\_rate * \frac{dx^2}{dx})$$</div>
 <p><span class="math">\(learning\_rate = 0.001\)</span>, 
 the derivative of <span class="math">\(x^2\)</span> is <span class="math">\(2x\)</span>, and 
 the initial value of <span class="math">\(x\)</span> was <span class="math">\(1.0\)</span>, that leaves us&nbsp;with:</p>

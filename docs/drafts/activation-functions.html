@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Activation Functions</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="../category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png " class="post-avatar" alt="TensorFlow From The Ground Up"></a>
+            </div>
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/tensorflow-from-the-ground-up.html" class="category">TensorFlow From The Ground Up</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2017-02-08T10:00:00-08:00">Wed 08 February 2017</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Activation&nbsp;Functions</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>This is the <strong>fourth</strong> post of my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
+<p>In this post, we&#8217;ll expand on our &#8220;Adding&#8221; example Neural Network, and talk about Activation Functions and how they impact the functioning of your&nbsp;system. </p>
+<h2>What are activation&nbsp;functions?</h2>
+<p>As we saw in the previous post, <a href="../learning-to-add.html">Learning to Add</a>, we can compute some real-vauled functions directly using a Neural Network style&nbsp;architecture. </p>
+<p>This is useful for functions like <span class="math">\(f(x) = x+y\)</span> and other linear and &#8220;linear-ish&#8221;&nbsp;problems.  </p>
+<p>A different, but very useful class of functions to model are simple conditionals.  But, the computation graph expressed by TensorFlow has no notion of control flow statements like an <em>if statement</em>.  So, how do we model functions that look like&nbsp;conditionals?  </p>
+<h2>We use activation&nbsp;functions!</h2>
+<p>Activation functions are transformations applied to the middle layer of our neural network to modify their values in well-defined ways.  For example, let&#8217;s think about writing a neural network that implements this&nbsp;behavior: </p>
+<div class="math">$$f(x, y)= 
+\begin{cases}
+    1.0, &amp; \text{if } x &gt; y \\
+    0,         &amp; \text{otherwise}
+\end{cases}
+$$</div>
+<p>There&#8217;s <strong>no way</strong> to express a function like this using traditional linear equations.  We need to introduce &#8220;something more&#8221; into the middle of our network.  You might also notice that the output is always either <span class="math">\(1.0\)</span> or <span class="math">\(0.0\)</span> so maybe there&#8217;s something we can add to the output layer as well that will &#8220;clamp&#8221; values into this&nbsp;range.  </p>
+<p>You can think of an activation function as describing when a middle-layer node is &#8220;on&#8221; and when it&#8217;s&nbsp;&#8220;off&#8221;. </p>
+<h2>Let&#8217;s look at the common activation&nbsp;functions</h2>
+<p>There are 3 common activation functions used in Neural Networks, <strong>tanh</strong>, <strong>sigmoid</strong>, and <strong>ReLU</strong>.  Their formulas and graphs of their outputs are show&nbsp;below:  </p>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;svg&#39;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">math</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;tanh&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="svg" src="../images/ActivationFunctions_files/ActivationFunctions_5_0.svg"></p>
+<p><strong>tanh</strong> takes any real value as input, and always produces a value in the range (-1,1).  At <span class="math">\(x=0\)</span>, tanh has the value <span class="math">\(0.0\)</span>.  tanh is&nbsp;symmetric. </p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="svg" src="../images/ActivationFunctions_files/ActivationFunctions_7_0.svg"></p>
+<p><strong>sigmoid</strong> takes any real value as input, and returns a value in the range (0,1).  sigmoid is useful for passing to subsequent analysis (logits, softmax).  sigmoid is also useful for treating nodes &#8220;like they have only binary values&#8221;.  sigmoid is&nbsp;symmetric. </p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> 
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span> 
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">relu</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;ReLU&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="svg" src="../images/ActivationFunctions_files/ActivationFunctions_9_0.svg"></p>
+<p><strong>relu</strong> is linear for values <span class="math">\(x&gt;0\)</span> and otherwise it is zero.  ReLU is not symmetric.  ReLU output values are unbounded for positive vaules.  ReLU is useful for piecewise linear function&nbsp;reconstruction. </p>
+<h2>The Computation&nbsp;Graph</h2>
+<p>The graph that I&#8217;m going to use in this example is <strong>exactly the same</strong> as the graph that I used for the <span class="math">\(f(x,y)=x+y\)</span> example, except that I&#8217;m going to make two very small changes.  I&#8217;ve duplicated and slightly simplified the code from the <a href="../learning-to-add.html">Learning To Add</a>&nbsp;post. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span> 
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputs&#39;</span><span class="p">)</span>
+<span class="n">expected</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expected&#39;</span><span class="p">)</span>
+
+<span class="c1"># Middle layer with 2 nodes</span>
+<span class="n">mid_layer_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">input_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
+    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">input_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
+    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="c1"># Here&#39;s where we apply the sigmoid Activation Fuction </span>
+<span class="n">mid_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_weight</span><span class="p">),</span> <span class="n">input_bias</span><span class="p">))</span>
+
+<span class="n">out_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
+    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">out_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
+    <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mid_layer</span><span class="p">,</span> <span class="n">out_weight</span><span class="p">),</span> <span class="n">out_bias</span><span class="p">))</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">output</span> <span class="o">-</span> <span class="n">expected</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span> 
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> 
+              <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
+
+    <span class="k">print</span> <span class="s2">&quot;TRAIN&quot;</span>
+    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">150000</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="p">):</span>
+        <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span> <span class="n">inputs</span><span class="p">:</span> <span class="p">[],</span> <span class="n">expected</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+          <span class="n">feed</span><span class="p">[</span><span class="n">inputs</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),])</span>
+          <span class="n">feed</span><span class="p">[</span><span class="n">expected</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">inp</span><span class="p">[</span><span class="mi">1</span><span class="p">]),])</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;i =&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; loss =&quot;</span><span class="p">,</span> <span class="n">l</span>
+
+    <span class="k">print</span> <span class="s2">&quot;VALIDATE&quot;</span>
+    <span class="n">validate_iterations</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">validate_iterations</span><span class="p">):</span>
+        <span class="n">inp</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="mi">1</span><span class="p">]),]</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">output</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">inputs</span><span class="p">:[</span><span class="n">inp</span><span class="p">,],</span> <span class="n">expected</span><span class="p">:[</span><span class="n">e</span><span class="p">,]})</span>
+        <span class="k">print</span> <span class="s2">&quot;x =&quot;</span><span class="p">,</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot; y =&quot;</span><span class="p">,</span><span class="n">inp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;expected =&quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="s2">&quot; out =&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s2">&quot; loss =&quot;</span><span class="p">,</span> <span class="n">l</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>TRAIN
+i = 0  loss = 0.161833
+i = 5000  loss = 0.00155709
+i = 10000  loss = 0.00071937
+i = 15000  loss = 0.000488477
+i = 20000  loss = 0.000357783
+i = 25000  loss = 0.000271752
+i = 30000  loss = 0.000224709
+i = 35000  loss = 0.000191571
+i = 40000  loss = 0.000165512
+i = 45000  loss = 0.000145984
+i = 50000  loss = 0.000129989
+i = 55000  loss = 0.000125781
+i = 60000  loss = 0.000114142
+i = 65000  loss = 0.000101471
+i = 70000  loss = 9.21531e-05
+i = 75000  loss = 8.97643e-05
+i = 80000  loss = 7.96096e-05
+i = 85000  loss = 7.25366e-05
+i = 90000  loss = 7.49389e-05
+i = 95000  loss = 7.36366e-05
+i = 100000  loss = 6.67829e-05
+i = 105000  loss = 6.08266e-05
+i = 110000  loss = 6.21528e-05
+i = 115000  loss = 5.6254e-05
+i = 120000  loss = 5.23087e-05
+i = 125000  loss = 5.0322e-05
+i = 130000  loss = 4.55622e-05
+i = 135000  loss = 4.98627e-05
+i = 140000  loss = 4.49891e-05
+i = 145000  loss = 4.71939e-05
+VALIDATE
+x = 81  y = -54 expected = 1  out = [[ 0.99591929]]  loss = 1.66522e-05
+x = 40  y = -75 expected = 1  out = [[ 0.98086274]]  loss = 0.000366235
+x = -70  y = 64 expected = 0  out = [[ 0.98118585]]  loss = 0.962726
+x = -94  y = -45 expected = 1  out = [[ 0.94745219]]  loss = 0.00276127
+x = -82  y = 19 expected = 1  out = [[ 0.94885868]]  loss = 0.00261543
+x = -59  y = 19 expected = 0  out = [[ 0.95760298]]  loss = 0.917003
+x = -25  y = 66 expected = 1  out = [[ 0.99487865]]  loss = 2.62282e-05
+x = 66  y = 74 expected = 0  out = [[ 0.99742305]]  loss = 0.994853
+x = 42  y = -26 expected = 0  out = [[ 0.99511981]]  loss = 0.990263
+x = -80  y = 79 expected = 1  out = [[ 0.98330623]]  loss = 0.000278682
+x = 95  y = 88 expected = 1  out = [[ 0.99712116]]  loss = 8.28775e-06
+x = 36  y = 42 expected = 0  out = [[ 0.99753702]]  loss = 0.99508
+x = 85  y = -13 expected = 0  out = [[ 0.99754143]]  loss = 0.995089
+x = 18  y = 99 expected = 1  out = [[ 0.99712735]]  loss = 8.25209e-06
+x = 29  y = 90 expected = 1  out = [[ 0.99730444]]  loss = 7.26605e-06
+x = 50  y = -57 expected = 1  out = [[ 0.989636]]  loss = 0.000107412
+x = -66  y = 79 expected = 1  out = [[ 0.98758823]]  loss = 0.000154052
+x = -2  y = -10 expected = 0  out = [[ 0.97415435]]  loss = 0.948977
+x = 26  y = 54 expected = 0  out = [[ 0.99758828]]  loss = 0.995182
+x = -66  y = 55 expected = 1  out = [[ 0.9782517]]  loss = 0.000472989
+x = -76  y = 1 expected = 1  out = [[ 0.94860929]]  loss = 0.002641
+x = 56  y = 44 expected = 0  out = [[ 0.99729091]]  loss = 0.994589
+x = 27  y = -33 expected = 0  out = [[ 0.98809904]]  loss = 0.97634
+x = -17  y = 88 expected = 1  out = [[ 0.9954223]]  loss = 2.09553e-05
+x = -16  y = -82 expected = 0  out = [[ 0.95281899]]  loss = 0.907864
+</pre></div>
+
+
+<h2>You should play with this code a little&nbsp;bit.</h2>
+<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
+<ul>
+<li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
+<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning&nbsp;rate?   </li>
+<li>Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</li>
+</ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="../tag/python.html">Python</a>
+            <a href="../tag/tensorflow.html">TensorFlow</a>
+            <a href="../tag/jupyter.html">Jupyter</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="../author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="../category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

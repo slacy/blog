@@ -116,7 +116,7 @@ We know that the minimum of $x^2$ is at $x=0$ so what happened?  Where did $0.99
 Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran *one iteration* of the algorithm, so only made a small change to the initial value of $x$.  The Good Thing is that it seems to be going in the right direction.  
 
 What it actually computed was:
-$$x_1=x_0 -(learning\_rate * \frac{\partial x^2}{\partial x})$$
+$$x_1=x_0 -(learning\_rate * \frac{dx^2}{dx})$$
 
 $learning\_rate = 0.001$, 
 the derivative of $x^2$ is $2x$, and 

@@ -19,9 +19,3 @@ If you are interested in playing with the examples and source code, then I would
 From there, you can easily run all the examples on all the pages in this blog. 
 
 **Woot!**
-
-
-```python
-
-
-```

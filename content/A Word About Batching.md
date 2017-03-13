@@ -8,25 +8,30 @@ This is an **interlude** from my series [TensorFlow From The Ground Up]({categor
 
 In a previous post, [Learning to Add]({filename}Learning to Add.md) I showed simple code to run & train a neural network.  That code example trains "one example at a time".  This is generally *not* how you implement a typical large ML training system. 
 
-Its much more typical to train in **batches**.  Batches are a way to pass a large collection of training examples to our network, run the expensive calculations just once, on the entire batch, and update the network once.   Because everything in TensorFlow is a *tensor* (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that virtually assume that the first dimension of a tensor is actually a batch.  Here is an example using an unknown batch size:
+Its much more typical to train in **batches**.  Batches are a way to pass a medium to large collection of training examples to our network, run the expensive calculations just once on the entire batch, then update the gradients and train on the next batch.   Because everything in TensorFlow is a *tensor* (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that assume that the first dimension of a tensor is the size of a batch.  Here is an example using an unknown batch size:
 
 
 ```python
 import tensorflow as tf
 
-# This declares a batch, of unknown size, of tensors of size 4. 
+# This declares a batch of unknown size, of tensors of size 4. 
 ins = tf.placeholder(dtype=tf.float32, shape=(None, 4))
 
-# Our weights and biases can be declared as usual. 
+# Our weights and biases are declared as usual.  The batch size does 
+# not effect their declaration. 
 w = tf.Variable(
-    expected_shape=(4, 3), dtype=tf.float32, name="x-nobatch", 
-    initial_value=tf.zeros(shape=(4, 3)))
+    expected_shape=(4, 3), dtype=tf.float32, 
+    initial_value=tf.ones(shape=(4, 3)))
+b = tf.Variable(
+    expected_shape=(3,), dtype=tf.float32, 
+    initial_value=tf.ones(shape=(3,)))
 
-# We can multiply in * w without worrying what the size of the output is. 
-out = tf.matmul(ins, w)
+# We compute "out = ins * w + b" without worrying what the first dimension of 
+# these tensors are. 
+out = tf.add(tf.matmul(ins, w), b)
 
-# When we print the size of the output, it will have an known 
-# dimension for batch size as well 
+# When we print the shape of the final output, it has an unknown 
+# size for the first dimension as well. 
 print "Shape of intermediate =", out.get_shape()
 ```
 
@@ -34,9 +39,9 @@ print "Shape of intermediate =", out.get_shape()
 
 ## Additional benefits of batching
 
-Batching our training data can actually make training faster as well, and not just because the computation is more efficient.  You must remember that we're training via *GradientDescent* (and similar algorithms).  These algorithms look at the current set of inputs, and decide how to tweak internally stored parameters to improve the *loss function*.  
+Batching our training data can actually make training faster as well, and not just because the computation is more efficient.  Remember that we're training via *GradientDescent* (and similar algorithms).  These algorithms look at the current set of inputs, and decide how to tweak internally stored parameters to minimize the *loss function*.  
 
-But, there are lots of cases where optimizing one training example has the opposite effect on other training examples.  These examples can tend to "See-saw" back and forth between two not very optimial sets of parameters.  You can think of each example as *pulling* the parameters in opposite directions.
+But, there are lots of cases where optimizing one training example has the opposite effect on other training examples.  These examples can tend to "See-saw" back and forth between two not very optimial sets of parameters during training.  You can think of each example as *pulling* the parameters in opposite directions.
 
 When we batch, we give multiple training examples to the optimizer.  If two examples pull parmeters in opposite directions, then they will end up cancelling each other out, and other solutions will be tried.
 
