@@ -11,7 +11,7 @@ from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 
 CONFIG = {
     # Local path configuration (can be absolute or relative to tasks.py)
-    'deploy_path': 'output',
+    'deploy_path': 'docs',
     # Github Pages configuration
     'github_pages_branch': 'master',
     'commit_message': "'Publish site on {}'".format(datetime.date.today().isoformat()),
@@ -29,11 +29,14 @@ def clean(c):
 @task
 def build(c):
     """Build local version of site"""
+    c.run('sass slacy-medius/scss/main.scss slacy-medius/static/css/main.css')
+    c.run('jupyter-nbconvert --config nbconvert_conf.py')
     c.run('pelican -s pelicanconf.py')
 
 @task
 def rebuild(c):
     """`build` with the delete switch"""
+    c.run('jupyter-nbconvert --config nbconvert_conf.py')
     c.run('pelican -d -s pelicanconf.py')
 
 @task
