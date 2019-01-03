@@ -26,6 +26,7 @@ gast==0.2.0
 grpcio==1.17.1
 h5py==2.9.0
 html5lib==0.9999999
+http==0.2
 idna==2.6
 invoke==1.2.0
 ipaddress==1.0.19
