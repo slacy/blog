@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Activation Functions</title>
+        <title>Activation Functions</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
@@ -39,7 +39,7 @@
 
             <div class="background-image-small">
                 <div class="title-container">
-                    <h1>Activation Functions</h1>
+                    <h1>Activation&nbsp;Functions</h1>
                 </div>
             </div>
         </div>
@@ -47,23 +47,23 @@
 
     <div class="entry-content">
         <p>This is the <strong>fourth</strong> post of my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
-<p>In this post, we'll expand on our "Adding" example Neural Network, and talk about Activation Functions and how they impact the functioning of your system. </p>
-<h2>What are activation functions?</h2>
-<p>As we saw in the previous post, <a href="../learning-to-add.html">Learning to Add</a>, we can compute some real-vauled functions directly using a Neural Network style architecture. </p>
-<p>This is useful for functions like <span class="math">\(f(x) = x+y\)</span> and other linear and "linear-ish" problems.  </p>
-<p>A different, but very useful class of functions to model are simple conditionals.  But, the computation graph expressed by TensorFlow has no notion of control flow statements like an <em>if statement</em>.  So, how do we model functions that look like conditionals?  </p>
-<h2>We use activation functions!</h2>
-<p>Activation functions are transformations applied to the middle layer of our neural network to modify their values in well-defined ways.  For example, let's think about writing a neural network that implements this behavior: </p>
+<p>In this post, we&#8217;ll expand on our &#8220;Adding&#8221; example Neural Network, and talk about Activation Functions and how they impact the functioning of your&nbsp;system. </p>
+<h2>What are activation&nbsp;functions?</h2>
+<p>As we saw in the previous post, <a href="../learning-to-add.html">Learning to Add</a>, we can compute some real-vauled functions directly using a Neural Network style&nbsp;architecture. </p>
+<p>This is useful for functions like <span class="math">\(f(x) = x+y\)</span> and other linear and &#8220;linear-ish&#8221;&nbsp;problems.  </p>
+<p>A different, but very useful class of functions to model are simple conditionals.  But, the computation graph expressed by TensorFlow has no notion of control flow statements like an <em>if statement</em>.  So, how do we model functions that look like&nbsp;conditionals?  </p>
+<h2>We use activation&nbsp;functions!</h2>
+<p>Activation functions are transformations applied to the middle layer of our neural network to modify their values in well-defined ways.  For example, let&#8217;s think about writing a neural network that implements this&nbsp;behavior: </p>
 <div class="math">$$f(x, y)= 
 \begin{cases}
     1.0, &amp; \text{if } x &gt; y \\
     0,         &amp; \text{otherwise}
 \end{cases}
 $$</div>
-<p>There's <strong>no way</strong> to express a function like this using traditional linear equations.  We need to introduce "something more" into the middle of our network.  You might also notice that the output is always either <span class="math">\(1.0\)</span> or <span class="math">\(0.0\)</span> so maybe there's something we can add to the output layer as well that will "clamp" values into this range.  </p>
-<p>You can think of an activation function as describing when a middle-layer node is "on" and when it's "off". </p>
-<h2>Let's look at the common activation functions</h2>
-<p>There are 3 common activation functions used in Neural Networks, <strong>tanh</strong>, <strong>sigmoid</strong>, and <strong>ReLU</strong>.  Their formulas and graphs of their outputs are show below:  </p>
+<p>There&#8217;s <strong>no way</strong> to express a function like this using traditional linear equations.  We need to introduce &#8220;something more&#8221; into the middle of our network.  You might also notice that the output is always either <span class="math">\(1.0\)</span> or <span class="math">\(0.0\)</span> so maybe there&#8217;s something we can add to the output layer as well that will &#8220;clamp&#8221; values into this&nbsp;range.  </p>
+<p>You can think of an activation function as describing when a middle-layer node is &#8220;on&#8221; and when it&#8217;s&nbsp;&#8220;off&#8221;. </p>
+<h2>Let&#8217;s look at the common activation&nbsp;functions</h2>
+<p>There are 3 common activation functions used in Neural Networks, <strong>tanh</strong>, <strong>sigmoid</strong>, and <strong>ReLU</strong>.  Their formulas and graphs of their outputs are show&nbsp;below:  </p>
 <div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;svg&#39;</span>
 </pre></div>
@@ -83,7 +83,7 @@ $$</div>
 
 
 <p><img alt="svg" src="../images/ActivationFunctions_files/ActivationFunctions_5_0.svg"></p>
-<p><strong>tanh</strong> takes any real value as input, and always produces a value in the range (-1,1).  At <span class="math">\(x=0\)</span>, tanh has the value <span class="math">\(0.0\)</span>.  tanh is symmetric. </p>
+<p><strong>tanh</strong> takes any real value as input, and always produces a value in the range (-1,1).  At <span class="math">\(x=0\)</span>, tanh has the value <span class="math">\(0.0\)</span>.  tanh is&nbsp;symmetric. </p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
@@ -95,7 +95,7 @@ $$</div>
 
 
 <p><img alt="svg" src="../images/ActivationFunctions_files/ActivationFunctions_7_0.svg"></p>
-<p><strong>sigmoid</strong> takes any real value as input, and returns a value in the range (0,1).  sigmoid is useful for passing to subsequent analysis (logits, softmax).  sigmoid is also useful for treating nodes "like they have only binary values".  sigmoid is symmetric. </p>
+<p><strong>sigmoid</strong> takes any real value as input, and returns a value in the range (0,1).  sigmoid is useful for passing to subsequent analysis (logits, softmax).  sigmoid is also useful for treating nodes &#8220;like they have only binary values&#8221;.  sigmoid is&nbsp;symmetric. </p>
 <div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> 
     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="n">x</span> 
     <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
@@ -109,9 +109,9 @@ $$</div>
 
 
 <p><img alt="svg" src="../images/ActivationFunctions_files/ActivationFunctions_9_0.svg"></p>
-<p><strong>relu</strong> is linear for values <span class="math">\(x&gt;0\)</span> and otherwise it is zero.  ReLU is not symmetric.  ReLU output values are unbounded for positive vaules.  ReLU is useful for piecewise linear function reconstruction. </p>
-<h2>The Computation Graph</h2>
-<p>The graph that I'm going to use in this example is <strong>exactly the same</strong> as the graph that I used for the <span class="math">\(f(x,y)=x+y\)</span> example, except that I'm going to make two very small changes.  I've duplicated and slightly simplified the code from the <a href="../learning-to-add.html">Learning To Add</a> post. </p>
+<p><strong>relu</strong> is linear for values <span class="math">\(x&gt;0\)</span> and otherwise it is zero.  ReLU is not symmetric.  ReLU output values are unbounded for positive vaules.  ReLU is useful for piecewise linear function&nbsp;reconstruction. </p>
+<h2>The Computation&nbsp;Graph</h2>
+<p>The graph that I&#8217;m going to use in this example is <strong>exactly the same</strong> as the graph that I used for the <span class="math">\(f(x,y)=x+y\)</span> example, except that I&#8217;m going to make two very small changes.  I&#8217;ve duplicated and slightly simplified the code from the <a href="../learning-to-add.html">Learning To Add</a>&nbsp;post. </p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
 <span class="kn">import</span> <span class="nn">random</span>
 
@@ -234,12 +234,12 @@ x = -16  y = -82 expected = 0  out = [[ 0.95281899]]  loss = 0.907864
 </pre></div>
 
 
-<h2>You should play with this code a little bit.</h2>
-<p>Here's a collection of random ideas for how to play around with the code example above and gain some insights:</p>
+<h2>You should play with this code a little&nbsp;bit.</h2>
+<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
 <ul>
-<li>Modify the "f()" function to try other linear combinations of x &amp; y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
-<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate?   </li>
-<li>Modify the size of the middle layer, and have it try to learn something "Hard" like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why not?</li>
+<li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
+<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning&nbsp;rate?   </li>
+<li>Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</li>
 </ul>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

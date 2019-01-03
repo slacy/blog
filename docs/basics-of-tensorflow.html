@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Basics of TensorFlow</title>
+        <title>Basics of TensorFlow</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
@@ -39,7 +39,7 @@
 
             <div class="background-image-small">
                 <div class="title-container">
-                    <h1>Basics of TensorFlow</h1>
+                    <h1>Basics of&nbsp;TensorFlow</h1>
                 </div>
             </div>
         </div>
@@ -47,8 +47,8 @@
 
     <div class="entry-content">
         <p>This is the <strong>second</strong> post of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
-<p>When I first heard about TensorFlow, it was described as a library for doing Machine Learning, which I equated with Neural Networks.  (Neural Networks are just one type of Machine Learning).  </p>
-<p>I had read many other blog posts about Neural Network architectures, so I assumed it would have an API that looked something like this:</p>
+<p>When I first heard about TensorFlow, it was described as a library for doing Machine Learning, which I equated with Neural Networks.  (Neural Networks are just one type of Machine&nbsp;Learning).  </p>
+<p>I had read many other blog posts about Neural Network architectures, so I assumed it would have an <span class="caps">API</span> that looked something like&nbsp;this:</p>
 <div class="highlight"><pre><span></span><span class="c1"># Here&#39;s What I thought the *core* TensorFlow API might look like, </span>
 <span class="c1"># before I had read any code or documentation about it.</span>
 <span class="n">network</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span> 
@@ -59,23 +59,23 @@
 </pre></div>
 
 
-<h2>Boy, was I wrong!</h2>
-<p>The <em>core</em> API of TensorFlow is much lower level than what I've shown above!</p>
-<p>They do provide highlevel NN abstractions like the one I've shown above, but they are wrapped up in some pretty domain-specific APIs.  Additionally, I'd like to understand what the <em>lowest level</em> part of the API is.  Where are the <em>guts</em> of TensorFlow and how do they work? </p>
-<p>So, after a little bit of digging, I found some of the lowest level parts.  The APIs revolve around a process that goes like this: </p>
+<h2>Boy, was I&nbsp;wrong!</h2>
+<p>The <em>core</em> <span class="caps">API</span> of TensorFlow is much lower level than what I&#8217;ve shown&nbsp;above!</p>
+<p>They do provide highlevel <span class="caps">NN</span> abstractions like the one I&#8217;ve shown above, but they are wrapped up in some pretty domain-specific APIs.  Additionally, I&#8217;d like to understand what the <em>lowest level</em> part of the <span class="caps">API</span> is.  Where are the <em>guts</em> of TensorFlow and how do they&nbsp;work? </p>
+<p>So, after a little bit of digging, I found some of the lowest level parts.  The APIs revolve around a process that goes like&nbsp;this: </p>
 <ul>
-<li>Construct some inputs, outputs, and parameters to learn (your "Tensors") </li>
-<li>Construct a computation graph for what you want to do with your variables. </li>
-<li>Run an Optimizer to apply one of several different algorithms to compute your hidden parameters. </li>
-<li>Save models to disk and use them for inferrence in the futrue. </li>
+<li>Construct some inputs, outputs, and parameters to learn (your&nbsp;&#8220;Tensors&#8221;) </li>
+<li>Construct a computation graph for what you want to do with your&nbsp;variables. </li>
+<li>Run an Optimizer to apply one of several different algorithms to compute your hidden&nbsp;parameters. </li>
+<li>Save models to disk and use them for inferrence in the&nbsp;futrue. </li>
 </ul>
 <p>TensorFlow can be thought of as being most similar to the Python library <a href="http://www.sympy.org/en/index.html">SymPy</a> or other 
-symbolic mathematics packages/languages like R, Matlab or Mathematica.    But, TensorFlow isn't a generic symbolic math package, it's a symbolic math library whose sole purpose is to calculate numeric approximations of functions.  In other words, you can think of it like a "solver" using an algorithm like <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton's Method</a> or <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Runge-Kutta</a>, except that it's specifically focused on techniques used in ML: Stochastic Gradient Descent.  </p>
-<p>I know that sounds like a lot, and you really don't need to know what all that stuff means!   </p>
-<p>When using TensorFlow, what you're doing is setting up 
-a <a href="https://www.tensorflow.org/get_started/basic_usage#the_computation_graph">computation graph</a> for your function(s).  </p>
-<h2>Computing y=x^2 using TensorFlow</h2>
-<p>Let's write a quick example TensorFlow program and see how the simple parts work.  Here, we're going to compute <span class="math">\(y=x^2\)</span> using TensorFlow.  This is about as close to "Hello World" as we'll get.</p>
+symbolic mathematics packages/languages like R, Matlab or Mathematica.    But, TensorFlow isn&#8217;t a generic symbolic math package, it&#8217;s a symbolic math library whose sole purpose is to calculate numeric approximations of functions.  In other words, you can think of it like a &#8220;solver&#8221; using an algorithm like <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton&#8217;s Method</a> or <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Runge-Kutta</a>, except that it&#8217;s specifically focused on techniques used in <span class="caps">ML</span>: Stochastic Gradient&nbsp;Descent.  </p>
+<p>I know that sounds like a lot, and you really don&#8217;t need to know what all that stuff&nbsp;means!   </p>
+<p>When using TensorFlow, what you&#8217;re doing is setting up 
+a <a href="https://www.tensorflow.org/get_started/basic_usage#the_computation_graph">computation graph</a> for your&nbsp;function(s).  </p>
+<h2>Computing y=x^2 using&nbsp;TensorFlow</h2>
+<p>Let&#8217;s write a quick example TensorFlow program and see how the simple parts work.  Here, we&#8217;re going to compute <span class="math">\(y=x^2\)</span> using TensorFlow.  This is about as close to &#8220;Hello World&#8221; as we&#8217;ll&nbsp;get.</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
 <span class="c1"># TensorFlow Variables are for values used during computation:</span>
@@ -112,12 +112,12 @@ Initial value of y=x^2 =  4.0
 </pre></div>
 
 
-<p>So, there you have it.  TensorFlow can compute some values, which is not a huge surprise.  The syntax is a bit verbose, but the general program structure I've used above is very common, even in larger systems, so its useful to start out this way. </p>
-<p>Now, on to bigger and better things.  How to we run a Solver?</p>
-<h2>Running a solver &amp; finding the minimum of our function</h2>
-<p>Before we run a solver, we must create a computation graph whose result is a single value that we would like to <strong>minimize</strong>.  Finding values that minimize functions is what TensorFlow is really, really good at. </p>
-<p>Given our <span class="math">\(x^2\)</span> example from above, let's just assume that what we want to compute is <span class="math">\(\min(x^2)\)</span> so we restate this as "Find me the value of '<span class="math">\(x\)</span>' that minimizes the function <span class="math">\(x^2\)</span>" </p>
-<p>So, here's the code:</p>
+<p>So, there you have it.  TensorFlow can compute some values, which is not a huge surprise.  The syntax is a bit verbose, but the general program structure I&#8217;ve used above is very common, even in larger systems, so its useful to start out this&nbsp;way. </p>
+<p>Now, on to bigger and better things.  How to we run a&nbsp;Solver?</p>
+<h2>Running a solver <span class="amp">&amp;</span> finding the minimum of our&nbsp;function</h2>
+<p>Before we run a solver, we must create a computation graph whose result is a single value that we would like to <strong>minimize</strong>.  Finding values that minimize functions is what TensorFlow is really, really good&nbsp;at. </p>
+<p>Given our <span class="math">\(x^2\)</span> example from above, let&#8217;s just assume that what we want to compute is <span class="math">\(\min(x^2)\)</span> so we restate this as &#8220;Find me the value of &#8216;<span class="math">\(x\)</span><span class="quo">&#8216;</span> that minimizes the function <span class="math">\(x^2\)</span>&#8221; </p>
+<p>So, here&#8217;s the&nbsp;code:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
@@ -137,24 +137,24 @@ Initial value of y=x^2 =  4.0
 </pre></div>
 
 
-<h2>Wait, what happened?</h2>
-<p>We know that the minimum of <span class="math">\(x^2\)</span> is at <span class="math">\(x=0\)</span> so what happened?  Where did <span class="math">\(0.998\)</span> come from, and what's "Learning Rate"? </p>
-<p>Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran <em>one iteration</em> of the algorithm, so only made a small change to the initial value of <span class="math">\(x\)</span>.  The Good Thing is that it seems to be going in the right direction.  </p>
-<p>What it actually computed was:
+<h2>Wait, what&nbsp;happened?</h2>
+<p>We know that the minimum of <span class="math">\(x^2\)</span> is at <span class="math">\(x=0\)</span> so what happened?  Where did <span class="math">\(0.998\)</span> come from, and what&#8217;s &#8220;Learning&nbsp;Rate&#8221;? </p>
+<p>Remember, TensorFlow uses GradientDescent, which is an iterative process.  The code above only ran <em>one iteration</em> of the algorithm, so only made a small change to the initial value of <span class="math">\(x\)</span>.  The Good Thing is that it seems to be going in the right&nbsp;direction.  </p>
+<p>What it actually computed&nbsp;was:
 </p>
 <div class="math">$$x_1=x_0 -(learning\_rate * \frac{dx^2}{dx})$$</div>
 <p><span class="math">\(learning\_rate = 0.001\)</span>, 
 the derivative of <span class="math">\(x^2\)</span> is <span class="math">\(2x\)</span>, and 
-the initial value of <span class="math">\(x\)</span> was <span class="math">\(1.0\)</span>, that leaves us with:</p>
+the initial value of <span class="math">\(x\)</span> was <span class="math">\(1.0\)</span>, that leaves us&nbsp;with:</p>
 <div class="math">$$x_1=1.0-0.001*2x$$</div>
-<p>Which is exactly 0.998.  Whew!  </p>
-<p>What we learned is: </p>
+<p>Which is exactly 0.998.&nbsp;Whew!  </p>
+<p>What we learned&nbsp;is: </p>
 <blockquote>
-<p>With each iteration of an optimizer, TensorFlow takes us one "learning_rate sized step" closer towards 
-the solution we're looking for. </p>
+<p>With each iteration of an optimizer, TensorFlow takes us one &#8220;learning_rate sized step&#8221; closer towards 
+the solution we&#8217;re looking&nbsp;for. </p>
 </blockquote>
-<p>So, now we can rewrite our solver to iterate many times, and we'll get pretty close to a true solution. </p>
-<h2>A solver that actually "works"</h2>
+<p>So, now we can rewrite our solver to iterate many times, and we&#8217;ll get pretty close to a true&nbsp;solution. </p>
+<h2>A solver that actually&nbsp;&#8220;works&#8221;</h2>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
@@ -189,11 +189,11 @@ final x =  2.02028e-09  y= 4.08155e-18
 </pre></div>
 
 
-<p>Well, it <em>almost</em> actually works, right? </p>
-<p>Yes, the code above works, and this is <em>exactly</em> what you should expect from a numerical solver.  It's going to take a very large number of iterations for the <code>GradientDescent</code> alrogithm to reach the exact solution of <span class="math">\(x=0\)</span>. </p>
+<p>Well, it <em>almost</em> actually works,&nbsp;right? </p>
+<p>Yes, the code above works, and this is <em>exactly</em> what you should expect from a numerical solver.  It&#8217;s going to take a very large number of iterations for the <code>GradientDescent</code> alrogithm to reach the exact solution of <span class="math">\(x=0\)</span>. </p>
 <h2>Conclusion</h2>
-<p>We have explored the most basic comptation functions of TensorFlow, and we've run a very simple solver to approximate the minimum value of the function <span class="math">\(x^2\)</span>.  Values to be compted in TensorFlow are stored in <strong>tf.Variable</strong> instances, and the main unit of work is a <strong>computation graph</strong> which is constructed by calling into the core TensorFlow API. </p>
-<p>We've seen that TensorFlow is a numerical solver, and does <strong>not</strong> produce exact results.  We've also shown that it takes a fairly large number of iterations to get to a final result value, for a trivial example using naive Gradient Descent. </p>
+<p>We have explored the most basic comptation functions of TensorFlow, and we&#8217;ve run a very simple solver to approximate the minimum value of the function <span class="math">\(x^2\)</span>.  Values to be compted in TensorFlow are stored in <strong>tf.Variable</strong> instances, and the main unit of work is a <strong>computation graph</strong> which is constructed by calling into the core TensorFlow <span class="caps">API</span>. </p>
+<p>We&#8217;ve seen that TensorFlow is a numerical solver, and does <strong>not</strong> produce exact results.  We&#8217;ve also shown that it takes a fairly large number of iterations to get to a final result value, for a trivial example using naive Gradient&nbsp;Descent. </p>
 <div class="highlight"><pre><span></span>
 </pre></div>
 
