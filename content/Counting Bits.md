@@ -236,3 +236,8 @@ with tf.Session() as sess:
     input= [[5]]  out= [[ 1.95039511]] actual=, [[2]]  loss= 0.00246065
     input= [[1]]  out= [[ 0.97653669]] actual=, [[1]]  loss= 0.000550527
 
+
+
+```python
+
+```

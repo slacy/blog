@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Nonlinear Units</title>
+        <title>Nonlinear Units</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
@@ -39,7 +39,7 @@
 
             <div class="background-image-small">
                 <div class="title-container">
-                    <h1>Nonlinear&nbsp;Units</h1>
+                    <h1>Nonlinear Units</h1>
                 </div>
             </div>
         </div>
@@ -47,33 +47,33 @@
 
     <div class="entry-content">
         <p>This post part of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
-<p>In my previous post <a href="./learning-to-add.html">Learning to Add</a>, I showed how a Neural Network architecture can learn a simple linear function of two&nbsp;variables.  </p>
-<p>In this post, we&#8217;ll explore how to take our functions from linear to nonlinear.  Additionally, we&#8217;ll work on going some <strong>regressions</strong> and see what happens when we try to learn nonlinear&nbsp;functions. </p>
-<h2>Composing linear&nbsp;functions</h2>
-<p>One of the key points of linear functions is that the composition of two linear functions is also a linear function.  The math behind this is fairly&nbsp;straightforward: </p>
+<p>In my previous post <a href="./learning-to-add.html">Learning to Add</a>, I showed how a Neural Network architecture can learn a simple linear function of two variables.  </p>
+<p>In this post, we'll explore how to take our functions from linear to nonlinear.  Additionally, we'll work on going some <strong>regressions</strong> and see what happens when we try to learn nonlinear functions. </p>
+<h2>Composing linear functions</h2>
+<p>One of the key points of linear functions is that the composition of two linear functions is also a linear function.  The math behind this is fairly straightforward: </p>
 <div class="math">$$\begin{array}{rl}
 f(x) &amp; = wx+b \\
 f(f(x)) &amp; = w_2(w_1x+b_1)+b_2 \\
 &amp; = (w_2w_1)x+(w_2b_1+b_2) \\
 \end{array}$$</div>
-<p>As you can see, the composed form of <span class="math">\(f(f(x))\)</span> is also a linear function, just with <span class="math">\(w = w_2w_1\)</span> and <span class="math">\(b =&nbsp;w_2b_1+b_2\)</span></p>
-<p>Or, to think of this differently:  Without any <strong>nonlinear elements</strong> in our neural network architecture, there&#8217;s no reason to have any more than one node in the middle layer, because even a giant collection of linear functions still result in a single linear&nbsp;transformation.  </p>
+<p>As you can see, the composed form of <span class="math">\(f(f(x))\)</span> is also a linear function, just with <span class="math">\(w = w_2w_1\)</span> and <span class="math">\(b = w_2b_1+b_2\)</span></p>
+<p>Or, to think of this differently:  Without any <strong>nonlinear elements</strong> in our neural network architecture, there's no reason to have any more than one node in the middle layer, because even a giant collection of linear functions still result in a single linear transformation.  </p>
 <p>An exception to this is functions of multiple variables, like <span class="math">\(f(x,y) = \{a,b\}\)</span>  We can work the math backwards, but let it suffice to say that for functions of <span class="math">\(N\)</span> inputs and <span class="math">\(M\)</span> outputs, we need no more than <span class="math">\(\max(N,M)\)</span> linear 
-nodes in the middle&nbsp;layer. </p>
-<h2>How do we introduce&nbsp;nonlinearity?</h2>
-<p>All we need to do is apply some elementwise nonlinear function to all the values in the middle layer of our network.  It ends up making our computation graph look like&nbsp;this: </p>
+nodes in the middle layer. </p>
+<h2>How do we introduce nonlinearity?</h2>
+<p>All we need to do is apply some elementwise nonlinear function to all the values in the middle layer of our network.  It ends up making our computation graph look like this: </p>
 <div class="math">$$\begin{array}{rl}
 middle\ layer &amp; = input \times W_{mid} + B_{mid} \\
 middle\ nonlinear &amp; = f(middle\ layer) \\ 
 output &amp; = (midle\ nonlinear) \times W_{out} + B_{out}
 \end{array}$$</div>
-<p>It&#8217;s that easy, we just need to choose the right nonlinear function to insert there.  Thankfully, this has been heavily researched, and there are 3 very commonly used&nbsp;functions:</p>
+<p>It's that easy, we just need to choose the right nonlinear function to insert there.  Thankfully, this has been heavily researched, and there are 3 very commonly used functions:</p>
 <ul>
 <li><strong>sigmoid</strong> : <code>tf.nn.sigmoid</code></li>
 <li><strong>tanh</strong> : <code>tf.nn.tanh</code></li>
 <li><strong>ReLu</strong>  : <code>tf.nn.relu</code></li>
 </ul>
-<p>The best way to get a grasp on these is to look at them visually, so here we&nbsp;go: </p>
+<p>The best way to get a grasp on these is to look at them visually, so here we go: </p>
 <div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 <span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;svg&#39;</span>
 </pre></div>
@@ -107,15 +107,15 @@ output &amp; = (midle\ nonlinear) \times W_{out} + B_{out}
 
 
 <p><img alt="svg" src="./images/NonlinearUnits_files/NonlinearUnits_5_0.svg"></p>
-<h2>Simple&nbsp;Example</h2>
-<p>As an example of computation that requires nonlinear units, I&#8217;d like to propose that we implement a function like&nbsp;this: 
+<h2>Simple Example</h2>
+<p>As an example of computation that requires nonlinear units, I'd like to propose that we implement a function like this: 
 </p>
 <div class="math">$$f(x) = \begin{cases}
     1.0, &amp; \text{if } \lfloor x \rfloor = 42 \\
     0,         &amp; \text{otherwise}
 \end{cases}
 $$</div>
-<p>This function isn&#8217;t easily expressed through any combination of linear operators.  Additionally, the fact that the output should be either 1.0 or 0.0 after training suggests that we should use the <strong>sigmoid</strong> function for activation of the neuron(s) in the&nbsp;network. </p>
+<p>This function isn't easily expressed through any combination of linear operators.  Additionally, the fact that the output should be either 1.0 or 0.0 after training suggests that we should use the <strong>sigmoid</strong> function for activation of the neuron(s) in the network. </p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
 <span class="kn">import</span> <span class="nn">random</span>
@@ -230,13 +230,17 @@ GRAPH
 
 
 <p><img alt="svg" src="./images/NonlinearUnits_files/NonlinearUnits_7_1.svg"></p>
-<h2>You should play with this code a little&nbsp;bit.</h2>
-<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
+<h2>You should play with this code a little bit.</h2>
+<p>Here's a collection of random ideas for how to play around with the code example above and gain some insights:</p>
 <ul>
-<li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
-<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning&nbsp;rate?   </li>
-<li>Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</li>
+<li>Modify the "f()" function to try other linear combinations of x &amp; y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
+<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate?   </li>
+<li>Modify the size of the middle layer, and have it try to learn something "Hard" like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why not?</li>
 </ul>
+<div class="highlight"><pre><span></span>
+</pre></div>
+
+
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",

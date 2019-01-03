@@ -21,14 +21,6 @@ network = network.AddMaxPoolingLayer(...)
 network = network.AddSigmoidActivation(...)
 network.Train(data)
 ```
-
-
-      File "<ipython-input-1-b9893411f213>", line 4
-        network = network.AddConvolutionalLayer(...)
-                                                ^
-    SyntaxError: invalid syntax
-
-
 ## Boy, was I wrong!  
 
 The *core* API of TensorFlow is much lower level than what I've shown above!
@@ -184,3 +176,8 @@ Yes, the code above works, and this is *exactly* what you should expect from a n
 We have explored the most basic comptation functions of TensorFlow, and we've run a very simple solver to approximate the minimum value of the function $x^2$.  Values to be compted in TensorFlow are stored in **tf.Variable** instances, and the main unit of work is a **computation graph** which is constructed by calling into the core TensorFlow API. 
 
 We've seen that TensorFlow is a numerical solver, and does **not** produce exact results.  We've also shown that it takes a fairly large number of iterations to get to a final result value, for a trivial example using naive Gradient Descent. 
+
+
+```python
+
+```

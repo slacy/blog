@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>Learning to Multiply, Part 1</title>
+        <title>Learning to Multiply, Part 1</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
@@ -39,7 +39,7 @@
 
             <div class="background-image-small">
                 <div class="title-container">
-                    <h1>Learning to Multiply, Part&nbsp;1</h1>
+                    <h1>Learning to Multiply, Part 1</h1>
                 </div>
             </div>
         </div>
@@ -47,12 +47,12 @@
 
     <div class="entry-content">
         <p>This is the <strong>fourth</strong> post of my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
-<p>In my previous post, <a href="../learning-to-add.html">Learning to Add</a> I demonstrated a toy neural network that was able to learn how to add two real-valued variables.  It learned a general formula that applied to <em>any</em> real-valued input values, even though we only trained it on values in the range [0,20].  (Note: This is <em>really</em>&nbsp;amazing!) </p>
-<p>Now, we&#8217;re going to start to ask some more difficult&nbsp;questions:</p>
+<p>In my previous post, <a href="../learning-to-add.html">Learning to Add</a> I demonstrated a toy neural network that was able to learn how to add two real-valued variables.  It learned a general formula that applied to <em>any</em> real-valued input values, even though we only trained it on values in the range [0,20].  (Note: This is <em>really</em> amazing!) </p>
+<p>Now, we're going to start to ask some more difficult questions:</p>
 <blockquote>
-<p>How do we know when a network is able to learn a function, and when it&nbsp;isn&#8217;t? </p>
-<p>What parameters can we tweak help a network to&nbsp;learn? </p>
-<p>Is it possible that some functions are&nbsp;&#8220;unlearnable&#8221;? </p>
+<p>How do we know when a network is able to learn a function, and when it isn't? </p>
+<p>What parameters can we tweak help a network to learn? </p>
+<p>Is it possible that some functions are "unlearnable"? </p>
 </blockquote>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
 <span class="kn">import</span> <span class="nn">random</span>
@@ -166,12 +166,12 @@ x= -33  y= 3  out= -29.9999  loss= [  1.53704605e-08]
 </pre></div>
 
 
-<h2>You should play with this code a little&nbsp;bit.</h2>
-<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
+<h2>You should play with this code a little bit.</h2>
+<p>Here's a collection of random ideas for how to play around with the code example above and gain some insights:</p>
 <ul>
-<li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
-<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning&nbsp;rate?   </li>
-<li>Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</li>
+<li>Modify the "f()" function to try other linear combinations of x &amp; y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
+<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate?   </li>
+<li>Modify the size of the middle layer, and have it try to learn something "Hard" like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why not?</li>
 </ul>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

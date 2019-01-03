@@ -4,3 +4,4 @@ Tags: Python, TensorFlow, Jupyter
 Date: 2/9/2017 1:10pm
 Author: slacy
 Status: draft
+

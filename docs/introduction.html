@@ -48,48 +48,48 @@
     <div class="entry-content">
         <p>This is the <strong>first</strong> post of my series <a href="./category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
 <h2>Welcome!</h2>
-<p>I&#8217;m <a href="https://github.com/slacy">Steve</a>, I&#8217;m an experienced Software Engineer, and I&#8217;m learning <a href="https://tensorflow.org">TensorFlow</a>.</p>
-<p>There is a lot of mystery, speculation, and promise in the field of Machine Learning. As an engineer learning these new systems, my goal is to answer several big questions about <span class="caps">ML</span> in&nbsp;general: </p>
+<p>I'm <a href="https://github.com/slacy">Steve</a>, I'm an experienced Software Engineer, and I'm learning <a href="https://tensorflow.org">TensorFlow</a>.</p>
+<p>There is a lot of mystery, speculation, and promise in the field of Machine Learning. As an engineer learning these new systems, my goal is to answer several big questions about ML in general: </p>
 <blockquote>
-<p>How do I determine if I can solve a specific problem using Machine&nbsp;Learning?  </p>
-<p>Which problems will it work for, and which ones will be a&nbsp;failure?  </p>
-<p>How do I design an <span class="caps">ML</span> graph from&nbsp;scratch? </p>
+<p>How do I determine if I can solve a specific problem using Machine Learning?  </p>
+<p>Which problems will it work for, and which ones will be a failure?  </p>
+<p>How do I design an ML graph from scratch? </p>
 </blockquote>
-<p>These are extremely important questions, and most tutorials I found were lacking this type of low level deph and&nbsp;context. </p>
-<p>TensorFlow itself is a very large and complex framework, ranging from symbolic graph construction primitives, to distributed training and system management, threads and queueing, etc.  For the sake of this blog, I&#8217;m going to focus on the <em>core</em> <span class="caps">API</span> that TensorFlow provides.  This is lowlevel methods for buliding computation graphs and implementing &#8220;learning&#8221; and &#8220;training&#8221;.  TensorFlow includes several other higher level <span class="caps">API</span> abstractions in <code>tf.contrib</code> and <code>tf.learn</code>, but these will be out of the scope of this blog and I will try not to use those&nbsp;APIs. </p>
-<p>There are many tutorials for TensorFlow on the internet, but most of them (including ones included in the <a href="https://www.tensorflow.org/tutorials/mnist/beginners/">TensorFlow documentation</a> itself) take a &#8220;top down&#8221; approach, starting with running an large complex models, like an <span class="caps">MNIST</span> classifier, on a pre-existing data set downloaded from the internet.  Additionally, they will frequently use the collection of highlevel and specialized APIs primarily from <code>tf.contrib</code>, which hide the implementation details from the developer.  This is not the way I approach learning, and I would like a set of articles describing basic machine learning from first principles, starting with simple examples, and working&nbsp;forward. </p>
-<p>The top down style introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply <em>existing <span class="caps">ML</span> models</em> to new or existing datasets.  They&#8217;re also useful for people who want to get a 10,000 foot view of what <span class="caps">ML</span> is and how it&#8217;s applied in&nbsp;practice. </p>
-<p>Top down approaches aren&#8217;t at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs involved.  Additionally, if you&#8217;re looking to apply <span class="caps">ML</span> to new problem spaces, design and build <span class="caps">ML</span> graphs from scratch, or just experiment with the limits of the framework, then you&#8217;ll need to use a different learning&nbsp;approach. </p>
-<p>This blog is the documentation of my personal learning approach, and I hope others find it useful as&nbsp;well.</p>
+<p>These are extremely important questions, and most tutorials I found were lacking this type of low level deph and context. </p>
+<p>TensorFlow itself is a very large and complex framework, ranging from symbolic graph construction primitives, to distributed training and system management, threads and queueing, etc.  For the sake of this blog, I'm going to focus on the <em>core</em> API that TensorFlow provides.  This is lowlevel methods for buliding computation graphs and implementing "learning" and "training".  TensorFlow includes several other higher level API abstractions in <code>tf.contrib</code> and <code>tf.learn</code>, but these will be out of the scope of this blog and I will try not to use those APIs. </p>
+<p>There are many tutorials for TensorFlow on the internet, but most of them (including ones included in the <a href="https://www.tensorflow.org/tutorials/mnist/beginners/">TensorFlow documentation</a> itself) take a "top down" approach, starting with running an large complex models, like an MNIST classifier, on a pre-existing data set downloaded from the internet.  Additionally, they will frequently use the collection of highlevel and specialized APIs primarily from <code>tf.contrib</code>, which hide the implementation details from the developer.  This is not the way I approach learning, and I would like a set of articles describing basic machine learning from first principles, starting with simple examples, and working forward. </p>
+<p>The top down style introductions are useful for people who have a specific dataset or application in mind, or for those who are ready to apply <em>existing ML models</em> to new or existing datasets.  They're also useful for people who want to get a 10,000 foot view of what ML is and how it's applied in practice. </p>
+<p>Top down approaches aren't at all suited for developers who would like to gain a deep, thourough understanding of the systems, processess, and APIs involved.  Additionally, if you're looking to apply ML to new problem spaces, design and build ML graphs from scratch, or just experiment with the limits of the framework, then you'll need to use a different learning approach. </p>
+<p>This blog is the documentation of my personal learning approach, and I hope others find it useful as well.</p>
 <h2>Goals</h2>
-<p>I have some rough goals in mind, which I&#8217;ll quickly outline here, to keep myself&nbsp;focused: </p>
+<p>I have some rough goals in mind, which I'll quickly outline here, to keep myself focused: </p>
 <ol>
 <li>Approach machine learning from the <strong>bottom up</strong>.  </li>
-<li>Build <strong>intuititon</strong> around the tools and processes used in <span class="caps">ML</span>. </li>
-<li>Use <strong>exploratory</strong> methodology, showing different approaches to solving the same&nbsp;problem.</li>
-<li>Aim for <strong>deep</strong> understanding of the systems&nbsp;involved. </li>
+<li>Build <strong>intuititon</strong> around the tools and processes used in ML. </li>
+<li>Use <strong>exploratory</strong> methodology, showing different approaches to solving the same problem.</li>
+<li>Aim for <strong>deep</strong> understanding of the systems involved. </li>
 </ol>
 <h2>Tools</h2>
-<p>For this blog, I&#8217;m using a new collection of tools, which I&#8217;ve hand-configured for this purpose.  I may go into more detail in later posts. The collection of tools I&#8217;m using&nbsp;is: </p>
+<p>For this blog, I'm using a new collection of tools, which I've hand-configured for this purpose.  I may go into more detail in later posts. The collection of tools I'm using is: </p>
 <ul>
-<li><a href="https://getpelican.com">Pelican Static Blogging</a> Software for content&nbsp;generation.</li>
-<li><a href="https://pages.github.com">Github Pages</a> for&nbsp;hosting. </li>
-<li><a href="https://python.org">Python</a> for all source&nbsp;code. </li>
-<li><a href="https://tensorflow.com">TensorFlow</a> for my <span class="caps">ML</span>&nbsp;framework. </li>
-<li><a href="https://jupyter.org">Jupyter Notebooks</a> for authoring all&nbsp;posts. </li>
-<li>Ubuntu <span class="amp">&amp;</span> Linux hardware with nVidia <span class="caps">GPU</span> accelleration as my&nbsp;runtime.</li>
+<li><a href="https://getpelican.com">Pelican Static Blogging</a> Software for content generation.</li>
+<li><a href="https://pages.github.com">Github Pages</a> for hosting. </li>
+<li><a href="https://python.org">Python</a> for all source code. </li>
+<li><a href="https://tensorflow.com">TensorFlow</a> for my ML framework. </li>
+<li><a href="https://jupyter.org">Jupyter Notebooks</a> for authoring all posts. </li>
+<li>Ubuntu &amp; Linux hardware with nVidia GPU accelleration as my runtime.</li>
 </ul>
-<h2>Intended&nbsp;Audience</h2>
-<p>This blog is intended for a technical audience who has little to no experience with <span class="caps">ML</span> / TensorFlow, or who has highlevel experience with TensorFlow and would like to gain a deeper understanding of the math and systems&nbsp;involved. </p>
-<p>If you are interested in &#8220;Coding along&#8221; and evaluating the the example code here, you will need a computer wit ha software stack that&nbsp;includes:</p>
+<h2>Intended Audience</h2>
+<p>This blog is intended for a technical audience who has little to no experience with ML / TensorFlow, or who has highlevel experience with TensorFlow and would like to gain a deeper understanding of the math and systems involved. </p>
+<p>If you are interested in "Coding along" and evaluating the the example code here, you will need a computer wit ha software stack that includes:</p>
 <ul>
 <li><a href="https://tensorflow.org">TensorFlow</a></li>
 <li><a href="https://python.org">Python</a></li>
-<li><a href="https://jupyter.org">Jupyter&nbsp;Notebook</a></li>
-<li><a href="https://mathjax.org">MathJax</a> (for rendering Notebook&nbsp;equations)</li>
+<li><a href="https://jupyter.org">Jupyter Notebook</a></li>
+<li><a href="https://mathjax.org">MathJax</a> (for rendering Notebook equations)</li>
 <li>Numpy/matplotlib</li>
 </ul>
-<p>Although <span class="caps">GPU</span> accelleration isn&#8217;t strictly needed, it can help the design and iteration process go much&nbsp;faster. </p>
+<p>Although GPU accelleration isn't strictly needed, it can help the design and iteration process go much faster. </p>
     </div>
 
     <footer>

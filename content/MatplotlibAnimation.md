@@ -58,3 +58,8 @@ plt.show()
 
 ![svg]({filename}images/MatplotlibAnimation_files/MatplotlibAnimation_0_1.svg)
 
+
+
+```python
+
+```

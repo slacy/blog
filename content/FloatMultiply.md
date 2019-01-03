@@ -238,3 +238,13 @@ with tf.Session() as sess:
     decode_learn =  [array([[-63.42816544]], dtype=float32)]
     loss =  [0.15896809]
 
+
+
+```python
+
+```
+
+
+```python
+
+```

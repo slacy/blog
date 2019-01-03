@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>A Word About Batching</title>
+        <title>A Word About Batching</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
@@ -39,7 +39,7 @@
 
             <div class="background-image-small">
                 <div class="title-container">
-                    <h1>A Word About&nbsp;Batching</h1>
+                    <h1>A Word About Batching</h1>
                 </div>
             </div>
         </div>
@@ -47,8 +47,8 @@
 
     <div class="entry-content">
         <p>This is an <strong>interlude</strong> from my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
-<p>In a previous post, <a href="../learning-to-add.html">Learning to Add</a> I showed simple code to run <span class="amp">&amp;</span> train a neural network.  That code example trains &#8220;one example at a time&#8221;.  This is generally <em>not</em> how you implement a typical large <span class="caps">ML</span> training&nbsp;system. </p>
-<p>Its much more typical to train in <strong>batches</strong>.  Batches are a way to pass a medium to large collection of training examples to our network, run the expensive calculations just once on the entire batch, then update the gradients and train on the next batch.   Because everything in TensorFlow is a <em>tensor</em> (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that assume that the first dimension of a tensor is the size of a batch.  Here is an example using an unknown batch&nbsp;size:</p>
+<p>In a previous post, <a href="../learning-to-add.html">Learning to Add</a> I showed simple code to run &amp; train a neural network.  That code example trains "one example at a time".  This is generally <em>not</em> how you implement a typical large ML training system. </p>
+<p>Its much more typical to train in <strong>batches</strong>.  Batches are a way to pass a medium to large collection of training examples to our network, run the expensive calculations just once on the entire batch, then update the gradients and train on the next batch.   Because everything in TensorFlow is a <em>tensor</em> (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that assume that the first dimension of a tensor is the size of a batch.  Here is an example using an unknown batch size:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
 
 <span class="c1"># This declares a batch of unknown size, of tensors of size 4. </span>
@@ -77,16 +77,16 @@
 </pre></div>
 
 
-<h2>Additional benefits of&nbsp;batching</h2>
-<p>Batching our training data can actually make training faster as well, and not just because the computation is more efficient.  Remember that we&#8217;re training via <em>GradientDescent</em> (and similar algorithms).  These algorithms look at the current set of inputs, and decide how to tweak internally stored parameters to minimize the <em>loss function</em>.  </p>
-<p>But, there are lots of cases where optimizing one training example has the opposite effect on other training examples.  These examples can tend to &#8220;See-saw&#8221; back and forth between two not very optimial sets of parameters during training.  You can think of each example as <em>pulling</em> the parameters in opposite&nbsp;directions.</p>
-<p>When we batch, we give multiple training examples to the optimizer.  If two examples pull parmeters in opposite directions, then they will end up cancelling each other out, and other solutions will be&nbsp;tried.</p>
-<p>There are several library functions within TensorFlow itself to facilitate batching, but here, I&#8217;m going to be doing the work myself, to make it more clear how batching really&nbsp;works.</p>
+<h2>Additional benefits of batching</h2>
+<p>Batching our training data can actually make training faster as well, and not just because the computation is more efficient.  Remember that we're training via <em>GradientDescent</em> (and similar algorithms).  These algorithms look at the current set of inputs, and decide how to tweak internally stored parameters to minimize the <em>loss function</em>.  </p>
+<p>But, there are lots of cases where optimizing one training example has the opposite effect on other training examples.  These examples can tend to "See-saw" back and forth between two not very optimial sets of parameters during training.  You can think of each example as <em>pulling</em> the parameters in opposite directions.</p>
+<p>When we batch, we give multiple training examples to the optimizer.  If two examples pull parmeters in opposite directions, then they will end up cancelling each other out, and other solutions will be tried.</p>
+<p>There are several library functions within TensorFlow itself to facilitate batching, but here, I'm going to be doing the work myself, to make it more clear how batching really works.</p>
 <h2>Examples</h2>
-<p>The example that I&#8217;m going to use an example is a 4-bit parity problem.  My input is going to be a Tensor of shape (4), with each value being either 0.0 or 1.0.  Expressed as a mathematical function, what I&#8217;d like to compute&nbsp;is: </p>
+<p>The example that I'm going to use an example is a 4-bit parity problem.  My input is going to be a Tensor of shape (4), with each value being either 0.0 or 1.0.  Expressed as a mathematical function, what I'd like to compute is: </p>
 <div class="math">$$ f(x_i)= \sum_{i=0}^n{x_i} \bmod{2} $$</div>
-<p>The network we&#8217;ll use will be a one-layer network with 16 nodes in the middle&nbsp;layer. </p>
-<p>So, here we&nbsp;go: </p>
+<p>The network we'll use will be a one-layer network with 16 nodes in the middle layer. </p>
+<p>So, here we go: </p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
 <span class="kn">import</span> <span class="nn">random</span>
 
@@ -187,12 +187,12 @@ x= -33  y= 3  out= -29.9999  loss= [  1.53704605e-08]
 </pre></div>
 
 
-<h2>You should play with this code a little&nbsp;bit.</h2>
-<p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
+<h2>You should play with this code a little bit.</h2>
+<p>Here's a collection of random ideas for how to play around with the code example above and gain some insights:</p>
 <ul>
-<li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
-<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning&nbsp;rate?   </li>
-<li>Modify the size of the middle layer, and have it try to learn something &#8220;Hard&#8221; like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why&nbsp;not?</li>
+<li>Modify the "f()" function to try other linear combinations of x &amp; y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>
+<li>Modify the size of the middle layer.  We use 2 middle layer nodes.  What if you use 200?  How does that impact learning rate?   </li>
+<li>Modify the size of the middle layer, and have it try to learn something "Hard" like <span class="math">\(x\cdot y\)</span>. Did it work?  Do you have any thoughts about why or why not?</li>
 </ul>
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",

@@ -1,5 +1,4 @@
 from fabric.api import *
-import fabric.contrib.project as project
 import os
 import shutil
 import sys
@@ -81,7 +80,7 @@ def cf_upload():
 def publish():
     """Publish to production via rsync"""
     local('pelican -s publishconf.py')
-    project.rsync_project(
+    fabric.patchwork.transfers.rsync(
         remote_dir=dest_path,
         exclude=".DS_Store",
         local_dir=DEPLOY_PATH.rstrip('/') + '/',
