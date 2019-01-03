@@ -2,9 +2,7 @@ Title: Learning to Add
 Category: TensorFlow From The Ground Up
 Tags: Python, TensorFlow, Jupyter
 Date: 2/8/2017 10:00am 
-Author: slacy
-
-This is the **third** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
+Author: slacyThis is the **third** post of my series [TensorFlow From The Ground Up]({category}tensorflow-from-the-ground-up).
 
 In this post, we'll explore a toy Neural Network, and show our first Perceptron based code.  This is a simple example to get the thought process going, but will lead us to more insights in coming posts. 
 
@@ -102,7 +100,7 @@ expected = tf.placeholder(shape=(1,), dtype=tf.float32, name='expected')
 
 # Inputs need to be in the form of a single tensor, so we concatenate and reshape 
 # into a form that we can use below. 
-inputs = tf.reshape(tf.concat(0, [x,y]), (1,2))
+inputs = tf.reshape(tf.concat([x,y], 0), (1,2))
 
 # We are constructing a middle layer of 2 perceptron nodes.  Weights and biases 
 # are our w_i and v_i from the above equations. 
@@ -175,30 +173,30 @@ with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
 ```
 
     TRAIN
-    i= 0  loss= [ 96.03557587]
-    i= 1000  loss= [ 0.02457347]
-    i= 2000  loss= [ 0.00617263]
-    i= 3000  loss= [ 0.00031168]
-    i= 4000  loss= [ 0.00040334]
-    i= 5000  loss= [  2.47910157e-06]
-    i= 6000  loss= [  3.63274012e-07]
-    i= 7000  loss= [  5.71934834e-07]
-    i= 8000  loss= [  3.97377335e-07]
-    i= 9000  loss= [  2.21334631e-08]
+    i= 0  loss= [ 32.81954193]
+    i= 1000  loss= [ 0.01804398]
+    i= 2000  loss= [ 0.00302923]
+    i= 3000  loss= [  1.86966245e-05]
+    i= 4000  loss= [ 0.00014678]
+    i= 5000  loss= [  1.73764784e-05]
+    i= 6000  loss= [  1.85982572e-06]
+    i= 7000  loss= [  1.63308869e-08]
+    i= 8000  loss= [  1.06378138e-07]
+    i= 9000  loss= [  6.57109922e-09]
     VALIDATE
-    x= 29  y= 39  out= 67.9992  loss= [  5.70493285e-07]
-    x= 37  y= 27  out= 63.9994  loss= [  3.27418093e-07]
-    x= 31  y= -9  out= 22.0002  loss= [  4.40195436e-08]
-    x= -37  y= 27  out= -10.0001  loss= [  3.38422979e-09]
-    x= 5  y= 9  out= 14.0  loss= [  3.63797881e-10]
-    x= 15  y= 9  out= 24.0  loss= [  2.45927367e-09]
-    x= -11  y= -35  out= -45.999  loss= [  1.06083462e-06]
-    x= -33  y= -27  out= -59.999  loss= [  1.02963531e-06]
-    x= -23  y= -33  out= -55.9989  loss= [  1.14087015e-06]
-    x= -27  y= 35  out= 7.99971  loss= [  8.37756033e-08]
-    [array([[-0.04954526, -0.85443568],
-           [ 0.01755414, -0.85590768]], dtype=float32), array([[ 0.08150564,  0.08256237]], dtype=float32), array([[-0.02584258],
-           [-1.1688565 ]], dtype=float32), array([[ 0.09884781]], dtype=float32)]
+    x= 3  y= -11  out= -7.9998  loss= [  3.93483788e-08]
+    x= 23  y= -19  out= 4.00007  loss= [  4.26757651e-09]
+    x= 13  y= 27  out= 39.9998  loss= [  2.94676283e-08]
+    x= -3  y= -29  out= -31.9996  loss= [  1.46977982e-07]
+    x= 9  y= 3  out= 12.0  loss= [  1.60434865e-09]
+    x= -13  y= -15  out= -27.9996  loss= [  1.42623321e-07]
+    x= -19  y= 3  out= -15.9997  loss= [  9.25510903e-08]
+    x= -9  y= -17  out= -25.9996  loss= [  1.24509825e-07]
+    x= -13  y= 11  out= -1.99981  loss= [  3.63343275e-08]
+    x= 5  y= -19  out= -13.9998  loss= [  5.59375621e-08]
+    [array([[-0.41777897,  0.73986024],
+           [-0.41391361,  0.74204183]], dtype=float32), array([[ 0.08377501, -0.10600967]], dtype=float32), array([[-0.57803202],
+           [ 1.02519488]], dtype=float32), array([[ 0.15725224]], dtype=float32)]
 
 ## It worked!
 

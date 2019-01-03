@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Feature Engineering (Counting the Bits)</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../theme/css/main.css" />
+</head>
+<body>
+
+    <div class="navigation pure-menu pure-menu-horizontal">
+        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"></li>
+
+        </ul>
+    </div>
+
+
+<div class="page-container">
+    <div class="entry-content">
+        <div class="post-meta pure-g">
+            <div class="pure-u">
+                <a href="../category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png " class="post-avatar" alt="TensorFlow From The Ground Up"></a>
+            </div>
+<div class="pure-u-3-4 meta-data">
+    <a href="../category/tensorflow-from-the-ground-up.html" class="category">TensorFlow From The Ground Up</a><br />
+
+    <a class="author" href="../author/slacy.html">slacy</a>
+    &mdash; <abbr title="2017-03-13T16:30:00-07:00">Mon 13 March 2017</abbr>
+</div>        </div>
+    </div>
+
+    <div class="article-header-container">
+        <div class="background-image-container">
+
+            <div class="background-image-small">
+                <div class="title-container">
+                    <h1>Feature Engineering (Counting the&nbsp;Bits)</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-content">
+        <p>Feature engineering is the task of deciding how to represent the data that goes in and out of your Machine Learning system.  Feature Engineering is a vital part of network design, because it turns out that how features (i.e. data) is represented has a huge impact on how easy it will be for your system to learn the task that you are interested&nbsp;in.</p>
+<p>To illustrate how important Feature Engineering is, one good approach is to &#8220;make up&#8221; some synthetic examples with synthetic inputs <span class="amp">&amp;</span> outputs, and see if we can learn the task at&nbsp;hand. </p>
+<h2>Counting Bits in&nbsp;Binary</h2>
+<p>For this exercise, we are going to use &#8220;counting the binary bits&#8221; (also referred to as &#8220;<em>popcount</em>&#8221; or &#8220;<em>Hamming Distance</em>&#8220;) as the function we are trying to learn.  This function cannot be represented by a linear function, se we&#8217;ll be using a 2-layer network.  We will constrain our input our values in the range <span class="math">\([0,1024)\)</span>, and our outputs will be in the range <span class="math">\([0,10]\)</span>.  We can think of our training set as looking somewhat like&nbsp;this:</p>
+<div class="math">$$
+\begin{array}{|c|c|}
+\hline input &amp; popcount(input) \\\hline
+  374 &amp; 5 \\\hline
+  924 &amp; 6 \\\hline
+  708 &amp; 4 \\\hline
+  6 &amp; 2 \\\hline
+  ... &amp; ... \\\hline
+\end{array}
+$$</div>
+<p>Let&#8217;s try passing these integer values directly into the first layer of the network and see what&nbsp;happens!</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+<span class="n">popcount</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;popcount&#39;</span><span class="p">)</span>
+
+<span class="n">input_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> 
+                           <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">input_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> 
+                         <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="c1"># &quot;Perceptron&quot; </span>
+<span class="n">mid_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">input_weight</span><span class="p">),</span> <span class="n">input_bias</span><span class="p">))</span>
+
+<span class="n">out_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+                         <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">out_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="c1"># Perceptron formula again.</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mid_layer</span><span class="p">,</span> <span class="n">out_weight</span><span class="p">),</span> <span class="n">out_bias</span><span class="p">)</span>
+
+<span class="c1"># Our error function is computed as &quot;Squared Difference&quot; between the computed output</span>
+<span class="c1"># and the expected value. </span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">output</span> <span class="o">-</span> <span class="n">popcount</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Learning rate and optimizer similar to our previous examples. </span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> 
+    <span class="n">popcount</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="k">while</span> <span class="n">x</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">x</span><span class="o">&amp;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">popcount</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">x</span><span class="o">&gt;&gt;=</span><span class="mi">1</span> 
+    <span class="k">return</span> <span class="n">popcount</span>
+
+<span class="k">def</span> <span class="nf">makeinput</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,]</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> 
+              <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
+
+    <span class="c1"># Training: </span>
+    <span class="c1">#</span>
+    <span class="c1"># Iterate many times with random inputs to &quot;learn&quot; the parameters</span>
+    <span class="c1"># stored in input_wegiht, input_bias, out_weight, out_bias Variables above.  </span>
+    <span class="c1"># For this example, we only pass in **even** numbers in the range [0,20]</span>
+    <span class="c1"># </span>
+    <span class="c1"># We will use odd values during our validation phase below to ensure that </span>
+    <span class="c1"># we never validate on any of the inputs that were in the training set. </span>
+    <span class="k">print</span> <span class="s2">&quot;TRAIN&quot;</span>
+    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">100000</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+    <span class="n">max_value</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="p">):</span>
+        <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="n">inputs</span><span class="p">:[],</span> <span class="n">popcount</span><span class="p">:[]}</span>
+        <span class="k">for</span> <span class="n">bt</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_value</span><span class="p">)</span>
+            <span class="n">feed</span><span class="p">[</span><span class="n">inputs</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">makeinput</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="n">feed</span><span class="p">[</span><span class="n">popcount</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">makeinput</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">)))</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">it</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">it</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
+
+    <span class="c1"># Once we have learned the parameters, we can validate by passing inputs </span>
+    <span class="c1"># never seen before.  For this case, we expand the range of our inputs </span>
+    <span class="c1"># to include all odd numbers in the range [-40,40].  </span>
+    <span class="k">print</span> <span class="s2">&quot;VALIDATE&quot;</span>
+    <span class="n">validate_iterations</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">validate_iterations</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_value</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="p">[</span><span class="n">makeinput</span><span class="p">(</span><span class="n">v</span><span class="p">),]</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">makeinput</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">)),]</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">output</span><span class="p">,</span> <span class="n">loss</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">inputs</span><span class="p">:</span><span class="n">i</span><span class="p">,</span> <span class="n">popcount</span><span class="p">:</span><span class="n">e</span><span class="p">})</span>
+        <span class="k">print</span> <span class="s2">&quot;input=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; out=&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s2">&quot;actual=,&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>TRAIN
+i= 0  loss= 4.62908
+i= 1000  loss= 0.419672
+i= 2000  loss= 0.350638
+i= 3000  loss= 0.413125
+i= 4000  loss= 0.352155
+i= 5000  loss= 0.327442
+i= 6000  loss= 0.344848
+i= 7000  loss= 0.356394
+i= 8000  loss= 0.305952
+i= 9000  loss= 0.308031
+i= 10000  loss= 0.283118
+i= 11000  loss= 0.369738
+i= 12000  loss= 0.303562
+i= 13000  loss= 0.308296
+i= 14000  loss= 0.333424
+i= 15000  loss= 0.30559
+i= 16000  loss= 0.291579
+i= 17000  loss= 0.351013
+i= 18000  loss= 0.338948
+i= 19000  loss= 0.362444
+i= 20000  loss= 0.304563
+i= 21000  loss= 0.180726
+i= 22000  loss= 0.266295
+i= 23000  loss= 0.270902
+i= 24000  loss= 0.25015
+i= 25000  loss= 0.241592
+i= 26000  loss= 0.272542
+i= 27000  loss= 0.272879
+i= 28000  loss= 0.263778
+i= 29000  loss= 0.211322
+i= 30000  loss= 0.282963
+i= 31000  loss= 0.319068
+i= 32000  loss= 0.230075
+i= 33000  loss= 0.284408
+i= 34000  loss= 0.301685
+i= 35000  loss= 0.247171
+i= 36000  loss= 0.319898
+i= 37000  loss= 0.253544
+i= 38000  loss= 0.240501
+i= 39000  loss= 0.2356
+i= 40000  loss= 0.280686
+i= 41000  loss= 0.226019
+i= 42000  loss= 0.214324
+i= 43000  loss= 0.262179
+i= 44000  loss= 0.198153
+i= 45000  loss= 0.261084
+i= 46000  loss= 0.240503
+i= 47000  loss= 0.235443
+i= 48000  loss= 0.269355
+i= 49000  loss= 0.314097
+i= 50000  loss= 0.238789
+i= 51000  loss= 0.203914
+i= 52000  loss= 0.29305
+i= 53000  loss= 0.291942
+i= 54000  loss= 0.302206
+i= 55000  loss= 0.242575
+i= 56000  loss= 0.27227
+i= 57000  loss= 0.223717
+i= 58000  loss= 0.249152
+i= 59000  loss= 0.202866
+i= 60000  loss= 0.208728
+i= 61000  loss= 0.235625
+i= 62000  loss= 0.203516
+i= 63000  loss= 0.245659
+i= 64000  loss= 0.253923
+i= 65000  loss= 0.213467
+i= 66000  loss= 0.239217
+i= 67000  loss= 0.231245
+i= 68000  loss= 0.256408
+i= 69000  loss= 0.231592
+i= 70000  loss= 0.197811
+i= 71000  loss= 0.231928
+i= 72000  loss= 0.254814
+i= 73000  loss= 0.227593
+i= 74000  loss= 0.217913
+i= 75000  loss= 0.254691
+i= 76000  loss= 0.285135
+i= 77000  loss= 0.235177
+i= 78000  loss= 0.205863
+i= 79000  loss= 0.21152
+i= 80000  loss= 0.244499
+i= 81000  loss= 0.227693
+i= 82000  loss= 0.229226
+i= 83000  loss= 0.219194
+i= 84000  loss= 0.232463
+i= 85000  loss= 0.210225
+i= 86000  loss= 0.246284
+i= 87000  loss= 0.222384
+i= 88000  loss= 0.234835
+i= 89000  loss= 0.214603
+i= 90000  loss= 0.21836
+i= 91000  loss= 0.241133
+i= 92000  loss= 0.222177
+i= 93000  loss= 0.233147
+i= 94000  loss= 0.238967
+i= 95000  loss= 0.200362
+i= 96000  loss= 0.215999
+i= 97000  loss= 0.193563
+i= 98000  loss= 0.207447
+i= 99000  loss= 0.230364
+VALIDATE
+input= [[7]]  out= [[ 2.09152031]] actual=, [[3]]  loss= 0.825335
+input= [[3]]  out= [[ 1.37256026]] actual=, [[2]]  loss= 0.393681
+input= [[5]]  out= [[ 1.95039511]] actual=, [[2]]  loss= 0.00246065
+input= [[11]]  out= [[ 2.25213575]] actual=, [[3]]  loss= 0.559301
+input= [[10]]  out= [[ 1.9918443]] actual=, [[2]]  loss= 6.65155e-05
+input= [[3]]  out= [[ 1.37256026]] actual=, [[2]]  loss= 0.393681
+input= [[10]]  out= [[ 1.9918443]] actual=, [[2]]  loss= 6.65155e-05
+input= [[9]]  out= [[ 1.8509928]] actual=, [[2]]  loss= 0.0222031
+input= [[14]]  out= [[ 3.30856967]] actual=, [[3]]  loss= 0.0952152
+input= [[11]]  out= [[ 2.25213575]] actual=, [[3]]  loss= 0.559301
+input= [[1]]  out= [[ 0.97653669]] actual=, [[1]]  loss= 0.000550527
+input= [[12]]  out= [[ 2.57091808]] actual=, [[2]]  loss= 0.325947
+input= [[8]]  out= [[ 1.90836024]] actual=, [[1]]  loss= 0.825118
+input= [[3]]  out= [[ 1.37256026]] actual=, [[2]]  loss= 0.393681
+input= [[3]]  out= [[ 1.37256026]] actual=, [[2]]  loss= 0.393681
+input= [[10]]  out= [[ 1.9918443]] actual=, [[2]]  loss= 6.65155e-05
+input= [[6]]  out= [[ 2.13547993]] actual=, [[2]]  loss= 0.0183548
+input= [[11]]  out= [[ 2.25213575]] actual=, [[3]]  loss= 0.559301
+input= [[12]]  out= [[ 2.57091808]] actual=, [[2]]  loss= 0.325947
+input= [[3]]  out= [[ 1.37256026]] actual=, [[2]]  loss= 0.393681
+input= [[0]]  out= [[ 0.00694078]] actual=, [[0]]  loss= 4.81745e-05
+input= [[12]]  out= [[ 2.57091808]] actual=, [[2]]  loss= 0.325947
+input= [[10]]  out= [[ 1.9918443]] actual=, [[2]]  loss= 6.65155e-05
+input= [[5]]  out= [[ 1.95039511]] actual=, [[2]]  loss= 0.00246065
+input= [[1]]  out= [[ 0.97653669]] actual=, [[1]]  loss= 0.000550527
+</pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    var location_protocol = (false) ? 'https' : document.location.protocol;
+    if (location_protocol !== 'http' && location_protocol !== 'https') location_protocol = 'https:';
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = location_protocol + '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div>
+
+    <footer>
+        <div class="tags">
+            <a href="../tag/python.html">Python</a>
+            <a href="../tag/tensorflow.html">TensorFlow</a>
+            <a href="../tag/jupyter.html">Jupyter</a>
+        </div>
+        <div class="pure-g post-footer">
+            <div class="pure-u-1 pure-u-md-1-2">
+                <div class="pure-g poster-info">
+                    <div class="pure-u">
+                        <a href="../author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../author/slacy.html">slacy</a></h3>
+                        <p class="author-description">
+                                              
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pure-u-1 pure-u-md-1-2">
+
+                <div class="pure-g post-category-info">
+                    <div class="pure-u">
+                        <a href="../category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png" alt=""></a>
+                    </div>
+                    <div class="pure-u-3-4">
+                        <h3 class="author-name"><a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a></h3>
+                        <p class="author-description">
+                          
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </footer>
+
+
+</div>
+
+
+
+    <footer class="index-footer">
+
+        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
+
+    </footer>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-85612-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

@@ -85,7 +85,7 @@ plt.show()
 
 As an example of computation that requires nonlinear units, I'd like to propose that we implement a function like this: 
 $$f(x) = \begin{cases}
-    1.0, & \text{if } \lfloor x \rfloor == 42 \\
+    1.0, & \text{if } \lfloor x \rfloor = 42 \\
     0,         & \text{otherwise}
 \end{cases}
 $$
@@ -98,31 +98,36 @@ import math
 import tensorflow as tf 
 import random
 
+t = 30.
+min_t = 25.
+max_t = 35.
 def f(x): 
-    if math.floor(x) == 42.0: 
+    if x >= t:
         return 1 
     return 0
 
 i = tf.placeholder(shape=(None, 1), dtype=tf.float32, name='input')
 o = tf.placeholder(shape=(None, 1), dtype=tf.float32, name='output')
 
-num_hidden = 4
+num_hidden = 32
 
 i_w = tf.Variable(expected_shape=(1, num_hidden), 
-                initial_value=tf.random_normal((1, num_hidden), mean=1, stddev=0.1))
+                initial_value=tf.random.truncated_normal((1, num_hidden), mean=1, stddev=1))
 i_b = tf.Variable(expected_shape=(1, num_hidden), 
-                initial_value=tf.random_normal((1, num_hidden), mean=0, stddev=0.1))
+                initial_value=tf.random.truncated_normal((1, num_hidden), mean=0, stddev=1))
 
-mid = tf.nn.sigmoid(tf.add(tf.matmul(i, i_w), i_b))
+mid = tf.nn.relu(tf.add(tf.matmul(i, i_w), i_b))
+# mid = tf.add(tf.matmul(i, i_w), i_b)
 
 o_w = tf.Variable(
     expected_shape=(num_hidden, 1), 
-    initial_value=tf.random_normal((num_hidden, 1), mean=1, stddev=0.1))
+    initial_value=tf.random.truncated_normal((num_hidden, 1), mean=1, stddev=1))
 o_b = tf.Variable(
     expected_shape=(1, 1), 
-    initial_value=tf.random_normal((1, 1), mean=0, stddev=0.1))
+    initial_value=tf.random.truncated_normal((1, 1), mean=0, stddev=1))
 
-output = tf.nn.sigmoid(tf.add(tf.matmul(mid, o_w), o_b))
+output = tf.nn.relu(tf.add(tf.matmul(mid, o_w), o_b))
+# output = tf.add(tf.matmul(mid, o_w), o_b)
 
 # Our error function is computed as "Mean Squared Difference" between the computed output
 # and the expected value. 
@@ -130,88 +135,78 @@ loss = tf.pow(output - o, 2)
 mean_loss = tf.reduce_mean(loss)
 
 # Learning rate and optimizer similar to our previous examples. 
-learning_rate = 0.001
-optimizer = tf.train.RMSPropOptimizer(learning_rate).minimize(loss)
+# learning_rate = 0.0001
+optimizer = tf.train.AdamOptimizer().minimize(loss)
 
 with tf.Session() as sess: 
     sess.run([tf.local_variables_initializer(), 
               tf.global_variables_initializer()])
     
     print "TRAIN"
-    batch_size = 100
-    train_iterations = 30000
+    batch_size = 200
+    train_iterations = 50000
     for step in xrange(train_iterations):
         feed = {i:[], o:[]}
-        for b in xrange(batch_size):
-#            v = random.uniform(0, 100)
-#            feed[i].append([v,])
-#            feed[o].append([f(v),])
-            v = random.uniform(40, 50)
+        for b in xrange(batch_size/2):
+            v = random.uniform(min_t, max_t)
             feed[i].append([v,])
             feed[o].append([f(v),])
         _, l, out = sess.run([optimizer, mean_loss, output], feed_dict=feed)
-        if step % 1000 == 0:
+        if step % 5000 == 0:
             print "step =",step," loss=", l
             
     print "VALIDATE"
     validate_iterations = 15
     for step in xrange(validate_iterations):
         feed = {i:[], o:[]}
-        v = random.uniform(41, 44)
+        v = random.uniform(min_t, max_t)
         feed[i].append([v,])
         feed[o].append([f(v),])
         _, l, out = sess.run([optimizer, mean_loss, output], feed_dict=feed)
         print "in = ", feed[i], "output =", out, "expected = ", f(v), " loss=", l
-
+        
+        
+    print "GRAPH"
+    tx = np.linspace(min_t,max_t,100)
+    ys = sess.run(output, feed_dict={i:[[ix,] for ix in tx],})
+    plt.plot(tx, [v[0] for v in ys], label="learned")
+    plt.plot(tx, [f(fx) for fx in tx], label="f(x)")
+    plt.legend()
+    plt.show()
 ```
 
     TRAIN
-    step = 0  loss= 0.877057
-    step = 1000  loss= 0.104496
-    step = 2000  loss= 0.0742236
-    step = 3000  loss= 0.0900399
-    step = 4000  loss= 0.12191
-    step = 5000  loss= 0.0979266
-    step = 6000  loss= 0.0819742
-    step = 7000  loss= 0.113891
-    step = 8000  loss= 0.0578795
-    step = 9000  loss= 0.0500379
-    step = 10000  loss= 0.0979864
-    step = 11000  loss= 0.122138
-    step = 12000  loss= 0.0740604
-    step = 13000  loss= 0.0980238
-    step = 14000  loss= 0.113875
-    step = 15000  loss= 0.0980144
-    step = 16000  loss= 0.114098
-    step = 17000  loss= 0.0819586
-    step = 18000  loss= 0.0819596
-    step = 19000  loss= 0.122212
-    step = 20000  loss= 0.0979735
-    step = 21000  loss= 0.0579728
-    step = 22000  loss= 0.0739617
-    step = 23000  loss= 0.0499344
-    step = 24000  loss= 0.0740566
-    step = 25000  loss= 0.0335692
-    step = 26000  loss= 0.0900009
-    step = 27000  loss= 0.0900244
-    step = 28000  loss= 0.065831
-    step = 29000  loss= 0.0900088
+    step = 0  loss= 1.83179e+06
+    step = 5000  loss= 0.156334
+    step = 10000  loss= 0.197727
+    step = 15000  loss= 0.145691
+    step = 20000  loss= 0.0489364
+    step = 25000  loss= 0.0920705
+    step = 30000  loss= 0.0996958
+    step = 35000  loss= 0.0495032
+    step = 40000  loss= 0.0642934
+    step = 45000  loss= 0.0641886
     VALIDATE
-    in =  [[42.418392103505745]] output = [[ 0.09433614]] expected =  1  loss= 0.820227
-    in =  [[41.27331682450373]] output = [[ 0.09447734]] expected =  0  loss= 0.00892597
-    in =  [[42.74300684100083]] output = [[ 0.0944618]] expected =  1  loss= 0.819999
-    in =  [[41.77018467542995]] output = [[ 0.09461799]] expected =  0  loss= 0.00895256
-    in =  [[41.71882226461412]] output = [[ 0.09460072]] expected =  0  loss= 0.0089493
-    in =  [[43.828811973181075]] output = [[ 0.09458257]] expected =  0  loss= 0.00894586
-    in =  [[43.316574487518395]] output = [[ 0.09456344]] expected =  0  loss= 0.00894224
-    in =  [[42.01840829969748]] output = [[ 0.09454328]] expected =  1  loss= 0.819852
-    in =  [[42.41435611237114]] output = [[ 0.09474455]] expected =  1  loss= 0.819487
-    in =  [[43.777608677423316]] output = [[ 0.09495493]] expected =  0  loss= 0.00901644
-    in =  [[42.27698122268134]] output = [[ 0.09493159]] expected =  1  loss= 0.819149
-    in =  [[41.167553882421814]] output = [[ 0.09516267]] expected =  0  loss= 0.00905593
-    in =  [[43.99910254663018]] output = [[ 0.09513699]] expected =  0  loss= 0.00905105
-    in =  [[43.16787136118454]] output = [[ 0.09510995]] expected =  0  loss= 0.0090459
-    in =  [[43.953262142856325]] output = [[ 0.09508146]] expected =  0  loss= 0.00904049
+    in =  [[32.003762118671474]] output = [[ 0.76464736]] expected =  1  loss= 0.0553909
+    in =  [[32.36696377797531]] output = [[ 0.82751727]] expected =  1  loss= 0.0297503
+    in =  [[29.104202468396544]] output = [[ 0.24386668]] expected =  0  loss= 0.059471
+    in =  [[25.386498517093727]] output = [[ 0.]] expected =  0  loss= 0.0
+    in =  [[33.06359502062598]] output = [[ 0.94786686]] expected =  1  loss= 0.00271786
+    in =  [[25.46369592630006]] output = [[ 0.]] expected =  0  loss= 0.0
+    in =  [[34.76348901877117]] output = [[ 1.2494638]] expected =  1  loss= 0.0622322
+    in =  [[32.77071202248998]] output = [[ 0.88596189]] expected =  1  loss= 0.0130047
+    in =  [[33.86705852782782]] output = [[ 1.07837367]] expected =  1  loss= 0.00614243
+    in =  [[33.21695256720534]] output = [[ 0.95710593]] expected =  1  loss= 0.0018399
+    in =  [[25.06452496846031]] output = [[ 0.]] expected =  0  loss= 0.0
+    in =  [[26.761287670627226]] output = [[ 0.]] expected =  0  loss= 0.0
+    in =  [[31.26943022484645]] output = [[ 0.60015279]] expected =  1  loss= 0.159878
+    in =  [[34.61701252905589]] output = [[ 1.20263445]] expected =  1  loss= 0.0410607
+    in =  [[31.322623992257483]] output = [[ 0.61499643]] expected =  1  loss= 0.148228
+    GRAPH
+
+
+
+![svg]({filename}images/NonlinearUnits_files/NonlinearUnits_7_1.svg)
 
 ## You should play with this code a little bit.
 

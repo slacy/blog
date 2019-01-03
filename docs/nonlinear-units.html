@@ -111,7 +111,7 @@ output &amp; = (midle\ nonlinear) \times W_{out} + B_{out}
 <p>As an example of computation that requires nonlinear units, I&#8217;d like to propose that we implement a function like&nbsp;this: 
 </p>
 <div class="math">$$f(x) = \begin{cases}
-    1.0, &amp; \text{if } \lfloor x \rfloor == 42 \\
+    1.0, &amp; \text{if } \lfloor x \rfloor = 42 \\
     0,         &amp; \text{otherwise}
 \end{cases}
 $$</div>
@@ -120,31 +120,36 @@ $$</div>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
 <span class="kn">import</span> <span class="nn">random</span>
 
+<span class="n">t</span> <span class="o">=</span> <span class="mf">30.</span>
+<span class="n">min_t</span> <span class="o">=</span> <span class="mf">25.</span>
+<span class="n">max_t</span> <span class="o">=</span> <span class="mf">35.</span>
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> 
-    <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mf">42.0</span><span class="p">:</span> 
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">t</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">1</span> 
     <span class="k">return</span> <span class="mi">0</span>
 
 <span class="n">i</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
 <span class="n">o</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
 
-<span class="n">num_hidden</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">num_hidden</span> <span class="o">=</span> <span class="mi">32</span>
 
 <span class="n">i_w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> 
-                <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+                <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">i_b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> 
-                <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+                <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_hidden</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-<span class="n">mid</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i_w</span><span class="p">),</span> <span class="n">i_b</span><span class="p">))</span>
+<span class="n">mid</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i_w</span><span class="p">),</span> <span class="n">i_b</span><span class="p">))</span>
+<span class="c1"># mid = tf.add(tf.matmul(i, i_w), i_b)</span>
 
 <span class="n">o_w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
     <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="n">num_hidden</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
-    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">((</span><span class="n">num_hidden</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="n">num_hidden</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">o_b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
     <span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
-    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-<span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="n">o_w</span><span class="p">),</span> <span class="n">o_b</span><span class="p">))</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="n">o_w</span><span class="p">),</span> <span class="n">o_b</span><span class="p">))</span>
+<span class="c1"># output = tf.add(tf.matmul(mid, o_w), o_b)</span>
 
 <span class="c1"># Our error function is computed as &quot;Mean Squared Difference&quot; between the computed output</span>
 <span class="c1"># and the expected value. </span>
@@ -152,91 +157,79 @@ $$</div>
 <span class="n">mean_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
 <span class="c1"># Learning rate and optimizer similar to our previous examples. </span>
-<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">RMSPropOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+<span class="c1"># learning_rate = 0.0001</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">()</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> 
               <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
 
     <span class="k">print</span> <span class="s2">&quot;TRAIN&quot;</span>
-    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">30000</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">50000</span>
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="p">):</span>
         <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:[],</span> <span class="n">o</span><span class="p">:[]}</span>
-        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
-<span class="c1">#            v = random.uniform(0, 100)</span>
-<span class="c1">#            feed[i].append([v,])</span>
-<span class="c1">#            feed[o].append([f(v),])</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">batch_size</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_t</span><span class="p">,</span> <span class="n">max_t</span><span class="p">)</span>
             <span class="n">feed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">v</span><span class="p">,])</span>
             <span class="n">feed</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">),])</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">mean_loss</span><span class="p">,</span> <span class="n">output</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">5000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">print</span> <span class="s2">&quot;step =&quot;</span><span class="p">,</span><span class="n">step</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
 
     <span class="k">print</span> <span class="s2">&quot;VALIDATE&quot;</span>
     <span class="n">validate_iterations</span> <span class="o">=</span> <span class="mi">15</span>
     <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">validate_iterations</span><span class="p">):</span>
         <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:[],</span> <span class="n">o</span><span class="p">:[]}</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">41</span><span class="p">,</span> <span class="mi">44</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_t</span><span class="p">,</span> <span class="n">max_t</span><span class="p">)</span>
         <span class="n">feed</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">v</span><span class="p">,])</span>
         <span class="n">feed</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">),])</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">mean_loss</span><span class="p">,</span> <span class="n">output</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span>
         <span class="k">print</span> <span class="s2">&quot;in = &quot;</span><span class="p">,</span> <span class="n">feed</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s2">&quot;output =&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s2">&quot;expected = &quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
+
+
+    <span class="k">print</span> <span class="s2">&quot;GRAPH&quot;</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_t</span><span class="p">,</span><span class="n">max_t</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">i</span><span class="p">:[[</span><span class="n">ix</span><span class="p">,]</span> <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">],})</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;learned&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span> <span class="k">for</span> <span class="n">fx</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f(x)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
 <div class="highlight"><pre><span></span>TRAIN
-step = 0  loss= 0.877057
-step = 1000  loss= 0.104496
-step = 2000  loss= 0.0742236
-step = 3000  loss= 0.0900399
-step = 4000  loss= 0.12191
-step = 5000  loss= 0.0979266
-step = 6000  loss= 0.0819742
-step = 7000  loss= 0.113891
-step = 8000  loss= 0.0578795
-step = 9000  loss= 0.0500379
-step = 10000  loss= 0.0979864
-step = 11000  loss= 0.122138
-step = 12000  loss= 0.0740604
-step = 13000  loss= 0.0980238
-step = 14000  loss= 0.113875
-step = 15000  loss= 0.0980144
-step = 16000  loss= 0.114098
-step = 17000  loss= 0.0819586
-step = 18000  loss= 0.0819596
-step = 19000  loss= 0.122212
-step = 20000  loss= 0.0979735
-step = 21000  loss= 0.0579728
-step = 22000  loss= 0.0739617
-step = 23000  loss= 0.0499344
-step = 24000  loss= 0.0740566
-step = 25000  loss= 0.0335692
-step = 26000  loss= 0.0900009
-step = 27000  loss= 0.0900244
-step = 28000  loss= 0.065831
-step = 29000  loss= 0.0900088
+step = 0  loss= 1.83179e+06
+step = 5000  loss= 0.156334
+step = 10000  loss= 0.197727
+step = 15000  loss= 0.145691
+step = 20000  loss= 0.0489364
+step = 25000  loss= 0.0920705
+step = 30000  loss= 0.0996958
+step = 35000  loss= 0.0495032
+step = 40000  loss= 0.0642934
+step = 45000  loss= 0.0641886
 VALIDATE
-in =  [[42.418392103505745]] output = [[ 0.09433614]] expected =  1  loss= 0.820227
-in =  [[41.27331682450373]] output = [[ 0.09447734]] expected =  0  loss= 0.00892597
-in =  [[42.74300684100083]] output = [[ 0.0944618]] expected =  1  loss= 0.819999
-in =  [[41.77018467542995]] output = [[ 0.09461799]] expected =  0  loss= 0.00895256
-in =  [[41.71882226461412]] output = [[ 0.09460072]] expected =  0  loss= 0.0089493
-in =  [[43.828811973181075]] output = [[ 0.09458257]] expected =  0  loss= 0.00894586
-in =  [[43.316574487518395]] output = [[ 0.09456344]] expected =  0  loss= 0.00894224
-in =  [[42.01840829969748]] output = [[ 0.09454328]] expected =  1  loss= 0.819852
-in =  [[42.41435611237114]] output = [[ 0.09474455]] expected =  1  loss= 0.819487
-in =  [[43.777608677423316]] output = [[ 0.09495493]] expected =  0  loss= 0.00901644
-in =  [[42.27698122268134]] output = [[ 0.09493159]] expected =  1  loss= 0.819149
-in =  [[41.167553882421814]] output = [[ 0.09516267]] expected =  0  loss= 0.00905593
-in =  [[43.99910254663018]] output = [[ 0.09513699]] expected =  0  loss= 0.00905105
-in =  [[43.16787136118454]] output = [[ 0.09510995]] expected =  0  loss= 0.0090459
-in =  [[43.953262142856325]] output = [[ 0.09508146]] expected =  0  loss= 0.00904049
+in =  [[32.003762118671474]] output = [[ 0.76464736]] expected =  1  loss= 0.0553909
+in =  [[32.36696377797531]] output = [[ 0.82751727]] expected =  1  loss= 0.0297503
+in =  [[29.104202468396544]] output = [[ 0.24386668]] expected =  0  loss= 0.059471
+in =  [[25.386498517093727]] output = [[ 0.]] expected =  0  loss= 0.0
+in =  [[33.06359502062598]] output = [[ 0.94786686]] expected =  1  loss= 0.00271786
+in =  [[25.46369592630006]] output = [[ 0.]] expected =  0  loss= 0.0
+in =  [[34.76348901877117]] output = [[ 1.2494638]] expected =  1  loss= 0.0622322
+in =  [[32.77071202248998]] output = [[ 0.88596189]] expected =  1  loss= 0.0130047
+in =  [[33.86705852782782]] output = [[ 1.07837367]] expected =  1  loss= 0.00614243
+in =  [[33.21695256720534]] output = [[ 0.95710593]] expected =  1  loss= 0.0018399
+in =  [[25.06452496846031]] output = [[ 0.]] expected =  0  loss= 0.0
+in =  [[26.761287670627226]] output = [[ 0.]] expected =  0  loss= 0.0
+in =  [[31.26943022484645]] output = [[ 0.60015279]] expected =  1  loss= 0.159878
+in =  [[34.61701252905589]] output = [[ 1.20263445]] expected =  1  loss= 0.0410607
+in =  [[31.322623992257483]] output = [[ 0.61499643]] expected =  1  loss= 0.148228
+GRAPH
 </pre></div>
 
 
+<p><img alt="svg" src="./images/NonlinearUnits_files/NonlinearUnits_7_1.svg"></p>
 <h2>You should play with this code a little&nbsp;bit.</h2>
 <p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
 <ul>

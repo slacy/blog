@@ -21,6 +21,14 @@ network = network.AddMaxPoolingLayer(...)
 network = network.AddSigmoidActivation(...)
 network.Train(data)
 ```
+
+
+      File "<ipython-input-1-b9893411f213>", line 4
+        network = network.AddConvolutionalLayer(...)
+                                                ^
+    SyntaxError: invalid syntax
+
+
 ## Boy, was I wrong!  
 
 The *core* API of TensorFlow is much lower level than what I've shown above!

@@ -58,14 +58,15 @@ f(f(x)) &amp; = w_2(w_1x+b_1)+b_2 \\
 \end{array}$$</div>
 <p>As you can see, the composed form of <span class="math">\(f(f(x))\)</span> is also a linear function, just with <span class="math">\(w = w_2w_1\)</span> and <span class="math">\(b =&nbsp;w_2b_1+b_2\)</span></p>
 <p>Or, to think of this differently:  Without any <strong>nonlinear elements</strong> in our neural network architecture, there&#8217;s no reason to have any more than one node in the middle layer, because even a giant collection of linear functions still result in a single linear&nbsp;transformation.  </p>
-<p>An exception to this is functions of multiple variables, like <span class="math">\(f(x,y) = \{a,b\}\)</span>  We can work the math backwards, but let it suffice to say that for functions of <span class="math">\(N\)</span> inputs and <span class="math">\(M\)</span> outputs, we need no more than <span class="math">\(\max(N,M)\)</span> linear 
+<p>An exception to this is functions of multiple variables, like <span class="math">\(f(x,y) = \{a,b\}\)</span>  We can work the math backwards, 
+but let it suffice to say that for functions of <span class="math">\(N\)</span> inputs and <span class="math">\(M\)</span> outputs, we need no more than <span class="math">\(\max(N,M)\)</span> linear 
 nodes in the middle&nbsp;layer. </p>
 <h2>How do we introduce&nbsp;nonlinearity?</h2>
 <p>All we need to do is apply some elementwise nonlinear function to all the values in the middle layer of our network.  It ends up making our computation graph look like&nbsp;this: </p>
 <div class="math">$$\begin{array}{rl}
-middle\ layer &amp; = input \times W_{mid} + B_{mid} \\
-middle\ nonlinear &amp; = f(middle\ layer) \\ 
-output &amp; = (midle\ nonlinear) \times W_{out} + B_{out}
+middle\_layer &amp; = input \times W_{mid} + B_{mid} \\
+middle\_nonlinear &amp; = f(middle\_layer) \\ 
+output &amp; = (midle\_nonlinear) \times W_{out} + B_{out}
 \end{array}$$</div>
 <p>It&#8217;s that easy, we just need to choose the right nonlinear function to insert there.  Thankfully, this has been heavily researched, and there are 3 very commonly used&nbsp;functions:</p>
 <ul>
@@ -80,86 +81,139 @@ output &amp; = (midle\ nonlinear) \times W_{out} + B_{out}
 
 
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span> 
+
+<span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span> 
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;tanh&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">relu</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;ReLU&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+
+<p><img alt="png" src="./images/NonlinearRegressions_files/NonlinearRegressions_5_0.png"></p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> 
-    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">10.0</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="mi">0</span> 
+<span class="c1">#    return math.sin(x*(math.pi/10.0))</span>
+
+<span class="n">mid_layer_size</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">sdev</span> <span class="o">=</span> <span class="mf">0.25</span>
+
+<span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num_mid</span><span class="p">):</span>
+    <span class="c1"># We are constructing a middle layer of 2 perceptron nodes.  Weights and biases </span>
+    <span class="c1"># are our w_i and v_i from the above equations. </span>
+    <span class="n">l1_w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+                                                                     <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sdev</span><span class="p">))</span>
+    <span class="n">l1_b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">,),</span> 
+                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+                                                                   <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sdev</span><span class="p">))</span>
+    <span class="n">mids</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">mids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">l1_w</span><span class="p">),</span> <span class="n">l1_b</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_mid</span><span class="p">):</span>
+        <span class="n">mid_w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+                           <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+                                                                     <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sdev</span><span class="p">))</span>
+        <span class="n">mid_b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">,),</span> 
+                           <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
+                                                                   <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sdev</span><span class="p">))</span>
+        <span class="n">mids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">batch_normalization</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mid_w</span><span class="p">),</span> <span class="n">mid_b</span><span class="p">))))</span>
+
+    <span class="n">l3_w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+                                                         <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sdev</span><span class="p">))</span>
+    <span class="n">l3_b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sdev</span><span class="p">))</span>
+
+    <span class="n">l3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">l3_w</span><span class="p">),</span> <span class="n">l3_b</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">l3</span> 
+    <span class="c1"># Our error function is computed as &quot;Mean Squared Difference&quot; between the computed output</span>
+    <span class="c1"># and the expected value. </span>
+    <span class="k">return</span> <span class="n">output</span>
+
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
 
-<span class="n">mid_layer_size</span> <span class="o">=</span> <span class="mi">8</span>
-
-<span class="c1"># We are constructing a middle layer of 2 perceptron nodes.  Weights and biases </span>
-<span class="c1"># are our w_i and v_i from the above equations. </span>
-<span class="n">input_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> 
-                           <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
-<span class="n">input_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">,),</span> 
-                         <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid_layer_size</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
-
-<span class="n">mid_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">input_weight</span><span class="p">),</span> <span class="n">input_bias</span><span class="p">))</span>
-
-<span class="n">out_weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
-                         <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="n">mid_layer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
-<span class="n">out_bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">expected_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
-                       <span class="n">initial_value</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
-
-<span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mid_layer</span><span class="p">,</span> <span class="n">out_weight</span><span class="p">),</span> <span class="n">out_bias</span><span class="p">)</span>
-
-<span class="c1"># Our error function is computed as &quot;Mean Squared Difference&quot; between the computed output</span>
-<span class="c1"># and the expected value. </span>
-<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">output</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-
 <span class="c1"># Learning rate and optimizer similar to our previous examples. </span>
-<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">RMSPropOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">learn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">output</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">()</span>
+<span class="n">update_ops</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GraphKeys</span><span class="o">.</span><span class="n">UPDATE_OPS</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">control_dependencies</span><span class="p">(</span><span class="n">update_ops</span><span class="p">):</span>
+    <span class="n">train_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span> 
     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">local_variables_initializer</span><span class="p">(),</span> 
               <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()])</span>
 
     <span class="k">print</span> <span class="s2">&quot;TRAIN&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
     <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">30000</span>
-    <span class="n">li</span> <span class="o">=</span> <span class="mi">6</span> 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="p">):</span>
+    <span class="n">train_iterations</span> <span class="o">=</span> <span class="mi">50000</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">train_iterations</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:[],</span> <span class="n">y</span><span class="p">:[]}</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
             <span class="n">feed</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">v</span><span class="p">,])</span>
             <span class="n">feed</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">output</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">li</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">li</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="k">print</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
-            <span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">500</span><span class="p">)</span>
-            <span class="n">ys</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:[[</span><span class="n">t</span><span class="p">,]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">],})</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">])</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">])</span>
-            <span class="c1"># print &quot;feed = &quot;, feed, &quot; output = &quot;, out</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">train_op</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">output</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">%</span><span class="mi">10000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;p=&quot;</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;i=&quot;</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s2">&quot; loss=&quot;</span><span class="p">,</span> <span class="n">l</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-.</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
+                <span class="n">ys</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:[[</span><span class="n">t</span><span class="p">,]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">],})</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;iter </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+                <span class="c1"># print &quot;feed = &quot;, feed, &quot; output = &quot;, out</span>
+            <span class="n">p</span><span class="o">+=</span><span class="mi">1</span>
 
 
     <span class="k">print</span> <span class="s2">&quot;GRAPH&quot;</span>
-    <span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">500</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">])</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-.</span><span class="mi">1</span><span class="p">,</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;f(x)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 
 
 <div class="highlight"><pre><span></span>TRAIN
-i= 1096  loss= 0.97226
-i= 2979  loss= 0.00867264
-i= 8097  loss= 0.00252741
-i= 22009  loss= 0.00598667
+p= 0 i= 0  loss= 0.307398
+p= 1 i= 10000  loss= 1.81332e-07
+p= 2 i= 20000  loss= 0.00931463
+p= 3 i= 30000  loss= 4.06661e-09
+p= 4 i= 40000  loss= 1.12321e-06
+p= 5 i= 50000  loss= 2.22448e-06
 GRAPH
 </pre></div>
 
 
-<p><img alt="svg" src="./images/NonlinearRegressions_files/NonlinearRegressions_5_1.svg"></p>
-<h2>You should play with this code a little&nbsp;bit.</h2>
+<p><img alt="png" src="./images/NonlinearRegressions_files/NonlinearRegressions_6_1.png"></p>
+<h2>You can play with this&nbsp;code!</h2>
 <p>Here&#8217;s a collection of random ideas for how to play around with the code example above and gain some&nbsp;insights:</p>
 <ul>
 <li>Modify the &#8220;f()&#8221; function to try other linear combinations of x <span class="amp">&amp;</span> y.  Can it learn <span class="math">\(x-y\)</span>?  Can it learn <span class="math">\(0.5x + 0.75y - 0.33\)</span>? </li>

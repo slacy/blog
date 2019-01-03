@@ -50,7 +50,7 @@ There are several library functions within TensorFlow itself to facilitate batch
 
 The example that I'm going to use an example is a 4-bit parity problem.  My input is going to be a Tensor of shape (4), with each value being either 0.0 or 1.0.  Expressed as a mathematical function, what I'd like to compute is: 
 
-$$f(x_i)= \sum_{i=0}^n{x_i} \bmod{2}$$
+$$ f(x_i)= \sum_{i=0}^n{x_i} \bmod{2} $$
 
 The network we'll use will be a one-layer network with 16 nodes in the middle layer. 
 

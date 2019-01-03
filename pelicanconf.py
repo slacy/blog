@@ -28,6 +28,10 @@ LINKS = ()
 
 THEME = 'slacy-medius'
 
+MARKUP = ('md',)
+PLUGIN_PATHS = ['./plugins',]
+PLUGINS = ['liquid_tags.notebook',]
+
 # Social widget
 SOCIAL = (('Twitter @sklacy', 'https://twitter.com/sklacy'),
           ('Github', 'https://github.com/slacy'),)

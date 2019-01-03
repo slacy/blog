@@ -84,7 +84,7 @@
 <p>There are several library functions within TensorFlow itself to facilitate batching, but here, I&#8217;m going to be doing the work myself, to make it more clear how batching really&nbsp;works.</p>
 <h2>Examples</h2>
 <p>The example that I&#8217;m going to use an example is a 4-bit parity problem.  My input is going to be a Tensor of shape (4), with each value being either 0.0 or 1.0.  Expressed as a mathematical function, what I&#8217;d like to compute&nbsp;is: </p>
-<div class="math">$$f(x_i)= \sum_{i=0}^n{x_i} \bmod{2}$$</div>
+<div class="math">$$ f(x_i)= \sum_{i=0}^n{x_i} \bmod{2} $$</div>
 <p>The network we&#8217;ll use will be a one-layer network with 16 nodes in the middle&nbsp;layer. </p>
 <p>So, here we&nbsp;go: </p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span> 
