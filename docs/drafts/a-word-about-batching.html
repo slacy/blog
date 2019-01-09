@@ -1,52 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <title>A Word About Batching</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/pure-min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-responsive-min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../theme/css/main.css" />
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="slacy" />
 
-    <div class="navigation pure-menu pure-menu-horizontal">
-        <a href="../" class="pure-menu-heading  pure-menu-link">Slacy's Blog</a>
-        <ul class="pure-menu-list">
-            <li class="pure-menu-item"></li>
+        <meta name="twitter:creator" content="@sklacy">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
 
-        </ul>
-    </div>
+<meta name="keywords" content="Python, TensorFlow, Jupyter, TensorFlow From The Ground Up, " />
+
+<meta property="og:title" content="A Word About Batching "/>
+<meta property="og:url" content="../drafts/a-word-about-batching.html" />
+<meta property="og:description" content="This is an interlude from my series TensorFlow From The Ground Up. In a previous post, Learning to Add I showed simple code to run &amp; train a neural network. That code example trains “one example at a time”. This is generally not how you implement a typical large ML training …" />
+<meta property="og:site_name" content="Slacy&#39;s Blog" />
+<meta property="og:article:author" content="slacy" />
+<meta property="og:article:published_time" content="2017-02-09T13:10:00-08:00" />
+<meta name="twitter:title" content="A Word About Batching ">
+<meta name="twitter:description" content="This is an interlude from my series TensorFlow From The Ground Up. In a previous post, Learning to Add I showed simple code to run &amp; train a neural network. That code example trains “one example at a time”. This is generally not how you implement a typical large ML training …">
+
+        <title>A Word About Batching  · Slacy&#39;s Blog
+</title>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="../theme/css/pygments.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/tipuesearch/tipuesearch.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/css/elegant.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/css/admonition.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/css/custom.css" media="screen">
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-85612-4', 'auto');
+    ga('send', 'pageview');
+</script>
 
 
-<div class="page-container">
-    <div class="entry-content">
-        <div class="post-meta pure-g">
-            <div class="pure-u">
-                <a href="../category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png " class="post-avatar" alt="TensorFlow From The Ground Up"></a>
-            </div>
-<div class="pure-u-3-4 meta-data">
-    <a href="../category/tensorflow-from-the-ground-up.html" class="category">TensorFlow From The Ground Up</a><br />
 
-    <a class="author" href="../author/slacy.html">slacy</a>
-    &mdash; <abbr title="2017-02-09T13:10:00-08:00">Thu 09 February 2017</abbr>
-</div>        </div>
-    </div>
-
-    <div class="article-header-container">
-        <div class="background-image-container">
-
-            <div class="background-image-small">
-                <div class="title-container">
-                    <h1>A Word About&nbsp;Batching</h1>
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="../"><span class=site-name>Slacy's Blog</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href="..">Home</a></li>
+                            <li ><a href="../categories">Categories</a></li>
+                            <li ><a href="../tags">Tags</a></li>
+                            <li ><a href="../archives">Archives</a></li>
+                            <li><form class="navbar-search" action="../search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+    <h1><a href="../drafts/a-word-about-batching.html"> A Word About&nbsp;Batching  </a></h1>
+    </header>
+</div>
 
-    <div class="entry-content">
-        <p>This is an <strong>interlude</strong> from my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+
+            
+            <p>This is an <strong>interlude</strong> from my series <a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a>.</p>
 <p>In a previous post, <a href="../learning-to-add.html">Learning to Add</a> I showed simple code to run <span class="amp">&amp;</span> train a neural network.  That code example trains &#8220;one example at a time&#8221;.  This is generally <em>not</em> how you implement a typical large <span class="caps">ML</span> training&nbsp;system. </p>
 <p>Its much more typical to train in <strong>batches</strong>.  Batches are a way to pass a medium to large collection of training examples to our network, run the expensive calculations just once on the entire batch, then update the gradients and train on the next batch.   Because everything in TensorFlow is a <em>tensor</em> (a multi-dimensional array), the process of batching is nothing more than adding an extra dimension to all the tensors used in the system.  In fact, there are several parts of TensorFlow that assume that the first dimension of a tensor is the size of a batch.  Here is an example using an unknown batch&nbsp;size:</p>
 <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
@@ -251,71 +285,63 @@ x= -33  y= 3  out= -29.9999  loss= [  1.53704605e-08]
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
-    </div>
-
-    <footer>
-        <div class="tags">
-            <a href="../tag/python.html">Python</a>
-            <a href="../tag/tensorflow.html">TensorFlow</a>
-            <a href="../tag/jupyter.html">Jupyter</a>
-        </div>
-        <div class="pure-g post-footer">
-            <div class="pure-u-1 pure-u-md-1-2">
-                <div class="pure-g poster-info">
-                    <div class="pure-u">
-                        <a href="../author/slacy.html"><img src="https://slacy.github.io/blog/images/ygg.png" alt=""></a>
-                    </div>
-                    <div class="pure-u-3-4">
-                        <h3 class="author-name"><a href="../author/slacy.html">slacy</a></h3>
-                        <p class="author-description">
-                                              
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="pure-u-1 pure-u-md-1-2">
-
-                <div class="pure-g post-category-info">
-                    <div class="pure-u">
-                        <a href="../category/tensorflow-from-the-ground-up.html"><img src="https://slacy.github.io/blog/images/tf_logo.png" alt=""></a>
-                    </div>
-                    <div class="pure-u-3-4">
-                        <h3 class="author-name"><a href="../category/tensorflow-from-the-ground-up.html">TensorFlow From The Ground Up</a></h3>
-                        <p class="author-description">
-                          
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-
-    </footer>
-
-
+            <div>
 </div>
 
+            
+            
+            <hr/>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2017-02-09T13:10:00-08:00">Feb 9, 2017</time>
+            <h4>Category</h4>
+            <a class="category-link" href="../categories.html#tensorflow-from-the-ground-up-ref">TensorFlow From The Ground Up</a>
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="../tags#jupyter-ref">Jupyter
+                    <span>6</span>
+</a></li>
+                <li><a href="../tags#python-ref">Python
+                    <span>6</span>
+</a></li>
+                <li><a href="../tags#tensorflow-ref">TensorFlow
+                    <span>6</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+    <a href="https://twitter.com/sklacy" title="My Twitter @sklacy Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-twitter @sklacy sidebar-social-links"></i></a>
+    <a href="https://github.com/slacy" title="My Github Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-github sidebar-social-links"></i></a>
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+        <div id="push"></div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="https://github.com/Pelican-Elegant/elegant/" title="Theme Elegant Home Page">Elegant</a></li>
+    </ul>
+</div>
+</footer>            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
 
-
-    <footer class="index-footer">
-
-        <a href="../" title="Slacy's Blog">Slacy's Blog</a>
-
-    </footer>
-
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-85612-4', 'auto');
-      ga('send', 'pageview');
-
-    </script>
-</body>
+    
+    </body>
+    <!-- Theme: Elegant built for Pelican
+    License : MIT -->
 </html>

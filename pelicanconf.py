@@ -26,7 +26,8 @@ AUTHOR_FEED_RSS = None
 # Blogroll
 LINKS = ()
 
-THEME = 'slacy-medius'
+# THEME = 'slacy-medius'
+THEME = 'elegant'
 
 MARKUP = ('md',)
 PLUGIN_PATHS = ['./plugins',]

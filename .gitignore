@@ -16,4 +16,3 @@ content/notebooks/.ipynb_checkpoints/
 *.bak
 .ipynb_checkpoints/
 tmp/
-elegant/
